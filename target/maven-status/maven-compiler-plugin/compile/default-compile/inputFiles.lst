@@ -1,5 +1,5 @@
-C:\work\sharpic-dev\src\main\java\com\springjava4dev\web\controller\WebController.java
+C:\work\sharpic-dev\src\main\java\com\sharpic\controller\WebController.java
 C:\work\sharpic-dev\src\main\java\com\sharpic\domain\User.java
-C:\work\sharpic-dev\src\main\java\com\springjava4dev\web\WebsecurityTutorialApplication.java
-C:\work\sharpic-dev\src\main\java\com\springjava4dev\web\controller\security\SecurityConfig.java
-C:\work\sharpic-dev\src\main\java\com\springjava4dev\web\UserRepository.java
+C:\work\sharpic-dev\src\main\java\com\sharpic\controller\security\SecurityConfig.java
+C:\work\sharpic-dev\src\main\java\com\sharpic\repository\UserRepository.java
+C:\work\sharpic-dev\src\main\java\com\sharpic\WebsecurityTutorialApplication.java
