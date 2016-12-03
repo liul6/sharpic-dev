@@ -1,1 +1,5 @@
+com\sharpic\controller\WebController.class
+com\sharpic\WebsecurityTutorialApplication.class
+com\sharpic\controller\security\SecurityConfig.class
+com\sharpic\repository\UserRepository.class
 com\sharpic\domain\User.class
