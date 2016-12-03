@@ -1,0 +1,4 @@
+com\springjava4dev\web\WebsecurityTutorialApplication.class
+com\springjava4dev\web\controller\WebController.class
+com\springjava4dev\web\controller\security\SecurityConfig.class
+com\sharpic\domain\User.class
