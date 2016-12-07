@@ -1,0 +1,16 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sharpic.domain.LocationMapper">
+    <resultMap id="ResultMap" type="Location">
+        <id column="id" property="id" />
+        <result column="client_name" property="clientName" />
+        <result column="name" property="locationName" />
+        <result column="update_datetime" property="updatedDatetime" />
+    </resultMap>
+
+    <select id="getClientLocations" resultMap="ResultMap">
+        select client_name, name, update_datetime from location where client_name=#{clientName} order by name
+    </select>
+</mapper>

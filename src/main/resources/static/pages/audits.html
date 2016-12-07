@@ -3,18 +3,24 @@
 
     <div>
         <span>
-        <select ng-model="clientName" ng-options="x for x in clientNames" ng-style="{'width': '180px', 'padding' : '2px'}"></select>
+        <select ng-model="clientName" ng-options="x for x in clientNames" ng-change='selectClient()' ng-style="{'width': '180px', 'padding' : '2px'}"></select>
         <select ng-model="auditDate" ng-options="y for y in auditDates" ng-style="{'width': '180px', 'padding' : '2px'}"></select>
         <select ng-model="selectedVenue" ng-options="x for x in allVenus" ng-style="{'width': '180px', 'padding' : '2px'}"></select>
 
         <label/>
-        <button ng-click="addAudit()" ng-style="{'width': '100px'}">Add Audit</button>
-        <button ng-click="deleteAudit()" ng-style="{'width': '100px'}">Delete Audit</button>
-        <button ng-click="addEntry()" ng-style="{'width': '100px'}">Add Entry</button>
-        <button ng-click="addModifiers()" ng-style="{'width': '120px'}">Add Modifiers</button>
+        <button type="button" class="btn btn-default btn-sm" ng-click="refreshEntryPage()">
+          <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle"  >Audit Actions
+            <ul class="dropdown-menu">
+                <li><a href="#">Add Audit</a></li>
+                <li><a href="#">Delete Audit</a></li>
+                <li><a href="#">Modifier</a></li>
+           </ul>
+        </div>
         </span>
     </div>
-
-    <p>{{ message }}</p>
 
 </div>

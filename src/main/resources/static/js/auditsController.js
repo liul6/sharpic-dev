@@ -2,9 +2,11 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.message ='this is a test for angularjs controller';
     $scope.clientName = null;
     $scope.auditDate = null;
+    $scope.selectedVenue = null;
 
-    $scope.clientNames = ["Emil", "Tobias", "Linus"];
-    $scope.auditDates = ["2016-11-01", "2016-11-08", "2016-11-15"];
+    $scope.clientNames = [];
+    $scope.auditDates = [];
+    $scope.allVenues = [];
 
     $scope.addAudit = function() {
         $scope.message = 'Added audit succcessfully';
@@ -21,5 +23,32 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.addModifiers = function() {
         $scope.message = 'Added modifiers succcessfully';
     };
+
+    $scope.getClientNames = function() {
+        $http.get('/client/getClientNames')
+            .success(function (data, status, headers, config) {
+            $scope.clientNames = data;
+        })
+        .error(function (data, status, header, config) {
+        });
+     };
+
+    $scope.getClientNames();
+
+    $scope.selectClient = function() {
+        $http.get('/client/getAuditDates?clientName=' + $scope.clientName)
+            .success(function (data, status, headers, config) {
+            $scope.auditDates = data;
+        })
+        .error(function (data, status, header, config) {
+        });
+
+        $http.get('/client/getLocations?clientName=' + $scope.clientName)
+            .success(function (data, status, headers, config) {
+            $scope.allVenus = data;
+        })
+        .error(function (data, status, header, config) {
+        });
+    }
 
 });
