@@ -25,30 +25,36 @@
     </div>
 
     <br/>
-    <table class="table table-stripped table-condensed table-hove" ts-wrapper>
-        <thead>
-            <tr>
-                <th ts-criteria="productDescription" ts-default>Product</th>
-                <th ts-criteria="weights">Partials</th>
-                <th ts-criteria="fulls">Fulls</th>
-                <th ts-criteria="bin">Bin</th>
-                <th ts-criteria="location">Location</th>
-                <th style="width:80px">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="entry in auditEntries" ts-repeat>
-                <td>{{entry.productDescription}}</td>
-                <td>{{entry.weights}}</td>
-                <td>{{entry.amount}}</td>
-                <td>{{entry.bin}}</td>
-                <td>{{entry.location}}</td>
-                <td>
-                    <button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-                    <button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 
+    <tabset>
+        <tab heading="Entry">
+            <table class="table table-stripped table-condensed table-hove" ts-wrapper>
+                <thead>
+                    <tr>
+                        <th ts-criteria="productDescription" ts-default>Product</th>
+                        <th ts-criteria="weights">Partials</th>
+                        <th ts-criteria="fulls">Fulls</th>
+                        <th ts-criteria="bin">Bin</th>
+                        <th ts-criteria="location">Location</th>
+                        <th style="width:80px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="entry in auditEntries" ts-repeat>
+                        <td>{{entry.productDescription}}</td>
+                        <td>{{entry.weights}}</td>
+                        <td>{{entry.amount}}</td>
+                        <td>{{entry.bin}}</td>
+                        <td>{{entry.location}}</td>
+                        <td>
+                            <button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+                            <button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </tab>
+        <tab heading="Modifier">
+        </tab>
+    </tabset>
 </div>
