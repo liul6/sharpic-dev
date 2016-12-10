@@ -1,26 +1,54 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="auditsController">
     <h1 class="page-header">Audits</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3">
+                <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames" ng-change="selectClient()"></select>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" ng-model="auditDate" ng-options="y for y in auditDates"></select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" ng-model="selectedVenue" ng-options="x for x in allVenus"></select>
+            </div>
 
-    <div>
-        <span>
-        <select ng-model="clientName" ng-options="x for x in clientNames" ng-change='selectClient()' ng-style="{'width': '180px', 'padding' : '2px'}"></select>
-        <select ng-model="auditDate" ng-options="y for y in auditDates" ng-style="{'width': '180px', 'padding' : '2px'}"></select>
-        <select ng-model="selectedVenue" ng-options="x for x in allVenus" ng-style="{'width': '180px', 'padding' : '2px'}"></select>
-
-        <label/>
-        <button type="button" class="btn btn-default btn-sm" ng-click="refreshEntryPage()">
-          <span class="glyphicon glyphicon-refresh"></span>
-        </button>
-
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle"  >Audit Actions
-            <ul class="dropdown-menu">
-                <li><a href="#">Add Audit</a></li>
-                <li><a href="#">Delete Audit</a></li>
-                <li><a href="#">Modifier</a></li>
-           </ul>
+            <button type="button" class="btn btn-primary ">
+                <span class="glyphicon glyphicon-plus"></span> Add Entry
+            </button>
+            <button type="button" class="btn btn-primary">
+                <span class="glyphicon glyphicon-minus"></span> Delete Entry
+            </button>
+            <button ng-click="refreshEntryPage()" type="button" class="btn btn-primary pull-right">
+                <span class="glyphicon glyphicon-refresh"></span>
+            </button>
         </div>
-        </span>
     </div>
+
+    <br/>
+    <table class="table table-stripped table-condensed table-hove" ts-wrapper>
+        <thead>
+            <tr>
+                <th ts-criteria="productDescription" ts-default>Product</th>
+                <th ts-criteria="weights">Partials</th>
+                <th ts-criteria="fulls">Fulls</th>
+                <th ts-criteria="bin">Bin</th>
+                <th ts-criteria="location">Location</th>
+                <th style="width:80px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="entry in auditEntries" ts-repeat>
+                <td>{{entry.productDescription}}</td>
+                <td>{{entry.weights}}</td>
+                <td>{{entry.amount}}</td>
+                <td>{{entry.bin}}</td>
+                <td>{{entry.location}}</td>
+                <td>
+                    <button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+                    <button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>

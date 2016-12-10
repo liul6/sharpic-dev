@@ -7,6 +7,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.clientNames = [];
     $scope.auditDates = [];
     $scope.allVenues = [];
+    $scope.auditEntries = [];
 
     $scope.addAudit = function() {
         $scope.message = 'Added audit succcessfully';
@@ -45,10 +46,21 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
 
         $http.get('/client/getLocations?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
+            $scope.allVenus = [];
             $scope.allVenus = data;
+            $scope.allVenus.push("ALL");
         })
         .error(function (data, status, header, config) {
         });
+    }
+
+    $scope.refreshEntryPage = function() {
+       $http.get('/audit/getEntries?auditDateStr=' + $scope.auditDate)
+           .success(function (data, status, headers, config) {
+           $scope.auditEntries = data;
+       })
+       .error(function (data, status, header, config) {
+       });
     }
 
 });

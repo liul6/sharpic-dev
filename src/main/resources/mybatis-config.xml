@@ -22,5 +22,8 @@
         <mapper resource="mappers/ClientMapper.xml"/>
         <mapper resource="mappers/LocationMapper.xml"/>
         <mapper resource="mappers/AuditMapper.xml"/>
+        <mapper resource="mappers/SizeMapper.xml"/>
+        <mapper resource="mappers/ProductMapper.xml"/>
+        <mapper resource="mappers/EntryMapper.xml"/>
     </mappers>
 </configuration>

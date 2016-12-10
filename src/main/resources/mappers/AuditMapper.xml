@@ -14,4 +14,9 @@
     <select id="getClientAudits" resultMap="ResultMap">
         select client_name, audit_date, notes, update_datetime from audit where client_name=#{clientName} order by audit_date desc
     </select>
+
+    <select id="getAuditId" resultType="int">
+        select id from audit where audit_date=#{auditDate}
+    </select>
+
 </mapper>

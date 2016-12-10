@@ -2,5 +2,24 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="EntryMapper">
+<mapper namespace="com.sharpic.domain.EntryMapper">
+    <resultMap id="ResultMap" type="Entry">
+        <result column="id" property="id"/>
+
+        <result column="id" property="auditId"/>
+        <result column="location" property="location"/>
+        <result column="product_id" property="productId"/>
+        <result column="amount" property="amount"/>
+        <result column="weight" property="weight"/>
+        <result column="weights" property="weights"/>
+        <result column="open_bottles" property="openBottles"/>
+        <result column="bin" property="bin"/>
+
+        <result column="update_datetime" property="updatedDatetime"/>
+    </resultMap>
+
+    <select id="getAuditEntries" resultMap="ResultMap">
+        select id, audit_id, location, product_id, amount, weight, weights, open_bottles, bin, update_datetime from entry where audit_id=#{auditId}
+    </select>
+
 </mapper>

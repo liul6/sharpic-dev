@@ -1,0 +1,16 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sharpic.domain.SizeMapper">
+    <resultMap id="ResultMap" type="Size">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="ounces" property="ounces"/>
+        <result column="update_datetime" property="updatedDatetime"/>
+    </resultMap>
+
+    <select id="getSizes" resultMap="ResultMap">
+        select id, name, ounces, update_datetime from size
+    </select>
+</mapper>
