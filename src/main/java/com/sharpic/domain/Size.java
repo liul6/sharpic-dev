@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by joey on 2016-12-08.
  */
 
-public class Size {
+public class Size implements Comparable<Size> {
     private int id;
     private String name;
     private double ounces;
@@ -42,5 +42,9 @@ public class Size {
 
     public void setUpdatedDatetime(Date updatedDatetime) {
         this.updatedDatetime = updatedDatetime;
+    }
+
+    public int compareTo(Size size) {
+        return this.getName().compareTo(size.getName());
     }
 }

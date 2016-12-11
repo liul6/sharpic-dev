@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-08.
  */
-public class Product {
+public class Product implements Comparable<Product> {
     private int id;
     private String name;
     private int sizeId;
@@ -17,6 +17,8 @@ public class Product {
     private String upc;
     private String tags;
     private Date updatedDatetime;
+
+    private Size size;
 
     public int getId() {
         return id;
@@ -104,5 +106,17 @@ public class Product {
 
     public void setUpdatedDatetime(Date updatedDatetime) {
         this.updatedDatetime = updatedDatetime;
+    }
+
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
+
+    public int compareTo(Product product) {
+        return this.getName().compareTo(product.getName());
     }
 }

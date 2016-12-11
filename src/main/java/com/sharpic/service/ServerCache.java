@@ -1,11 +1,15 @@
 package com.sharpic.service;
 
-import com.sharpic.domain.*;
+import com.sharpic.domain.Product;
+import com.sharpic.domain.ProductMapper;
+import com.sharpic.domain.Size;
+import com.sharpic.domain.SizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -85,4 +89,23 @@ public class ServerCache implements IServerCache {
         }
     }
 
+    public List<Product> getProducts() {
+        if (productMap != null || productMap.size() <= 0)
+            this.fillProductCache();
+
+        List<Product> allProducts = new ArrayList<Product>();
+        allProducts.addAll(productMap.values());
+
+        return allProducts;
+    }
+
+    public List<Size> getSizes() {
+        if (sizeMap != null || sizeMap.size() <= 0)
+            this.fillSizeCache();
+
+        List<Size> allSizes = new ArrayList<Size>();
+        allSizes.addAll(sizeMap.values());
+
+        return allSizes;
+    }
 }
