@@ -13,4 +13,8 @@
     <select id="getClientLocations" resultMap="ResultMap">
         select client_name, name, update_datetime from location where client_name=#{clientName} order by name
     </select>
+
+    <select id="getLocations" resultMap="ResultMap">
+        select client_name, name, update_datetime from location
+    </select>
 </mapper>

@@ -5,7 +5,8 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-04.
  */
-public class Entry {
+
+public class Entry implements Comparable<Entry> {
     private int id;
     private int auditId;
     private String location;
@@ -106,5 +107,9 @@ public class Entry {
 
     public void setWeights(String weights) {
         this.weights = weights;
+    }
+
+    public int compareTo(Entry entry) {
+        return this.getProductDescription().compareTo(entry.getProductDescription());
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -57,7 +58,9 @@ public class AuditController {
         }
         System.out.println("The number of entries retrieved: " + entries.size());
 
+        Collections.sort(entries);
         return entries;
     }
+
 
 }

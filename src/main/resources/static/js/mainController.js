@@ -31,7 +31,7 @@
 
 			.when('/clients', {
 				templateUrl : 'pages/clients.html',
-				controller  : 'mainController'
+				controller  : 'clientController'
 			})
 
 			.when('/reports', {

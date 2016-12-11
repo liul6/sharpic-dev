@@ -1,5 +1,33 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="mainController">
-    <h1>Client Page</h1>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="clientController">
+    <h1 class="page-header">Clients</h1>
+    <br/>
 
-    <p>{{ message }}</p>
+    <table class="table table-stripped table-condensed table-hove" ts-wrapper>
+        <thead>
+        <tr>
+            <th ts-criteria="name" ts-default>Client Name</th>
+            <th ts-criteria="phone">Phone</th>
+            <th ts-criteria="email">Email</th>
+            <th ts-criteria="locations">Locations</th>
+            <th ts-criteria="modifiers">Modifiers</th>
+            <th style="width:90px">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="client in clients" ts-repeat>
+            <td>{{client.name}}</td>
+            <td>{{client.phone}}</td>
+            <td>{{client.email}}</td>
+            <td>{{client.locations}}</td>
+            <td>{{client.modifiers}}</td>
+            <td>
+                <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
+                <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+                <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
 </div>

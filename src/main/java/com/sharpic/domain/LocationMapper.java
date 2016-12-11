@@ -7,4 +7,5 @@ import java.util.List;
 @Mapper
 public interface LocationMapper {
     List<Location> getClientLocations(String clientName);
+    List<Location> getLocations();
 }

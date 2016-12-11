@@ -25,5 +25,6 @@
         <mapper resource="mappers/SizeMapper.xml"/>
         <mapper resource="mappers/ProductMapper.xml"/>
         <mapper resource="mappers/EntryMapper.xml"/>
+        <mapper resource="mappers/ModifierMapper.xml"/>
     </mappers>
 </configuration>

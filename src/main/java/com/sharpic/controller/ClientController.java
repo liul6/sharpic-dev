@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by joey on 2016-12-05.
  */
+
 @Controller
 public class ClientController {
     private static Log log = LogFactory.getLog(ClientController.class.getName());
@@ -31,6 +30,9 @@ public class ClientController {
 
     @Autowired
     private LocationMapper locationMapper;
+
+    @Autowired
+    private ModifierMapper modifierMapper;
 
     @RequestMapping(value = "/client/getClientNames")
     @ResponseBody
@@ -122,5 +124,22 @@ public class ClientController {
         auditMapper.deleteAudit(clientName, aDate);
 
         return DateUtil.format(aDate);
+    }
+
+    @RequestMapping(value = "/client/getClients")
+    @ResponseBody
+    public List<Client> getClients() {
+        List<Client> clients = clientMapper.getClients();
+
+        for (int i = 0; i < clients.size(); i++) {
+            Client client = clients.get(i);
+            String clientName = client.getName();
+
+            client.setLocations(locationMapper.getClientLocations(clientName));
+            client.setModifiers(modifierMapper.getClientModifiers(clientName));
+        }
+
+        System.out.println("#####The number of locations for client####:" + clients.size());
+        return clients;
     }
 }
