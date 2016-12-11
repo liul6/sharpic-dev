@@ -5,22 +5,20 @@
             <div class="col-sm-3">
                 <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames" ng-change="selectClient()"></select>
             </div>
-            <div class="col-sm-3">
-                <select class="form-control" ng-model="auditDate" ng-options="y for y in auditDates"></select>
-            </div>
             <div class="col-sm-2">
-                <select class="form-control" ng-model="selectedVenue" ng-options="x for x in allVenus"></select>
+                <select class="form-control" ng-model="auditDate" ng-options="y for y in auditDates" ng-change="selectAudit()"></select>
             </div>
-
             <button type="button" class="btn btn-primary ">
-                <span class="glyphicon glyphicon-plus"></span> Add Entry
+                <span class="glyphicon glyphicon-plus"></span> Add Audit
             </button>
             <button type="button" class="btn btn-primary">
-                <span class="glyphicon glyphicon-minus"></span> Delete Entry
+                <span class="glyphicon glyphicon-remove"></span> Delete Audit
             </button>
-            <button ng-click="refreshEntryPage()" type="button" class="btn btn-primary pull-right">
-                <span class="glyphicon glyphicon-refresh"></span>
-            </button>
+            <div class="input-group col-sm-3  pull-right">
+                <input type="text"  class="form-control"/>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+            </div>
+
         </div>
     </div>
 
@@ -36,7 +34,7 @@
                         <th ts-criteria="fulls">Fulls</th>
                         <th ts-criteria="bin">Bin</th>
                         <th ts-criteria="location">Location</th>
-                        <th style="width:80px">Action</th>
+                        <th style="width:90px">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,8 +45,9 @@
                         <td>{{entry.bin}}</td>
                         <td>{{entry.location}}</td>
                         <td>
-                            <button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-                            <button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                            <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
+                            <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+                            <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
                         </td>
                     </tr>
                 </tbody>

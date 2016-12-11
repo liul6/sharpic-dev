@@ -37,6 +37,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.getClientNames();
 
     $scope.selectClient = function() {
+        $scope.auditEntries = [];
         $http.get('/client/getAuditDates?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
             $scope.auditDates = data;
@@ -54,7 +55,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
         });
     }
 
-    $scope.refreshEntryPage = function() {
+    $scope.selectAudit = function() {
        $http.get('/audit/getEntries?auditDateStr=' + $scope.auditDate)
            .success(function (data, status, headers, config) {
            $scope.auditEntries = data;
