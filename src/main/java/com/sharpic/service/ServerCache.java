@@ -1,9 +1,6 @@
 package com.sharpic.service;
 
-import com.sharpic.domain.Product;
-import com.sharpic.domain.ProductMapper;
-import com.sharpic.domain.Size;
-import com.sharpic.domain.SizeMapper;
+import com.sharpic.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;

@@ -15,8 +15,15 @@
         select client_name, audit_date, notes, update_datetime from audit where client_name=#{clientName} order by audit_date desc
     </select>
 
-    <select id="getAuditId" resultType="int">
-        select id from audit where audit_date=#{auditDate}
+    <select id="getAuditId" resultType="Integer">
+        select id from audit where client_name=#{clientName} and audit_date=#{auditDate}
     </select>
 
+    <insert id="insertAudit">
+        insert into audit(client_name, audit_date, update_datetime) values(#{clientName}, #{auditDate}, SYSDATETIME())
+    </insert>
+
+    <insert id="deleteAudit">
+        delete from audit where client_name=#{clientName} and audit_date=#{auditDate}
+    </insert>
 </mapper>

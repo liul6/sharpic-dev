@@ -8,13 +8,13 @@
             <div class="col-sm-2">
                 <select class="form-control" ng-model="auditDate" ng-options="y for y in auditDates" ng-change="selectAudit()"></select>
             </div>
-            <button type="button" class="btn btn-primary ">
+            <button type="button" ng-click="addAudit()" class="btn btn-primary ">
                 <span class="glyphicon glyphicon-plus"></span> Add Audit
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="button" ng-click="removeAudit()" class="btn btn-primary">
                 <span class="glyphicon glyphicon-remove"></span> Delete Audit
             </button>
-            <div class="input-group col-sm-3  pull-right">
+            <div class="input-group col-sm-3 pull-right">
                 <input type="text"  class="form-control"/>
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
             </div>

@@ -1,20 +1,20 @@
 package com.sharpic.controller;
 
+import com.sharpic.common.DateUtil;
 import com.sharpic.domain.AuditMapper;
 import com.sharpic.domain.Entry;
 import com.sharpic.domain.EntryMapper;
 import com.sharpic.domain.Product;
 import com.sharpic.service.ProductService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +23,8 @@ import java.util.List;
 
 @Controller
 public class AuditController {
+    private static Log log = LogFactory.getLog(AuditController.class.getName());
+
     @Autowired
     private AuditMapper auditMapper;
 
@@ -34,19 +36,13 @@ public class AuditController {
 
     @RequestMapping(value = "/audit/getEntries")
     @ResponseBody
-    public List<Entry> getEntries(String auditDateStr) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date auditDate = null;
+    public List<Entry> getEntries(String clientName, String auditDateStr) {
+        LocalDate auditDate = LocalDate.parse(auditDateStr);
 
-        try {
-            auditDate = format.parse(auditDateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         if (auditDate == null)
-            auditDate = new Date();
+            auditDate = LocalDate.now();
 
-        int auditId = auditMapper.getAuditId(auditDate);
+        int auditId = auditMapper.getAuditId(clientName, DateUtil.toDate(auditDate));
         if (auditId < 0)
             return new ArrayList<Entry>();
 
