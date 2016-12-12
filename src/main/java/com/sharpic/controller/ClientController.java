@@ -2,6 +2,7 @@ package com.sharpic.controller;
 
 import com.sharpic.common.DateUtil;
 import com.sharpic.domain.*;
+import com.sharpic.service.IServerCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class ClientController {
 
     @Autowired
     private ModifierMapper modifierMapper;
+
+    @Autowired
+    private IServerCache serverCache;
 
     @RequestMapping(value = "/client/getClientNames")
     @ResponseBody
@@ -142,4 +146,17 @@ public class ClientController {
         System.out.println("#####The number of locations for client####:" + clients.size());
         return clients;
     }
+
+    @RequestMapping(value = "/client/getClientRecipes")
+    @ResponseBody
+    public List<Recipe> getRecipes(String clientName) {
+        if (clientName == null || clientName.isEmpty())
+            return new ArrayList<Recipe>();
+
+        List<Recipe> clientRecipes = serverCache.getRecipes(clientName);
+        Collections.sort(clientRecipes);
+
+        return clientRecipes;
+    }
+
 }

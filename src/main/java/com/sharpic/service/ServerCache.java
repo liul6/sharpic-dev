@@ -1,15 +1,13 @@
 package com.sharpic.service;
 
-import com.sharpic.domain.Product;
-import com.sharpic.domain.ProductMapper;
-import com.sharpic.domain.Size;
-import com.sharpic.domain.SizeMapper;
+import com.sharpic.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,16 +25,22 @@ public class ServerCache implements IServerCache {
     @Autowired
     private ProductMapper productMapper;
 
+    @Autowired
+    private RecipeMapper recipeMapper;
+
     private Map<Integer, Size> sizeMap = new ConcurrentHashMap<Integer, Size>();
     private Map<Integer, Product> productMap = new ConcurrentHashMap<Integer, Product>();
+    private Map<Integer, Recipe> recipeMap = new ConcurrentHashMap<Integer, Recipe>();
 
     @ManagedOperation
     public void reloadCache() {
         sizeMap.clear();
         productMap.clear();
+        recipeMap.clear();
 
         this.fillSizeCache();
         this.fillProductCache();
+        this.fillRecipeCache();
     }
 
     @Override
@@ -53,6 +57,14 @@ public class ServerCache implements IServerCache {
             this.fillProductCache();
 
         return productMap.get(productId);
+    }
+
+    @Override
+    public Recipe findRecipe(int recipeId) {
+        if (recipeMap.isEmpty())
+            this.fillRecipeCache();
+
+        return recipeMap.get(recipeId);
     }
 
     public void clearSizeCache() {
@@ -89,8 +101,21 @@ public class ServerCache implements IServerCache {
         }
     }
 
+    private void fillRecipeCache() {
+        recipeMap.clear();
+
+        List<Recipe> recipes = recipeMapper.getActiveRecipes();
+        if (recipes == null)
+            return;
+
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe recipe = recipes.get(i);
+            recipeMap.put(recipe.getId(), recipe);
+        }
+    }
+
     public List<Product> getProducts() {
-        if (productMap != null || productMap.size() <= 0)
+        if (productMap == null || productMap.size() <= 0)
             this.fillProductCache();
 
         List<Product> allProducts = new ArrayList<Product>();
@@ -100,12 +125,27 @@ public class ServerCache implements IServerCache {
     }
 
     public List<Size> getSizes() {
-        if (sizeMap != null || sizeMap.size() <= 0)
+        if (sizeMap == null || sizeMap.size() <= 0)
             this.fillSizeCache();
 
         List<Size> allSizes = new ArrayList<Size>();
         allSizes.addAll(sizeMap.values());
 
         return allSizes;
+    }
+
+    public List<Recipe> getRecipes(String clientName) {
+        if (recipeMap == null || recipeMap.size() <= 0)
+            this.fillRecipeCache();
+
+        List<Recipe> clientRecipes = new ArrayList<Recipe>();
+        Iterator iter = recipeMap.values().iterator();
+        while (iter.hasNext()) {
+            Recipe recipe = (Recipe) iter.next();
+            if (recipe.getClientName().equals(clientName))
+                clientRecipes.add(recipe);
+        }
+
+        return clientRecipes;
     }
 }

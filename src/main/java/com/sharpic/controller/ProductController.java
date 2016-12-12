@@ -1,4 +1,4 @@
-package com.sharpic.controller.security;
+package com.sharpic.controller;
 
 import com.sharpic.domain.Product;
 import com.sharpic.domain.Size;

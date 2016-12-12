@@ -26,5 +26,7 @@
         <mapper resource="mappers/ProductMapper.xml"/>
         <mapper resource="mappers/EntryMapper.xml"/>
         <mapper resource="mappers/ModifierMapper.xml"/>
+        <mapper resource="mappers/RecipeMapper.xml"/>
+        <mapper resource="mappers/RecipeItemMapper.xml"/>
     </mappers>
 </configuration>

@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sharpic.domain.RecipeItemMapper">
+    <resultMap id="ResultMap" type="RecipeItem">
+        <result column="id" property="id"/>
+        <result column="recipe_id" property="recipeId"/>
+        <result column="product_id" property="productId"/>
+        <result column="fulls" property="fulls"/>
+        <result column="ounces" property="ounces"/>
+        <result column="update_datetime" property="updatedDatetime"/>
+    </resultMap>
+
+    <select id="getClientRecipeItems" resultMap="ResultMap">
+        select id, recipe_id, product_id, fulls, ounces, update_datetime from recipe_item
+    </select>
+</mapper>
