@@ -18,9 +18,9 @@ sharpicApp.controller('clientController', function($rootScope, $http, $location,
         var locations = client.locations;
         if(locations!=null) {
             for( var i=0; i<locations.length; i++) {
-                locationNamesStr += locations[i].locatioName;
+                locationNamesStr += locations[i].locationName;
                 if(i!=(locations.length-1))
-                    locationNamesStr += "<br>";
+                    locationNamesStr += ",";
             }
         }
 
@@ -35,7 +35,7 @@ sharpicApp.controller('clientController', function($rootScope, $http, $location,
             for( var i=0; i<modifiers.length; i++) {
                 modifierNamesStr += modifiers[i].modifierName;
                 if(i!=(modifiers.length-1))
-                    modifierNamesStr += "<br>";
+                    modifierNamesStr += ",";
             }
         }
 

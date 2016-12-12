@@ -5,17 +5,17 @@
     <table class="table table-stripped table-condensed table-hove" ts-wrapper>
         <thead>
         <tr>
-            <th ts-criteria="name" ts-default>Client Name</th>
-            <th ts-criteria="locations">Locations</th>
-            <th ts-criteria="modifiers">Modifiers</th>
-            <th style="width:90px">Action</th>
+            <th ts-criteria="name" ts-default style="width: 20%">Client Name</th>
+            <th ts-criteria="locations" style="width: 35%">Locations</th>
+            <th ts-criteria="modifiers"  style="width: 35%">Modifiers</th>
+            <th  style="width: 10%">Action</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="client in clients" ts-repeat>
             <td>{{client.name}}</td>
-            <td>{{client.locations}}</td>
-            <td>{{client.modifiers}}</td>
+            <td>{{getLocationNames(client)}}</td>
+            <td>{{getModifierNames(client)}}</td>
             <td>
                 <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
                 <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>

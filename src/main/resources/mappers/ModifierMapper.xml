@@ -6,7 +6,7 @@
     <resultMap id="ResultMap" type="Modifier">
         <id column="id" property="id" />
         <result column="client_name" property="clientName" />
-        <result column="name" property="modifierName" />
+        <result column="modifier_name" property="modifierName" />
         <result column="percentage" property="percentage" />
         <result column="update_datetime" property="updatedDatetime" />
     </resultMap>
