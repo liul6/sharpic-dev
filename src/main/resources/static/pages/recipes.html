@@ -5,10 +5,6 @@
             <div class="col-sm-3">
                 <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames" ng-change="selectClient()"></select>
             </div>
-            <div class="input-group col-sm-3 pull-right">
-                <input type="text"  class="form-control"/>
-                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            </div>
 
         </div>
     </div>
@@ -17,11 +13,11 @@
 
     <tabset>
         <tab heading="Active">
-            <table class="table table-stripped table-condensed table-hove" ts-wrapper>
+            <table datatable="ng" dt-options="dtOptions" class="table table-hover table-stripped">
                 <thead>
                 <tr>
                     <th ts-criteria="name" ts-default  style="width: 20%">Name</th>
-                    <th ts-criteria="description"  style="width: 70%">Description</th>
+                    <th ts-criteria="description"  style="width: 70%">Items</th>
                     <th  style="width: 10%">Action</th>
                 </tr>
                 </thead>

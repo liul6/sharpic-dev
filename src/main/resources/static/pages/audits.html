@@ -14,10 +14,6 @@
             <button type="button" ng-click="removeAudit()" class="btn btn-primary">
                 <span class="glyphicon glyphicon-remove"></span> Delete Audit
             </button>
-            <div class="input-group col-sm-3 pull-right">
-                <input type="text"  class="form-control"/>
-                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            </div>
 
         </div>
     </div>
@@ -26,7 +22,7 @@
 
     <tabset>
         <tab heading="Entry">
-            <table class="table table-stripped table-condensed table-hove" ts-wrapper>
+            <table datatable="ng" dt-options="dtOptions" class="table table-hover table-stripped">
                 <thead>
                     <tr>
                         <th ts-criteria="productDescription" ts-default>Product</th>

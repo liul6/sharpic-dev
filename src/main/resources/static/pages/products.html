@@ -5,11 +5,6 @@
             <div class="col-sm-4">
                 <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames" ng-change="selectClient()"></select>
             </div>
-            <div class="input-group col-sm-3 pull-right">
-                <input type="text"  class="form-control"/>
-                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            </div>
-
         </div>
     </div>
 
@@ -17,7 +12,7 @@
 
     <tabset>
         <tab heading="Product">
-            <table class="table table-stripped table-condensed table-hove" ts-wrapper>
+            <table datatable="ng" dt-options="dtOptions" class="table table-hover table-stripped">
                 <thead>
                 <tr>
                     <th ts-criteria="name" ts-default>Product Name</th>
@@ -53,7 +48,7 @@
             </table>
         </tab>
         <tab heading="Size">
-            <table class="table table-stripped table-condensed table-hove" ts-wrapper>
+            <table datatable="ng" dt-options="dtOptions" class="table table-hover table-stripped">
                 <thead>
                 <tr>
                     <th ts-criteria="name" ts-default>Size Name</th>

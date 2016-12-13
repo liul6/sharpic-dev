@@ -1,4 +1,4 @@
-sharpicApp.controller('auditsController', function($rootScope, $http, $location, $route, $scope) {
+sharpicApp.controller('auditsController', function($rootScope, $http, $location, $route, $scope, DTOptionsBuilder) {
     $scope.message ='this is a test for angularjs controller';
     $scope.clientName = null;
     $scope.auditDate = null;
@@ -8,6 +8,10 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.auditDates = [];
     $scope.allVenues = [];
     $scope.auditEntries = [];
+
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withDisplayLength(25)
+        .withOption('bLengthChange', false);
 
     $scope.addAudit = function() {
         $scope.message = 'Added audit succcessfully';

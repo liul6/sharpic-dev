@@ -1,4 +1,4 @@
-sharpicApp.controller('productController', function($rootScope, $http, $location, $route, $scope) {
+sharpicApp.controller('productController', function($rootScope, $http, $location, $route, $scope, DTOptionsBuilder) {
     $scope.clientName = null;
 
     $scope.clientNames = [];
@@ -13,6 +13,10 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
         .error(function (data, status, header, config) {
         });
      };
+
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withDisplayLength(25)
+        .withOption('bLengthChange', false);
 
     $scope.getClientNames();
 
