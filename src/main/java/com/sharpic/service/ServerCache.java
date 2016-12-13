@@ -6,6 +6,7 @@ import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +33,7 @@ public class ServerCache implements IServerCache {
     private Map<Integer, Product> productMap = new ConcurrentHashMap<Integer, Product>();
     private Map<Integer, Recipe> recipeMap = new ConcurrentHashMap<Integer, Recipe>();
 
+    @PostConstruct
     @ManagedOperation
     public void reloadCache() {
         sizeMap.clear();
