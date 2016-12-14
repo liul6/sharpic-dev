@@ -154,7 +154,9 @@ public class ClientController {
             return new ArrayList<Recipe>();
 
         List<Recipe> clientRecipes = serverCache.getRecipes(clientName);
-        Collections.sort(clientRecipes);
+        if (clientRecipes != null)
+            Collections.sort(clientRecipes);
+
 
         return clientRecipes;
     }

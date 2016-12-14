@@ -1,5 +1,6 @@
 package com.sharpic.service;
 
+import com.sharpic.common.Util;
 import com.sharpic.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -29,9 +30,13 @@ public class ServerCache implements IServerCache {
     @Autowired
     private RecipeMapper recipeMapper;
 
+    @Autowired
+    private RecipeItemMapper recipeItemMapper;
+
     private Map<Integer, Size> sizeMap = new ConcurrentHashMap<Integer, Size>();
     private Map<Integer, Product> productMap = new ConcurrentHashMap<Integer, Product>();
     private Map<Integer, Recipe> recipeMap = new ConcurrentHashMap<Integer, Recipe>();
+    private Map<Integer, List<RecipeItem>> recipeItemMap = new ConcurrentHashMap<Integer, List<RecipeItem>>();
 
     @PostConstruct
     @ManagedOperation
@@ -39,9 +44,11 @@ public class ServerCache implements IServerCache {
         sizeMap.clear();
         productMap.clear();
         recipeMap.clear();
+        recipeItemMap.clear();
 
         this.fillSizeCache();
         this.fillProductCache();
+        this.fillRecipeItemCache();
         this.fillRecipeCache();
     }
 
@@ -86,7 +93,8 @@ public class ServerCache implements IServerCache {
 
         for (int i = 0; i < sizes.size(); i++) {
             Size size = sizes.get(i);
-            sizeMap.put(size.getId(), size);
+            if (Util.isValidName(size.getName()))
+                sizeMap.put(size.getId(), size);
         }
     }
 
@@ -99,7 +107,10 @@ public class ServerCache implements IServerCache {
 
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
-            productMap.put(product.getId(), product);
+            if (Util.isValidName(product.getName())) {
+                productMap.put(product.getId(), product);
+                product.setDescription(this.getProductDescription(product));
+            }
         }
     }
 
@@ -112,7 +123,30 @@ public class ServerCache implements IServerCache {
 
         for (int i = 0; i < recipes.size(); i++) {
             Recipe recipe = recipes.get(i);
-            recipeMap.put(recipe.getId(), recipe);
+            if (Util.isValidName(recipe.getRecipeName())) {
+                recipeMap.put(recipe.getId(), recipe);
+
+                recipe.setRecipeItems(this.findRecipeItems(recipe.getId()));
+                recipe.setDescription(getRecipeDescription(recipe));
+            }
+        }
+    }
+
+    private void fillRecipeItemCache() {
+        recipeItemMap.clear();
+
+        List<RecipeItem> recipeItems = recipeItemMapper.getRecipeItems();
+        if (recipeItems == null)
+            return;
+
+        for (int i = 0; i < recipeItems.size(); i++) {
+            RecipeItem recipeItem = recipeItems.get(i);
+            if (!recipeItemMap.containsKey(recipeItem.getRecipeId())) {
+                recipeItemMap.put(recipeItem.getRecipeId(), new ArrayList<RecipeItem>());
+            }
+
+            List<RecipeItem> recipeRecipeItems = recipeItemMap.get(recipeItem.getRecipeId());
+            recipeRecipeItems.add(recipeItem);
         }
     }
 
@@ -144,10 +178,50 @@ public class ServerCache implements IServerCache {
         Iterator iter = recipeMap.values().iterator();
         while (iter.hasNext()) {
             Recipe recipe = (Recipe) iter.next();
-            if (recipe.getClientName().equals(clientName))
+            if (recipe.getClientName().equals(clientName)) {
                 clientRecipes.add(recipe);
+            }
         }
 
         return clientRecipes;
+    }
+
+    public List<RecipeItem> findRecipeItems(int recipeId) {
+        if (recipeItemMap == null || recipeItemMap.size() <= 0)
+            return new ArrayList<RecipeItem>();
+
+        return recipeItemMap.get(recipeId);
+    }
+
+    private String getProductDescription(Product product) {
+
+        Size size = findSize(product.getSizeId());
+        if (size != null) {
+            return product.getName() + " " + size.getName();
+        }
+
+        return "UNKNOWN SIZE with size id: " + product.getSizeId();
+    }
+
+    private String getRecipeDescription(Recipe recipe) {
+        List<RecipeItem> recipeItems = recipe.getRecipeItems();
+        if (recipeItems == null)
+            return null;
+
+        String result = "";
+        for (int i = 0; i < recipeItems.size(); i++) {
+            RecipeItem recipeItem = recipeItems.get(i);
+            result += this.getProductDescription(this.findProduct(recipeItem.getProductId()));
+            if (Util.isCloseToZero(recipeItem.getFulls()))
+                result += (" ounces " + recipeItem.getOunces());
+            else
+                result += (" fulls " + (int) recipeItem.getFulls());
+
+            if (i != recipeItems.size() - 1)
+                result += ", ";
+        }
+
+        return result;
+
     }
 }

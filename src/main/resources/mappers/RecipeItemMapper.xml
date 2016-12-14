@@ -15,4 +15,9 @@
     <select id="getClientRecipeItems" resultMap="ResultMap">
         select id, recipe_id, product_id, fulls, ounces, update_datetime from recipe_item
     </select>
+
+    <select id="getRecipeItems" resultMap="ResultMap">
+        select id, recipe_id, product_id, fulls, ounces, update_datetime from recipe_item
+    </select>
+
 </mapper>

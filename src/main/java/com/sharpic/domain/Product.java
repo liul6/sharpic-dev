@@ -17,6 +17,7 @@ public class Product implements Comparable<Product> {
     private String upc;
     private String tags;
     private Date updatedDatetime;
+    private String description;
 
     private Size size;
 
@@ -118,5 +119,13 @@ public class Product implements Comparable<Product> {
 
     public int compareTo(Product product) {
         return this.getName().compareTo(product.getName());
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

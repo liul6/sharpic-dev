@@ -11,4 +11,5 @@ import java.util.List;
 @Mapper
 public interface RecipeItemMapper {
     public List<RecipeItem> getClientRecipeItems(String clientName);
+    public List<RecipeItem> getRecipeItems();
 }

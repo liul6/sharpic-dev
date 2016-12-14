@@ -5,7 +5,7 @@ import com.sharpic.domain.AuditMapper;
 import com.sharpic.domain.Entry;
 import com.sharpic.domain.EntryMapper;
 import com.sharpic.domain.Product;
-import com.sharpic.service.ProductService;
+import com.sharpic.service.IServerCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class AuditController {
     private EntryMapper entryMapper;
 
     @Autowired
-    private ProductService productService;
+    private IServerCache serverCache;
 
     @RequestMapping(value = "/audit/getEntries")
     @ResponseBody
@@ -51,8 +51,8 @@ public class AuditController {
         if (entries != null) {
             for (int i = 0; i < entries.size(); i++) {
                 Entry entry = entries.get(i);
-                Product product = productService.getProduct(entry.getProductId());
-                entry.setProductDescription(productService.getProductDescription(product));
+                Product product = serverCache.findProduct(entry.getProductId());
+                entry.setProductDescription(product.getDescription());
             }
 
         }

@@ -1,6 +1,7 @@
 package com.sharpic.domain;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by joey on 2016-12-11.
@@ -11,6 +12,8 @@ public class Recipe implements Comparable<Recipe> {
     private String recipeName;
     private boolean ignore;
     private Date updatedDatetime;
+    private List<RecipeItem> recipeItems;
+    private String description;
 
     public int getId() {
         return id;
@@ -54,5 +57,21 @@ public class Recipe implements Comparable<Recipe> {
 
     public int compareTo(Recipe recipe) {
         return this.recipeName.compareTo(recipe.recipeName);
+    }
+
+    public List<RecipeItem> getRecipeItems() {
+        return recipeItems;
+    }
+
+    public void setRecipeItems(List<RecipeItem> recipeItems) {
+        this.recipeItems = recipeItems;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
