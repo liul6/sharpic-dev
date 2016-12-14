@@ -1,5 +1,48 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="mainController">
-    <h1>Sales Page</h1>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="saleController">
+    <h1 class="page-header">Sales</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3">
+                <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames"
+                        ng-change="selectClient()"></select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" ng-model="auditDate" ng-options="y for y in auditDates"
+                        ng-change="selectAudit()"></select>
+            </div>
+            <button type="button" ng-click="addAudit()" class="btn btn-primary ">
+                <span class="glyphicon glyphicon-plus"></span> Upload Sales
+            </button>
 
-    <p>{{ message }}</p>
+        </div>
+    </div>
+
+    <br/>
+
+    <tabset>
+        <tab heading="Sales">
+            <table datatable="ng" dt-options="dtOptions" class="table table-hover table-stripped">
+                <thead>
+                <tr>
+                    <th ts-criteria="recipeDescription" ts-default>Recipe</th>
+                    <th ts-criteria="amount">Amount</th>
+                    <th ts-criteria="price">Price</th>
+                    <th style="width:90px">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="sale in auditSales" ts-repeat>
+                    <td>{{sale.recipeDescription}}</td>
+                    <td>{{sale.amount}}</td>
+                    <td>{{sale.price}}</td>
+                    <td>
+                        <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
+                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+                        <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </tab>
+    </tabset>
 </div>

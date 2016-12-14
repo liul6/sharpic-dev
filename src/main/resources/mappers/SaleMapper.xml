@@ -1,0 +1,19 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sharpic.domain.SaleMapper">
+    <resultMap id="ResultMap" type="Sale">
+        <result column="id" property="id"/>
+        <result column="audit_id" property="auditId"/>
+        <result column="recipe_id" property="recipeId"/>
+        <result column="amount" property="amount"/>
+        <result column="price" property="price"/>
+        <result column="update_datetime" property="updatedDatetime"/>
+    </resultMap>
+
+    <select id="getAuditSales" resultMap="ResultMap">
+        select id, audit_id, recipe_id, amount, price, update_datetime from sale
+        where audit_id = #{auditId}
+    </select>
+</mapper>
