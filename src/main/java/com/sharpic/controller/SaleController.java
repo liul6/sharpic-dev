@@ -47,8 +47,12 @@ public class SaleController {
             for (int i = 0; i < auditSales.size(); i++) {
                 Sale sale = auditSales.get(i);
                 Recipe recipe = serverCache.findRecipe(sale.getRecipeId());
+                sale.setRecipe(recipe);
                 if (recipe != null)
                     sale.setRecipeDescription(recipe.getDescription());
+                else {
+                    System.out.println("Cannot find recipe with id: " + recipe.getId());
+                }
             }
         }
 

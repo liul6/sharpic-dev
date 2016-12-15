@@ -30,4 +30,10 @@
         and t1.name=t2.name
         and t1.update_datetime=t2.update_datetime
     </select>
+
+    <select id="getRecipe" resultMap="ResultMap">
+        select t1.id, t1.client_name, t1.name, t1.ignore, t1.update_datetime from recipe t1
+        where t1.id=#{recipeId}
+    </select>
+
 </mapper>

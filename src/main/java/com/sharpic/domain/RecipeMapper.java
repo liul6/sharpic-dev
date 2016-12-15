@@ -12,4 +12,5 @@ import java.util.List;
 public interface RecipeMapper {
     public List<Recipe> getActiveRecipes();
     public List<Recipe> getClientActiveRecipes(String clientName);
+    public Recipe getRecipe(int recipeId);
 }

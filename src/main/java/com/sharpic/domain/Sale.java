@@ -12,6 +12,7 @@ public class Sale {
     private double amount;
     private double price;
     private Date updatedDatetime;
+    private Recipe recipe;
     private String recipeDescription;
 
     public int getId() {
@@ -68,5 +69,13 @@ public class Sale {
 
     public void setRecipeDescription(String recipeDescription) {
         this.recipeDescription = recipeDescription;
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
     }
 }

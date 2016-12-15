@@ -73,7 +73,11 @@ public class ServerCache implements IServerCache {
         if (recipeMap.isEmpty())
             this.fillRecipeCache();
 
-        return recipeMap.get(recipeId);
+        Recipe recipe = recipeMap.get(recipeId);
+        if(recipe!=null)
+            return recipe;
+
+        return recipeMapper.getRecipe(recipeId);
     }
 
     public void clearSizeCache() {

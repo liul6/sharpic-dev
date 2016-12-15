@@ -21,10 +21,11 @@
 
     <tabset>
         <tab heading="Sales">
-            <table datatable="ng" dt-options="dtOptions" class="table table-hover table-stripped">
+            <table datatable="ng" dt-options="dtOptions" class="table table-striped">
                 <thead>
                 <tr>
-                    <th ts-criteria="recipeDescription" ts-default>Recipe</th>
+                    <th ts-criteria="recipeDescription" ts-default>Recipe Name</th>
+                    <th ts-criteria="recipeDescription" ts-default>Recipe Items</th>
                     <th ts-criteria="amount">Amount</th>
                     <th ts-criteria="price">Price</th>
                     <th style="width:90px">Action</th>
@@ -32,6 +33,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="sale in auditSales" ts-repeat>
+                    <td>{{sale.recipe.recipeName}}</td>
                     <td>{{sale.recipeDescription}}</td>
                     <td>{{sale.amount}}</td>
                     <td>{{sale.price}}</td>
