@@ -1,6 +1,7 @@
 package com.sharpic.controller;
 
 import com.sharpic.common.DateUtil;
+import com.sharpic.dao.AuditDao;
 import com.sharpic.domain.*;
 import com.sharpic.service.IServerCache;
 import org.apache.commons.logging.Log;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by joey on 2016-12-05.
@@ -27,7 +31,7 @@ public class ClientController {
     private ClientMapper clientMapper;
 
     @Autowired
-    private AuditMapper auditMapper;
+    private AuditDao auditDao;
 
     @Autowired
     private LocationMapper locationMapper;
@@ -61,7 +65,7 @@ public class ClientController {
         if (clientName == null || clientName.isEmpty())
             return new ArrayList<String>();
 
-        List<Audit> allAudits = auditMapper.getClientAudits(clientName);
+        List<Audit> allAudits = auditDao.getClientAudits(clientName);
 
         List<String> allAuditDates = new ArrayList<String>();
         if (allAudits != null) {
@@ -100,12 +104,12 @@ public class ClientController {
     @ResponseBody
     public String addAudit(String clientName) {
         Date auditDate = DateUtil.toDate(LocalDate.now());
-        if (auditMapper.getAuditId(clientName, auditDate) != null) {
+        if (auditDao.getAuditId(clientName, auditDate) != null) {
             log.error("Cannot create audit  ," + auditDate.toString() + "since it is already existing!!!");
             return null;
         }
 
-        auditMapper.insertAudit(clientName, auditDate);
+        auditDao.insertAudit(clientName, auditDate);
         return DateUtil.format(auditDate);
     }
 
@@ -120,12 +124,12 @@ public class ClientController {
         }
         Date aDate = DateUtil.toDate(auditDate);
 
-        if (auditMapper.getAuditId(clientName, aDate) < 0) {
+        if (auditDao.getAuditId(clientName, aDate) < 0) {
             log.error("Cannot delete audit with " + auditDateStr + ", since it does not exist!!!");
             return null;
         }
 
-        auditMapper.deleteAudit(clientName, aDate);
+        auditDao.deleteAudit(clientName, aDate);
 
         return DateUtil.format(aDate);
     }

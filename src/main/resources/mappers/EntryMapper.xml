@@ -22,4 +22,7 @@
         select id, audit_id, location, product_id, amount, weight, weights, open_bottles, bin, update_datetime from entry where audit_id=#{auditId}
     </select>
 
+    <delete id="deleteAuditEntries">
+        delete from entry where audit_id=#{auditId}
+    </delete>
 </mapper>
