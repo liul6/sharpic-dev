@@ -67,4 +67,27 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
             });
     };
 
+    $scope.uploadFile = function(files) {
+        var fd = new FormData();
+        //Take the first selected file
+        fd.append('file', files[0]);
+        fd.append('name', 'SALE');
+        fd.append('clientName', $scope.clientName);
+        fd.append('auditDateStr', $scope.auditDate);
+        var uploadUrl = "/upload";
+
+        var config = {
+             headers : {
+                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+             }
+         }
+
+        $http.post(uploadUrl, fd,
+            {transformRequest: angular.identity,
+             headers: {'Content-Type': undefined}
+             }).then(function (resp){
+                $scope.auditSales = resp.data;
+             });
+    };
+
 });

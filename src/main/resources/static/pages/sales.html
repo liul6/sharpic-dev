@@ -12,17 +12,12 @@
                         ng-change="selectAudit()"></select>
             </div>
 
-            <input type = "file" class="form-control" file-model = "myFile"/>
-
-            <button type="button" ng-click="removeAudit()" class="btn btn-primary">
-                <span class="glyphicon glyphicon-cloud-upload"></span> Upload Sale
-            </button>
-
+            <div class="fileUpload btn btn-success"><span>Upload Sale</span>
+                <input class="upload" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+            </div>
         </div>
     </div>
-
     <br/>
-
     <tabset>
         <tab heading="Sales">
             <table datatable="ng" dt-options="dtOptions" class="table table-striped">
