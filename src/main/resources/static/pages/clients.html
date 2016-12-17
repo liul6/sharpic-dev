@@ -8,6 +8,7 @@
             <th ts-criteria="name" ts-default style="width: 20%">Client Name</th>
             <th ts-criteria="locations" style="width: 35%">Locations</th>
             <th ts-criteria="modifiers"  style="width: 35%">Modifiers</th>
+            <th ts-criteria="updateDate">Update Date</th>
             <th  style="width: 10%">Action</th>
         </tr>
         </thead>
@@ -16,6 +17,7 @@
             <td>{{client.name}}</td>
             <td>{{getLocationNames(client)}}</td>
             <td>{{getModifierNames(client)}}</td>
+            <td>{{client.updatedDatetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
             <td>
                 <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
                 <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>

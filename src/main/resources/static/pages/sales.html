@@ -1,20 +1,22 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="saleController">
     <h1 class="page-header">Sales</h1>
-    <div class="container-fluid">
+    <div class="wrapper">
         <div class="row">
             <div class="col-sm-3">
                 <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames"
                         ng-change="selectClient()"></select>
             </div>
+
             <div class="col-sm-2">
                 <select class="form-control" ng-model="auditDate" ng-options="y for y in auditDates"
                         ng-change="selectAudit()"></select>
             </div>
 
-            <div class="fileUpload btn btn-primary">
-                <input type = "file" file-model = "myFile"/>
-                <button ng-click = "uploadSaleFile()" class="btn btn-primary">Upload Sale</button>
-            </div>
+            <input type = "file" class="form-control" file-model = "myFile"/>
+
+            <button type="button" ng-click="removeAudit()" class="btn btn-primary">
+                <span class="glyphicon glyphicon-cloud-upload"></span> Upload Sale
+            </button>
 
         </div>
     </div>
@@ -30,7 +32,7 @@
                     <th ts-criteria="recipeDescription" ts-default>Recipe Items</th>
                     <th ts-criteria="amount">Amount</th>
                     <th ts-criteria="price">Price</th>
-                    <th ts-criteria="price">Update Date</th>
+                    <th ts-criteria="updateDate">Update Date</th>
                     <th style="width:90px">Action</th>
                 </tr>
                 </thead>
