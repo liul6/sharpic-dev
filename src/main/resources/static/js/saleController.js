@@ -1,4 +1,4 @@
-sharpicApp.controller('saleController', function($rootScope, $http, $location, $route, $scope, DTOptionsBuilder) {
+sharpicApp.controller('saleController', function($rootScope, $http, $location, $route, $scope, DTOptionsBuilder, fileUpload) {
     $scope.clientName = null;
     $scope.auditDate = null;
 
@@ -52,6 +52,19 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
        })
        .error(function (data, status, header, config) {
        });
+    };
+
+    $scope.uploadSaleFile = function(){
+        var file = $scope.myFile;
+        console.log('file is ' );
+        console.dir(file);
+        var uploadUrl = "/upload";
+
+        var info = {'name': 'SALE', 'clientName': $scope.clientName, 'auditDateStr': $scope.auditDate};
+        fileUpload.uploadFileToUrl(info, file, uploadUrl)
+            .then(function (resp){
+                $scope.auditSales = resp.data;
+            });
     };
 
 });

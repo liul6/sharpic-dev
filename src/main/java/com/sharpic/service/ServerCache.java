@@ -35,7 +35,8 @@ public class ServerCache implements IServerCache {
 
     private Map<Integer, Size> sizeMap = new ConcurrentHashMap<Integer, Size>();
     private Map<Integer, Product> productMap = new ConcurrentHashMap<Integer, Product>();
-    private Map<Integer, Recipe> recipeMap = new ConcurrentHashMap<Integer, Recipe>();
+    private Map<Integer, Recipe> recipeMapById = new ConcurrentHashMap<Integer, Recipe>();
+    private Map<String, Recipe> recipeMapByName = new ConcurrentHashMap<String, Recipe>();
     private Map<Integer, List<RecipeItem>> recipeItemMap = new ConcurrentHashMap<Integer, List<RecipeItem>>();
 
     @PostConstruct
@@ -43,7 +44,8 @@ public class ServerCache implements IServerCache {
     public void reloadCache() {
         sizeMap.clear();
         productMap.clear();
-        recipeMap.clear();
+        recipeMapById.clear();
+        recipeMapByName.clear();
         recipeItemMap.clear();
 
         this.fillSizeCache();
@@ -69,15 +71,24 @@ public class ServerCache implements IServerCache {
     }
 
     @Override
-    public Recipe findRecipe(int recipeId) {
-        if (recipeMap.isEmpty())
+    public Recipe findRecipeById(int recipeId) {
+        if (recipeMapById.isEmpty())
             this.fillRecipeCache();
 
-        Recipe recipe = recipeMap.get(recipeId);
-        if(recipe!=null)
+        Recipe recipe = recipeMapById.get(recipeId);
+        if (recipe != null)
             return recipe;
 
         return recipeMapper.getRecipe(recipeId);
+    }
+
+    @Override
+    public Recipe findRecipeByName(String clientName, String recipeName) {
+        if (recipeMapByName.isEmpty())
+            this.fillRecipeCache();
+
+        Recipe recipe = recipeMapByName.get(clientName + "_" + recipeName);
+        return recipe;
     }
 
     public void clearSizeCache() {
@@ -119,7 +130,7 @@ public class ServerCache implements IServerCache {
     }
 
     private void fillRecipeCache() {
-        recipeMap.clear();
+        recipeMapById.clear();
 
         List<Recipe> recipes = recipeMapper.getActiveRecipes();
         if (recipes == null)
@@ -128,7 +139,8 @@ public class ServerCache implements IServerCache {
         for (int i = 0; i < recipes.size(); i++) {
             Recipe recipe = recipes.get(i);
             if (Util.isValidName(recipe.getRecipeName())) {
-                recipeMap.put(recipe.getId(), recipe);
+                recipeMapById.put(recipe.getId(), recipe);
+                recipeMapByName.put(recipe.getClientName() + "_" + recipe.getRecipeName(), recipe);
 
                 recipe.setRecipeItems(this.findRecipeItems(recipe.getId()));
                 recipe.setDescription(getRecipeDescription(recipe));
@@ -139,7 +151,7 @@ public class ServerCache implements IServerCache {
     private void fillRecipeItemCache() {
         recipeItemMap.clear();
 
-        List<RecipeItem> recipeItems = recipeItemMapper.getRecipeItems();
+        List<RecipeItem> recipeItems = recipeItemMapper.getAllRecipeItems();
         if (recipeItems == null)
             return;
 
@@ -175,11 +187,11 @@ public class ServerCache implements IServerCache {
     }
 
     public List<Recipe> getRecipes(String clientName) {
-        if (recipeMap == null || recipeMap.size() <= 0)
+        if (recipeMapById == null || recipeMapById.size() <= 0)
             this.fillRecipeCache();
 
         List<Recipe> clientRecipes = new ArrayList<Recipe>();
-        Iterator iter = recipeMap.values().iterator();
+        Iterator iter = recipeMapById.values().iterator();
         while (iter.hasNext()) {
             Recipe recipe = (Recipe) iter.next();
             if (recipe.getClientName().equals(clientName)) {
@@ -224,8 +236,28 @@ public class ServerCache implements IServerCache {
             if (i != recipeItems.size() - 1)
                 result += ", ";
         }
-
         return result;
+    }
 
+    public void loadActiveRecipe(Recipe recipe) {
+        if (recipe == null)
+            return;
+
+        recipeMapById.put(recipe.getId(), recipe);
+        recipeMapByName.put(recipe.getClientName() + "_" + recipe.getRecipeName(), recipe);
+
+        List<RecipeItem> recipeItems = recipeItemMapper.getRecipeItems(recipe.getId());
+        recipe.setRecipeItems(recipeItems);
+        recipe.setDescription(getRecipeDescription(recipe));
+
+        for (int i = 0; i < recipeItems.size(); i++) {
+            RecipeItem recipeItem = recipeItems.get(i);
+            if (!recipeItemMap.containsKey(recipeItem.getRecipeId())) {
+                recipeItemMap.put(recipeItem.getRecipeId(), new ArrayList<RecipeItem>());
+            }
+
+            List<RecipeItem> recipeRecipeItems = recipeItemMap.get(recipeItem.getRecipeId());
+            recipeRecipeItems.add(recipeItem);
+        }
     }
 }

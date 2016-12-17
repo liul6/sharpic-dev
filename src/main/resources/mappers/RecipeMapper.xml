@@ -36,4 +36,20 @@
         where t1.id=#{recipeId}
     </select>
 
+
+    <select id="getRecipeByName" resultMap="ResultMap">
+        select t1.id, t1.client_name, t1.name, t1.ignore, t1.update_datetime from recipe t1,
+        (select client_name, name, max( update_datetime) as update_datetime from recipe
+        where client_name=#{clientName} and name=#{recipeName}
+        group by client_name, name) t2
+        where t1.client_name=t2.client_name
+        and t1.name=t2.name
+        and t1.update_datetime=t2.update_datetime
+    </select>
+
+    <insert id="createDummyRecipe">
+        insert into recipe(client_name, name, update_datetime) values(#{clientName}, #{recipeName}, SYSDATETIME())
+    </insert>
+
+
 </mapper>

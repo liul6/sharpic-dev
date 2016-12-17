@@ -12,12 +12,13 @@
         <result column="update_datetime" property="updatedDatetime"/>
     </resultMap>
 
-    <select id="getClientRecipeItems" resultMap="ResultMap">
+    <select id="getAllRecipeItems" resultMap="ResultMap">
         select id, recipe_id, product_id, fulls, ounces, update_datetime from recipe_item
     </select>
 
     <select id="getRecipeItems" resultMap="ResultMap">
         select id, recipe_id, product_id, fulls, ounces, update_datetime from recipe_item
+        where recipe_id=#{recipeId}
     </select>
 
 </mapper>

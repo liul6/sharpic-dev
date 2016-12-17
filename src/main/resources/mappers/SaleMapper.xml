@@ -16,4 +16,24 @@
         select id, audit_id, recipe_id, amount, price, update_datetime from sale
         where audit_id = #{auditId}
     </select>
+
+    <insert id="insertSales" parameterType="Sale">
+        INSERT INTO sale (audit_id, recipe_id, amount, price, update_datetime)
+        VALUES
+        <foreach collection="sales" item="item" index="index"
+                 separator=",">
+         (#{item.auditId}, #{item.recipeId}, #{item.amount}, #{item.price}, SYSDATETIME())
+        </foreach>
+    </insert>
+
+    <insert id="insertSale">
+        INSERT INTO sale (audit_id, recipe_id, amount, price, update_datetime)
+        VALUES
+            (#{sale.auditId}, #{sale.recipeId}, #{sale.amount}, #{sale.price}, SYSDATETIME())
+    </insert>
+
+    <delete id="deleteSales">
+        delete from sale where audit_id=#{auditId}
+    </delete>
+
 </mapper>

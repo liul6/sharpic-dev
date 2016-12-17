@@ -16,7 +16,11 @@ public interface IServerCache {
 
     Product findProduct(int productId);
 
-    Recipe findRecipe(int recipeId);
+    Recipe findRecipeById(int recipeId);
+
+    Recipe findRecipeByName(String clientName, String recipeName);
+
+    void loadActiveRecipe(Recipe recipe);
 
     List<Size> getSizes();
 

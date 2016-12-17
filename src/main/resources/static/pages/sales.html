@@ -10,9 +10,11 @@
                 <select class="form-control" ng-model="auditDate" ng-options="y for y in auditDates"
                         ng-change="selectAudit()"></select>
             </div>
-            <button type="button" ng-click="addAudit()" class="btn btn-primary ">
-                <span class="glyphicon glyphicon-plus"></span> Upload Sales
-            </button>
+
+            <div class="fileUpload btn btn-primary">
+                <input type = "file" file-model = "myFile"/>
+                <button ng-click = "uploadSaleFile()" class="btn btn-primary">Upload Sale</button>
+            </div>
 
         </div>
     </div>
@@ -28,6 +30,7 @@
                     <th ts-criteria="recipeDescription" ts-default>Recipe Items</th>
                     <th ts-criteria="amount">Amount</th>
                     <th ts-criteria="price">Price</th>
+                    <th ts-criteria="price">Update Date</th>
                     <th style="width:90px">Action</th>
                 </tr>
                 </thead>
@@ -37,6 +40,7 @@
                     <td>{{sale.recipeDescription}}</td>
                     <td>{{sale.amount}}</td>
                     <td>{{sale.price}}</td>
+                    <td>{{sale.updatedDatetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td>
                         <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
                         <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>

@@ -1,11 +1,12 @@
 package com.sharpic.controller;
 
 import com.sharpic.common.DateUtil;
+import com.sharpic.dao.SaleDao;
 import com.sharpic.domain.AuditMapper;
-import com.sharpic.domain.Recipe;
 import com.sharpic.domain.Sale;
-import com.sharpic.domain.SaleMapper;
 import com.sharpic.service.IServerCache;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +22,10 @@ import java.util.List;
 
 @Controller
 public class SaleController {
+    private static Log log = LogFactory.getLog(SaleController.class.getName());
+
     @Autowired
-    private SaleMapper saleMapper;
+    private SaleDao saleDao;
 
     @Autowired
     private AuditMapper auditMapper;
@@ -42,20 +45,14 @@ public class SaleController {
         if (auditId < 0)
             return new ArrayList<Sale>();
 
-        List<Sale> auditSales = saleMapper.getAuditSales(auditId);
-        if (auditSales != null) {
-            for (int i = 0; i < auditSales.size(); i++) {
-                Sale sale = auditSales.get(i);
-                Recipe recipe = serverCache.findRecipe(sale.getRecipeId());
-                sale.setRecipe(recipe);
-                if (recipe != null)
-                    sale.setRecipeDescription(recipe.getDescription());
-                else {
-                    System.out.println("Cannot find recipe with id: " + recipe.getId());
-                }
-            }
+        try {
+            List<Sale> auditSales = saleDao.getAuditSales(auditId);
+            return auditSales;
+        }
+        catch (Exception e){
+            log.error(e);
         }
 
-        return auditSales;
+        return null;
     }
 }
