@@ -3,6 +3,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
 
     $scope.clientNames = [];
     $scope.products = [];
+    $scope.clientProducts = [];
     $scope.sizes = [];
 
     $scope.getClientNames = function() {
@@ -41,4 +42,15 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
      };
 
     $scope.getSizes();
+
+    $scope.selectClient = function() {
+        $scope.clientProducts = [];
+        $http.get('/product/getClientProducts?clientName=' + $scope.clientName)
+            .success(function (data, status, headers, config) {
+            $scope.clientProducts = data;
+        })
+        .error(function (data, status, header, config) {
+        });
+    };
+
 });

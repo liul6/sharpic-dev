@@ -84,7 +84,16 @@ ID int IDENTITY(1,1) PRIMARY KEY,
 	tags varchar(100),
 	object_id varchar(10),
 	update_datetime DATETIME not null);
-	
+
+create table client_product(
+    ID int IDENTITY(1,1) PRIMARY KEY,
+    client_name varchar(100) not null,
+	name varchar(100) not null,
+	size_id int not null,
+	serving varchar(20),
+	retail_price decimal(8,2),
+	update_datetime DATETIME not null);
+
 drop table domain_value;
 create table domain_value (
        name varchar(40) not null,

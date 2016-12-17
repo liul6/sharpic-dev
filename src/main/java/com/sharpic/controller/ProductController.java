@@ -1,5 +1,7 @@
 package com.sharpic.controller;
 
+import com.sharpic.dao.ClientProductDao;
+import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.Product;
 import com.sharpic.domain.Size;
 import com.sharpic.service.IServerCache;
@@ -20,6 +22,9 @@ public class ProductController {
     @Autowired
     private IServerCache serverCache;
 
+    @Autowired
+    private ClientProductDao clientProductDao;
+
     @RequestMapping(value = "/product/getProducts")
     @ResponseBody
     public List<Product> getProducts() {
@@ -34,6 +39,15 @@ public class ProductController {
 
         Collections.sort(products);
         return products;
+    }
+
+    @RequestMapping(value = "/product/getClientProducts")
+    @ResponseBody
+    public List<ClientProduct> getClientProducts(String clientName) {
+        List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
+
+        Collections.sort(clientProducts);
+        return clientProducts;
     }
 
     @RequestMapping(value = "/product/getSizes")
