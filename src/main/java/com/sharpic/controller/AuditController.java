@@ -1,10 +1,8 @@
 package com.sharpic.controller;
 
 import com.sharpic.common.DateUtil;
-import com.sharpic.domain.AuditMapper;
-import com.sharpic.domain.Entry;
-import com.sharpic.domain.EntryMapper;
-import com.sharpic.domain.Product;
+import com.sharpic.dao.ModifierDao;
+import com.sharpic.domain.*;
 import com.sharpic.service.IServerCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +33,9 @@ public class AuditController {
     @Autowired
     private IServerCache serverCache;
 
+    @Autowired
+    private ModifierDao modifierDao;
+
     @RequestMapping(value = "/audit/getEntries")
     @ResponseBody
     public List<Entry> getEntries(String clientName, String auditDateStr) {
@@ -62,5 +63,19 @@ public class AuditController {
         return entries;
     }
 
+    @RequestMapping(value = "/audit/getModifierItems")
+    @ResponseBody
+    public List<ModifierItem> getModifierItems(String clientName, String auditDateStr) {
+        LocalDate auditDate = LocalDate.parse(auditDateStr);
+
+        if (auditDate == null)
+            auditDate = LocalDate.now();
+
+        int auditId = auditMapper.getAuditId(clientName, DateUtil.toDate(auditDate));
+        if (auditId < 0)
+            return new ArrayList<ModifierItem>();
+
+        return modifierDao.getAuditModifierItems(auditId);
+    }
 
 }

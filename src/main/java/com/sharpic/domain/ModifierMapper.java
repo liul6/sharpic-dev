@@ -12,4 +12,5 @@ import java.util.List;
 public interface ModifierMapper {
     List<Modifier> getClientModifiers(String clientName);
     List<Modifier> getModifiers();
+    Modifier getModifier(int modifierId);
 }

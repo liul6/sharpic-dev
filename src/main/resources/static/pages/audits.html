@@ -52,6 +52,36 @@
             </table>
         </tab>
         <tab heading="Modifier">
+            <table datatable="ng" dt-options="dtOptions" class="table table-striped">
+                <thead>
+                <tr>
+                    <th ts-criteria="modifierName" ts-default>Modifier Name</th>
+                    <th ts-criteria="recipeName">Recipe</th>
+                    <th ts-criteria="product">Product</th>
+                    <th ts-criteria="cost">Cost</th>
+                    <th ts-criteria="fulls">Fulls</th>
+                    <th ts-criteria="ounces">Ounces</th>
+                    <th ts-criteria="updateDate">Update Date</th>
+                    <th style="width:90px">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="modifierItem in auditModiferItems" ts-repeat>
+                    <td>{{modifierItem.modifier.modifierName}}</td>
+                    <td>{{modifierItem.recipe.description}}</td>
+                    <td>{{modifierItem.product.description}}</td>
+                    <td>{{modifierItem.cost}}</td>
+                    <td>{{modifierItem.fulls}}</td>
+                    <td>{{modifierItem.ounces}}</td>
+                    <td>{{entry.updatedDatetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>
+                        <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
+                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
+                        <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </tab>
     </tabset>
 </div>

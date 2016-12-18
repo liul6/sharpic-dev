@@ -18,4 +18,9 @@
     <select id="getModifiers" resultMap="ResultMap">
         select client_name, modifier_name, percentage, update_datetime from modifier
     </select>
+
+    <select id="getModifier" resultMap="ResultMap">
+        select client_name, modifier_name, percentage, update_datetime from modifier where id=#{modifierId}
+    </select>
+
 </mapper>

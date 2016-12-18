@@ -8,6 +8,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.auditDates = [];
     $scope.allVenues = [];
     $scope.auditEntries = [];
+    $scope.auditModiferItems = [];
 
     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withDisplayLength(25)
@@ -77,6 +78,13 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
        $http.get('/audit/getEntries?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
            .success(function (data, status, headers, config) {
            $scope.auditEntries = data;
+       })
+       .error(function (data, status, header, config) {
+       });
+
+       $http.get('/audit/getModifierItems?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
+           .success(function (data, status, headers, config) {
+           $scope.auditModiferItems = data;
        })
        .error(function (data, status, header, config) {
        });

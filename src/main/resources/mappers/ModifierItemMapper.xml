@@ -1,0 +1,23 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sharpic.domain.ModifierItemMapper">
+    <resultMap id="ResultMap" type="ModifierItem">
+        <id column="id" property="id"/>
+        <result column="audit_id" property="auditId"/>
+        <result column="modifier_id" property="modifierId"/>
+        <result column="recipe_id" property="recipeId"/>
+        <result column="product_id" property="productId"/>
+        <result column="cost" property="cost"/>
+        <result column="fulls" property="fulls"/>
+        <result column="ounces" property="ounces"/>
+        <result column="update_datetime" property="updatedDatetime"/>
+    </resultMap>
+
+    <select id="getAuditModifierItems" resultMap="ResultMap">
+        select id, audit_id, modifier_id, recipe_id, product_id, cost, fulls, ounces, update_datetime from modifier_item
+        where audit_id=#{auditId}
+        order by audit_id, modifier_id
+    </select>
+</mapper>
