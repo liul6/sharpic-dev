@@ -11,7 +11,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.auditModiferItems = [];
 
     $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDisplayLength(25)
+        .withDisplayLength(50)
         .withOption('bLengthChange', false);
 
     $scope.addAudit = function() {

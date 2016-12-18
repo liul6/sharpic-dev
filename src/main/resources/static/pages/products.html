@@ -5,6 +5,13 @@
             <div class="col-sm-4">
                 <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames" ng-change="selectClient()"></select>
             </div>
+            <button type="button" ng-click="addSize()" class="btn btn-danger pull-right">
+                <span class="glyphicon glyphicon-plus"></span> Add Size
+            </button>
+            <button type="button" ng-click="addProduct()" class="btn btn-danger pull-right">
+                <span class="glyphicon glyphicon-plus"></span> Add Product
+            </button>
+
         </div>
     </div>
 
@@ -41,7 +48,6 @@
                     <td>{{product.tags}}</td>
                     <td>{{product.updatedDatetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td>
-                        <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
                         <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
                         <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
                     </td>
@@ -63,7 +69,6 @@
                     <td>{{size.name}}</td>
                     <td>{{size.ounces}}</td>
                     <td>
-                        <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
                         <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
                         <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
                     </td>
@@ -91,7 +96,6 @@
                     <td>{{clientProduct.retailPrice}}</td>
                     <td>{{clientProduct.updatedDatetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td>
-                        <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
                         <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
                         <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
                     </td>

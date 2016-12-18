@@ -8,6 +8,7 @@ public class User {
 
     private String username;
     private String password;
+    private String tempPassword;
     private String role;
 
     public String getUsername() {
@@ -32,5 +33,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getTempPassword() {
+        return tempPassword;
+    }
+
+    public void setTempPassword(String tempPassword) {
+        this.tempPassword = tempPassword;
     }
 }

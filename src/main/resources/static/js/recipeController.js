@@ -5,7 +5,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
     $scope.recipes = [];
 
     $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDisplayLength(25)
+        .withDisplayLength(50)
         .withOption('bLengthChange', false);
 
     $scope.getClientNames = function() {

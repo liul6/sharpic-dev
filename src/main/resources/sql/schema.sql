@@ -164,4 +164,14 @@ create table modifier_item (
         ounces decimal(8,2),
         object_id varchar(10),
         update_datetime DATETIME not null
-)                
+)
+
+drop table user_name;
+create table user_name (
+        ID int IDENTITY(1,1) PRIMARY KEY,
+        username varchar(80) not null,
+        password varchar(200) not null,
+        temp_password varchar(20),
+        roles varchar(400) not null,
+        update_datetime DATETIME not null
+)

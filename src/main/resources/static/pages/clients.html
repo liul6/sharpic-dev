@@ -1,5 +1,14 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="clientController">
     <h1 class="page-header">Clients</h1>
+    <div class="wrapper">
+        <div class="row">
+            <button type="button" ng-click="addClient()" class="btn btn-danger pull-right">
+                <span class="glyphicon glyphicon-plus"></span> Add Client
+            </button>
+
+        </div>
+    </div>
+
     <br/>
 
     <table class="table table-striped" ts-wrapper>
@@ -19,7 +28,6 @@
             <td>{{getModifierNames(client)}}</td>
             <td>{{client.updatedDatetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
             <td>
-                <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
                 <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
                 <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
             </td>

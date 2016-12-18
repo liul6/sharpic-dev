@@ -12,9 +12,14 @@
                         ng-change="selectAudit()"></select>
             </div>
 
-            <div class="fileUpload btn btn-primary"><span>Upload Sale</span>
+            <div class="fileUpload btn btn-primary"><span>Upload Sales</span>
                 <input class="upload" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
             </div>
+
+            <button type="button" ng-click="addSale()" class="btn btn-danger pull-right">
+                <span class="glyphicon glyphicon-plus"></span> Add Sale
+            </button>
+
         </div>
     </div>
     <br/>
@@ -39,7 +44,6 @@
                     <td>{{sale.price}}</td>
                     <td>{{sale.updatedDatetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td>
-                        <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button>
                         <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
                         <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
                     </td>
