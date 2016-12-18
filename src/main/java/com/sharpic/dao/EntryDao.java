@@ -22,6 +22,6 @@ public class EntryDao {
 
     public void deleteAuditEntries(int auditId) {
         if (auditId > 0)
-            deleteAuditEntries(auditId);
+            entryMapper.deleteAuditEntries(auditId);
     }
 }
