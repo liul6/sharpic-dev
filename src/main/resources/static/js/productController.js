@@ -53,4 +53,23 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
         });
     };
 
+ $scope.getProducts1 = function(pageNo) {
+        $http.get('/product/getProductsByPage?pageNo=' + pageNo)
+            .success(function (data, status, headers, config) {
+                setTimeout(function(){
+                    if(pageNo == 1) {
+                        $scope.products = [];
+                    }
+
+                    if(data!=null && data.length>0) {
+                        $scope.products.push.apply($scope.products, data);
+                        $scope.getProducts(pageNo+1);
+                    }
+                }, 500);
+        })
+        .error(function (data, status, header, config) {
+        });
+     };
+
+    $scope.getProducts1(1);
 });
