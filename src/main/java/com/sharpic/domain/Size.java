@@ -6,19 +6,10 @@ import java.util.Date;
  * Created by joey on 2016-12-08.
  */
 
-public class Size implements Comparable<Size> {
-    private int id;
+public class Size extends BaseObject implements Comparable<Size> {
     private String name;
     private double ounces;
     private Date updatedDatetime;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

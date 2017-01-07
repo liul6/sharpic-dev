@@ -5,11 +5,10 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-05.
  */
-public class Location {
+public class Location extends BaseObject {
     private String clientName;
     private String locationName;
     private Date updatedDatetime;
-
 
     public String getClientName() {
         return clientName;

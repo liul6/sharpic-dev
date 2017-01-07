@@ -31,5 +31,7 @@
         <mapper resource="mappers/RecipeItemMapper.xml"/>
         <mapper resource="mappers/SaleMapper.xml"/>
         <mapper resource="mappers/ClientProductMapper.xml"/>
+        <mapper resource="mappers/AuditRecipeMapper.xml"/>
+        <mapper resource="mappers/AuditRecipeItemMapper.xml"/>
     </mappers>
 </configuration>

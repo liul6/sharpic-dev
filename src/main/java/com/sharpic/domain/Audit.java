@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-05.
  */
-public class Audit {
+public class Audit extends BaseObject {
     private String clientName;
     private Date auditDate;
     private String notes;

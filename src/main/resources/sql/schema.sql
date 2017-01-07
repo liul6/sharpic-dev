@@ -34,6 +34,7 @@ create table entry (
 
 drop table entry_modifier;
 create table entry_modifier (
+	ID int IDENTITY(1,1) PRIMARY KEY,
         entry_id int not null,
         name varchar(80),
         fulls int,
@@ -43,14 +44,14 @@ drop table entry_partial_weight;
 create table entry_partial_weight (
         entry_id int not null,
 		weight decimal(8,2));
-		
+
 drop table client;
 create table client (
         name varchar(80) PRIMARY KEY,
         phone varchar(20),
         email varchar(100),
-		object_id varchar(10),
-		update_datetime DATETIME not null);
+        object_id varchar(10),
+        update_datetime DATETIME not null);
 
 drop table audit;
 create table audit(
@@ -60,7 +61,7 @@ create table audit(
 	notes varchar(200),
 	object_id varchar(10),
 	update_datetime DATETIME not null);
-	
+
 drop table size;
 create table size (
 	ID int IDENTITY(1,1) PRIMARY KEY,
@@ -72,7 +73,7 @@ create table size (
 drop table product;
 
 create table product(
-ID int IDENTITY(1,1) PRIMARY KEY,
+        ID int IDENTITY(1,1) PRIMARY KEY,
 	name varchar(100) not null,
 	size_id int not null,
 	serving varchar(20),
@@ -80,33 +81,34 @@ ID int IDENTITY(1,1) PRIMARY KEY,
 	upc varchar(60),
 	cost decimal(8,2),
 	fulls decimal(8,2),
-	cases int not null, 
+	cases int not null,
 	tags varchar(100),
 	object_id varchar(10),
 	update_datetime DATETIME not null);
 
+drop table client_product;
 create table client_product(
-    ID int IDENTITY(1,1) PRIMARY KEY,
-    client_name varchar(100) not null,
-	name varchar(100) not null,
-	size_id int not null,
-	serving varchar(20),
-	retail_price decimal(8,2),
-	update_datetime DATETIME not null);
+        ID int IDENTITY(1,1) PRIMARY KEY,
+        client_name varchar(100) not null,
+        name varchar(100) not null,
+        size_id int not null,
+        serving varchar(20),
+        retail_price decimal(8,2),
+        update_datetime DATETIME not null);
 
 drop table domain_value;
 create table domain_value (
        name varchar(40) not null,
        val varchar(200) not null,
-		update_datetime DATETIME not null
+       update_datetime DATETIME not null
 );
 
 drop table location;
 create table location(
-		client_name varchar(100) not null,
-		name varchar(100) not null,
-		object_id varchar(10),
-		update_datetime DATETIME not null
+        client_name varchar(100) not null,
+        name varchar(100) not null,
+        object_id varchar(10),
+        update_datetime DATETIME not null
 );
 
 
@@ -120,9 +122,32 @@ create table recipe(
         update_datetime DATETIME not null
 );
 
+drop table audit_recipe;
+create table audit_recipe(
+        ID int IDENTITY(1,1) PRIMARY KEY,
+        audit_id int not null,
+        client_name varchar(80) not null,
+        name varchar(100) not null,
+        ignore int NOT NULL DEFAULT (0),
+        object_id varchar(10),
+        update_datetime DATETIME not null
+);
+
 drop table recipe_item;
 create table recipe_item(
         ID int IDENTITY(1,1) PRIMARY KEY,
+        recipe_id int not null,
+        product_id int not null,
+        fulls decimal(8,2),
+        ounces decimal(8,2),
+        object_id varchar(10),
+        update_datetime DATETIME not null
+);
+
+drop table audit_recipe_item;
+create table audit_recipe_item(
+        ID int IDENTITY(1,1) PRIMARY KEY,
+        audit_id int not null,
         recipe_id int not null,
         product_id int not null,
         fulls decimal(8,2),
@@ -175,3 +200,34 @@ create table user_name (
         roles varchar(400) not null,
         update_datetime DATETIME not null
 )
+
+#insert into audit_recipe(audit_id, client_name, name, ignore, object_id, update_datetime)
+#select audit_id, client_name, name, ignore, recipe.id, update_datetime
+from recipe, (select sale.audit_id, sale.recipe_id
+from sale
+group by audit_id, recipe_id) a
+where a.recipe_id=recipe.id;
+
+update sale
+set recipe_id = audit_recipe.id
+from audit_recipe
+where sale.audit_id=audit_recipe.audit_id and sale.recipe_id=audit_recipe.object_id;
+
+insert into audit_recipe_item(audit_id, recipe_id, product_id, fulls, ounces, object_id, update_datetime)
+select sale.audit_id, audit_recipe.id, recipe_item.product_id, fulls, ounces, recipe_item.id, sale.update_datetime
+from audit_recipe, sale, recipe, recipe_item
+where sale.recipe_id=recipe.id
+and recipe.id=audit_recipe.object_id
+and sale.audit_id=audit_recipe.audit_id
+and recipe_item.recipe_id=recipe.id;
+
+insert into audit_recipe_item(audit_id, recipe_id, product_id, fulls, ounces, object_id, update_datetime)
+select sale.audit_id, audit_recipe.id, recipe_item.product_id, fulls, ounces, recipe_item.id, recipe_item.update_datetime
+from recipe_item, audit_recipe, sale
+where sale.recipe_id=audit_recipe.id
+and sale.audit_id=audit_recipe.audit_id
+and recipe_item.recipe_id=audit_recipe.object_id;
+
+insert into client_product(client_name, name, size_id, serving, update_datetime)
+select client.name, product.name, size_id,serving, product.update_datetime
+from client, product;

@@ -1,0 +1,41 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sharpic.domain.AuditRecipeMapper">
+    <resultMap id="ResultMap" type="AuditRecipe">
+        <result column="id" property="id"/>
+        <result column="audit_id" property="auditId"/>
+        <result column="client_name" property="clientName"/>
+        <result column="name" property="recipeName"/>
+        <result column="ignore" property="ignore"/>
+        <result column="update_datetime" property="updatedDatetime"/>
+    </resultMap>
+
+    <select id="getAuditRecipes" resultMap="ResultMap">
+        select t1.id, t1.audit_id, t1.client_name, t1.name, t1.ignore, t1.update_datetime
+        from audit_recipe t1
+        where t1.audit_id=#{auditId}
+    </select>
+
+    <delete id="deleteAuditRecipes">
+        delete from audit_recipe where audit_id=#{auditId}
+    </delete>
+
+    <insert id="createDummyAuditRecipe">
+        insert into audit_recipe(audit_id, client_name, name, update_datetime) values(#{recipeObj.auditId},
+        #{recipeObj.clientName}, #{recipeObj.recipeName}, SYSDATETIME())
+    </insert>
+
+
+    <insert id="insertAuditRecipe">
+        insert into audit_recipe(audit_id, client_name, name, object_id, update_datetime) values(#{auditId},
+        #{auditRecipe.clientName}, #{auditRecipe.recipeName}, #{auditRecipe.objectId}, SYSDATETIME())
+    </insert>
+
+    <select id="getAuditRecipeByName" resultMap="ResultMap">
+        select id, audit_id, client_name, name, ignore, update_datetime from audit_recipe
+        where client_name=#{clientName} and name=#{recipeName} and t1.audit_id=#{auditId}
+    </select>
+
+</mapper>

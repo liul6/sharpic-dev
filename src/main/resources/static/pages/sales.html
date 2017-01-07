@@ -23,31 +23,7 @@
         </div>
     </div>
     <br/>
-    <tabset>
-        <tab heading="Sales">
-            <table datatable="ng" dt-options="dtOptions" class="table table-striped">
-                <thead>
-                <tr>
-                    <th ts-criteria="recipeDescription" ts-default>Recipe Name</th>
-                    <th ts-criteria="recipeDescription" ts-default>Recipe Items</th>
-                    <th ts-criteria="amount">Amount</th>
-                    <th ts-criteria="price">Price</th>
-                    <th style="width:90px">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="sale in auditSales" ts-repeat>
-                    <td>{{sale.recipe.recipeName}}</td>
-                    <td>{{sale.recipeDescription}}</td>
-                    <td>{{sale.amount}}</td>
-                    <td>{{sale.price}}</td>
-                    <td>
-                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-                        <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </tab>
-    </tabset>
+    <div>
+        <div ui-grid="auditSalesOptions" ui-grid-edit ui-grid-row-edit ui-grid-auto-resize class="grid"></div>
+    </div>
 </div>

@@ -2,7 +2,6 @@ package com.sharpic.service;
 
 import com.sharpic.domain.Product;
 import com.sharpic.domain.Recipe;
-import com.sharpic.domain.RecipeItem;
 import com.sharpic.domain.Size;
 
 import java.util.List;
@@ -12,6 +11,12 @@ import java.util.List;
  */
 
 public interface IServerCache {
+    List<Size> getSizes();
+
+    List<Product> getProducts();
+
+    List<Recipe> getRecipes(String clientName);
+
     Size findSize(int sizeId);
 
     Product findProduct(int productId);
@@ -20,13 +25,5 @@ public interface IServerCache {
 
     Recipe findRecipeByName(String clientName, String recipeName);
 
-    void loadActiveRecipe(Recipe recipe);
-
-    List<Size> getSizes();
-
-    List<Product> getProducts();
-
-    List<Recipe> getRecipes(String clientName);
-
-    List<RecipeItem> findRecipeItems(int recipeId);
+    void addRecipe(Recipe recipe);
 }

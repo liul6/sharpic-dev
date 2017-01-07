@@ -5,20 +5,11 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-11.
  */
-public class Modifier {
-    private int id;
+public class Modifier extends BaseObject {
     private String clientName;
     private String modifierName;
     private double percentage;
     private Date updatedDatetime;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getClientName() {
         return clientName;

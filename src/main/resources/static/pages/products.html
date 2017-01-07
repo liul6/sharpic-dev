@@ -19,83 +19,19 @@
 
     <tabset>
         <tab heading="Product">
-            <table datatable="ng" dt-options="dtOptions" class="table table-striped">
-                <thead>
-                <tr>
-                    <th ts-default style="width:35%" >Product Name</th>
-                    <th style="width:8%" >Fulls</th>
-                    <th style="width:8%" >Cost</th>
-                    <th style="width:8%" >Tare</th>
-                    <th style="width:6" >Case</th>
-                    <th style="width:14%" >UPC</th>
-                    <th style="width:14%" >Tags</th>
-                    <th style="width:7%" >Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="product in products" ts-repeat>
-                    <td>{{product.name}}</td>
-                    <td>{{product.fulls}}</td>
-                    <td>{{product.costs}}</td>
-                    <td>{{product.tare}}</td>
-                    <td>{{product.cases}}</td>
-                    <td>{{product.upc}}</td>
-                    <td>{{product.tags}}</td>
-                    <td>
-                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-                        <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </tab>
-        <tab heading="Size">
-            <table datatable="ng" dt-options="dtOptions" class="table table-striped">
-                <thead>
-                <tr>
-                    <th ts-criteria="name" ts-default>Size Name</th>
-                    <th ts-criteria="ounces" ts-default>Ounces</th>
-                    <th style="width:90px">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="size in sizes" ts-repeat>
-                    <td>{{size.name}}</td>
-                    <td>{{size.ounces}}</td>
-                    <td>
-                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-                        <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div>
+                <div ui-grid="productOptions" ui-grid-edit ui-grid-row-edit ui-grid-auto-resize class="grid"></div>
+            </div>
         </tab>
         <tab heading="Client Specific">
-            <table datatable="ng" dt-options="dtOptions" class="table table-striped">
-                <thead>
-                <tr>
-                    <th ts-criteria="name" ts-default>Product Name</th>
-                    <th ts-criteria="size.name" ts-default>Size</th>
-                    <th ts-criteria="serving">Serving</th>
-                    <th ts-criteria="retailPrice">Retail Price</th>
-                    <th ts-criteria="updateDate">Update Date</th>
-                    <th style="width:90px">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="clientProduct in clientProducts" ts-repeat>
-                    <td>{{clientProduct.name}}</td>
-                    <td>{{clientProduct.size.name}}</td>
-                    <td>{{clientProduct.serving}}</td>
-                    <td>{{clientProduct.retailPrice}}</td>
-                    <td>{{clientProduct.updatedDatetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                    <td>
-                        <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-                        <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div>
+                <div ui-grid="clientProductOptions" ui-grid-edit ui-grid-row-edit ui-grid-auto-resize class="grid"></div>
+            </div>
+        </tab>
+        <tab heading="Size">
+            <div>
+                <div ui-grid="sizeOptions" ui-grid-edit ui-grid-row-edit ui-grid-auto-resize class="grid"></div>
+            </div>
         </tab>
     </tabset>
 </div>

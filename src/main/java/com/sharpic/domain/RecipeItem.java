@@ -5,21 +5,12 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-11.
  */
-public class RecipeItem {
-    private int id;
+public class RecipeItem extends BaseObject {
     private int recipeId;
     private int productId;
     private double fulls;
     private double ounces;
     private Date updatedDatetime;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getRecipeId() {
         return recipeId;

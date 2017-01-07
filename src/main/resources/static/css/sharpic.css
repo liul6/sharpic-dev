@@ -14,3 +14,7 @@
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
+
+.grid {
+  height: 550px;
+}

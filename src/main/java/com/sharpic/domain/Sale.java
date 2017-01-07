@@ -5,23 +5,13 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-13.
  */
-public class Sale {
-    private int id;
+public class Sale extends BaseObject {
     private int auditId;
     private int recipeId;
     private double amount;
     private double price;
     private Date updatedDatetime;
     private Recipe recipe;
-    private String recipeDescription;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getAuditId() {
         return auditId;
@@ -61,14 +51,6 @@ public class Sale {
 
     public void setUpdatedDatetime(Date updatedDatetime) {
         this.updatedDatetime = updatedDatetime;
-    }
-
-    public String getRecipeDescription() {
-        return recipeDescription;
-    }
-
-    public void setRecipeDescription(String recipeDescription) {
-        this.recipeDescription = recipeDescription;
     }
 
     public Recipe getRecipe() {

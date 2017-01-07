@@ -6,8 +6,7 @@ import java.util.Date;
  * Created by joey on 2016-12-17.
  */
 
-public class ClientProduct implements Comparable<ClientProduct> {
-    private int id;
+public class ClientProduct extends BaseObject implements Comparable<ClientProduct> {
     private String clientName;
     private String name;
     private int sizeId;
@@ -18,14 +17,6 @@ public class ClientProduct implements Comparable<ClientProduct> {
 
     //transient fields
     private Size size;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getClientName() {
         return clientName;

@@ -1,5 +1,5 @@
 	// create the module and name it sharpicApp
-	var sharpicApp = angular.module('sharpicApp', ['ngRoute', 'ui.bootstrap', 'datatables']);
+	var sharpicApp = angular.module('sharpicApp', ['ngRoute', 'ui.bootstrap',  'ngTouch', 'ui.grid', 'ui.grid.edit', 'ui.grid.rowEdit', 'ui.grid.cellNav', 'ui.grid.autoResize', 'datatables']);
 
 	// configure our routes
 	sharpicApp.config(function($routeProvider) {

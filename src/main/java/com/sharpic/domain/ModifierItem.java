@@ -5,8 +5,7 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-17.
  */
-public class ModifierItem {
-    private int id;
+public class ModifierItem extends BaseObject {
     private int auditId;
     private int modifierId;
     private int recipeId;
@@ -20,14 +19,6 @@ public class ModifierItem {
     private Modifier modifier;
     private Recipe recipe;
     private Product product;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getAuditId() {
         return auditId;

@@ -81,7 +81,7 @@ public class SalesUploader {
                 if (tokens.length <= 0 || tokens[0] == null || tokens[0].trim().length() <= 0)
                     continue;
 
-                Sale sale = extractSale(lineno, clientName, tokens, reportType);
+                Sale sale = extractSale(lineno, auditId, clientName, tokens, reportType);
                 if (sale != null) {
                     sale.setAuditId(auditId);
                     sales.add(sale);
@@ -96,7 +96,7 @@ public class SalesUploader {
         }
     }
 
-    private Sale extractSale(int lineNo, String clientName, String[] tokens, REPORT_TYPE reportType) throws SharpICException {
+    private Sale extractSale(int lineNo, int auditId, String clientName, String[] tokens, REPORT_TYPE reportType) throws SharpICException {
         if (tokens == null || reportType == null)
             return null;
 
@@ -116,7 +116,7 @@ public class SalesUploader {
                 else
                     price = Util.round(gross / amount, 2);
 
-                return createSale(lineNo, clientName, tokens[2], amount, price);
+                return createSale(lineNo, auditId, clientName, tokens[2], amount, price);
             }
         } else if (reportType == REPORT_TYPE.VALANTE) {
             if (tokens.length <= 11)
@@ -134,7 +134,7 @@ public class SalesUploader {
                 else
                     price = Util.round(gross / amount, 2);
 
-                return createSale(lineNo, clientName, tokens[1], amount, price);
+                return createSale(lineNo, auditId, clientName, tokens[1], amount, price);
             }
         }
         return null;
@@ -174,14 +174,14 @@ public class SalesUploader {
         return REPORT_TYPE.UNKNOWN;
     }
 
-    private Sale createSale(int lineNo, String clientName, String recipeName, int amount, double price) throws SharpICException {
+    private Sale createSale(int lineNo, int auditId, String clientName, String recipeName, int amount, double price) throws SharpICException {
         if (!Util.isValidName(recipeName)) {
             throw new SharpICException("The recipe name at line no#= " + lineNo + " is invlalid!");
         }
 
         Recipe recipe = serverCache.findRecipeByName(clientName, recipeName);
         if (recipe == null) {
-            recipe = recipeDao.createDummyRecipe(clientName, recipeName);
+            recipe = recipeDao.createRecipe(clientName, recipeName);
         }
 
         Sale sale = new Sale();

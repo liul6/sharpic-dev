@@ -5,18 +5,42 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
     $scope.products = [];
     $scope.clientProducts = [];
     $scope.sizes = [];
+    $scope.productOptions = {};
+    $scope.clientProductOptions = {};
+    $scope.sizeOptions = {};
 
     $scope.getClientNames = function() {
         $http.get('/client/getClientNames')
             .success(function (data, status, headers, config) {
             $scope.clientNames = data;
+            if($scope.clientNames.length>0) {
+                $scope.populateDefault($scope.clientNames[0]);
+            }
         })
         .error(function (data, status, header, config) {
         });
      };
 
+    $scope.populateDefault = function(selectedClientName) {
+        $scope.clientName = selectedClientName;
+        $scope.clientProductOptions = {
+            data: [],
+            enableSorting: false,
+            enableColumnMenus: false,
+            columnDefs: [
+                {name: 'name', displayName: 'Product', width : '40%' },
+                {name: 'size.name', displayName: 'Size' },
+                {name: 'serving', displayName: 'Serving' },
+                {name: 'retailPrice', displayName: 'Retail Price', type: 'number' },
+                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+            ]
+        };
+
+        $scope.selectClient();
+    };
+
     $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDisplayLength(50)
+        .withDisplayLength(100)
         .withOption('bLengthChange', false);
 
     $scope.getClientNames();
@@ -25,6 +49,21 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
         $http.get('/product/getProducts')
             .success(function (data, status, headers, config) {
                 $scope.products = data;
+                $scope.productOptions = {
+                    data: data,
+                    enableSorting: false,
+                    enableColumnMenus: false,
+                    columnDefs: [
+                        {name: 'name', displayName: 'Product Name', width : '40%' },
+                        {name: 'fulls', displayName: 'Fulls', type: 'number' },
+                        {name: 'costs', displayName: 'Costs', type: 'number' },
+                        {name: 'tare', displayName: 'Tare', type: 'number' },
+                        {name: 'cases', displayName: 'Cases', type: 'number' },
+                        {name: 'upc', displayName: 'UPC', width : '12%'  },
+                        {name: 'tags', displayName: 'Tags', width : '12%' },
+                        {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeClientProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                    ]
+                };
         })
         .error(function (data, status, header, config) {
         });
@@ -36,6 +75,16 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
         $http.get('/product/getSizes')
             .success(function (data, status, headers, config) {
                 $scope.sizes = data;
+                $scope.sizeOptions = {
+                    data: data,
+                    enableSorting: false,
+                    enableColumnMenus: false,
+                    columnDefs: [
+                        {name: 'name', displayName: 'Name', width : '40%' },
+                        {name: 'ounces', displayName: 'Ounces', type: 'number' },
+                        {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSize(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                    ]
+                };
         })
         .error(function (data, status, header, config) {
         });
@@ -48,28 +97,31 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
         $http.get('/product/getClientProducts?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
             $scope.clientProducts = data;
+            $scope.clientProductOptions.data = data;
         })
         .error(function (data, status, header, config) {
         });
     };
 
- $scope.getProducts1 = function(pageNo) {
-        $http.get('/product/getProductsByPage?pageNo=' + pageNo)
-            .success(function (data, status, headers, config) {
-                setTimeout(function(){
-                    if(pageNo == 1) {
-                        $scope.products = [];
-                    }
+    $scope.addProduct = function() {
+        var newProduct = {name : null, fulls : null, costs : null, tare : null, cases : null, upc : null, tags : null};
+        $scope.productOptions.data.unshift(newProduct);
+    };
 
-                    if(data!=null && data.length>0) {
-                        $scope.products.push.apply($scope.products, data);
-                        $scope.getProducts(pageNo+1);
-                    }
-                }, 500);
-        })
-        .error(function (data, status, header, config) {
-        });
-     };
+    $scope.removeProduct = function(row) {
+        var index = $scope.productOptions.data.indexOf(row.entity);
+        $scope.productOptions.data.splice(index, 1);
+    };
 
-    $scope.getProducts1(1);
+
+    $scope.removeClientProduct = function(row) {
+        var index = $scope.clientProductOptions.data.indexOf(row.entity);
+        $scope.clientProductOptions.data.splice(index, 1);
+    };
+
+
+    $scope.removeSize = function(row) {
+        var index = $scope.sizeOptions.data.indexOf(row.entity);
+        $scope.sizeOptions.data.splice(index, 1);
+    };
 });

@@ -9,9 +9,10 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.allVenues = [];
     $scope.auditEntries = [];
     $scope.auditModiferItems = [];
+    $scope.auditEntriesOptions = [];
 
     $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDisplayLength(50)
+        .withDisplayLength(100)
         .withOption('bLengthChange', false);
 
     $scope.addAudit = function() {
@@ -48,11 +49,26 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
         $scope.auditEntries = [];
 
         $scope.clientName = selectedClientName;
+
+        $scope.auditEntriesOptions = {
+            data: [],
+            enableSorting: false,
+            enableColumnMenus: false,
+            columnDefs: [
+                {name: 'productDescription', displayName: 'Product', width : '40%' },
+                {name: 'weights', displayName: 'Partials', type: 'number' },
+                {name: 'fulls', displayName: 'Fulls', type: 'number' },
+                {name: 'bin', displayName: 'Bin' },
+                {name: 'location', displayName: 'Location' },
+                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+            ]
+        };
         $scope.selectClient();
     };
 
     $scope.selectClient = function() {
         $scope.auditEntries = [];
+        $scope.auditEntriesOptions.data = [];
         $http.get('/client/getAuditDates?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
             $scope.auditDates = data;
@@ -78,6 +94,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
        $http.get('/audit/getEntries?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
            .success(function (data, status, headers, config) {
            $scope.auditEntries = data;
+           $scope.auditEntriesOptions.data = data;
        })
        .error(function (data, status, header, config) {
        });
@@ -105,6 +122,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
             .success(function (data, status, headers, config) {
                 if(data != null) {
                     $scope.auditEntries = [];
+                    $scope.auditEntriesOptions.data = [];
                     $scope.selectClient();
                     $scope.auditDate = data;
                 }
@@ -112,6 +130,11 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
         .error(function (data, status, header, config) {
         //notify here
         });
+    };
+
+    $scope.removeEntry = function(row) {
+        var index = $scope.auditEntriesOptions.data.indexOf(row.entity);
+        $scope.auditEntriesOptions.data.splice(index, 1);
     };
 
     $scope.removeAudit = function() {

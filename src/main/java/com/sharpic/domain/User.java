@@ -1,11 +1,6 @@
 package com.sharpic.domain;
 
-import org.springframework.data.annotation.Id;
-
-public class User {
-    @Id
-    private String id;
-
+public class User extends BaseObject {
     private String username;
     private String password;
     private String tempPassword;

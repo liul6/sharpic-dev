@@ -15,23 +15,7 @@
 
     <br/>
 
-    <table datatable="ng" dt-options="dtOptions" class="table table-striped">
-        <thead>
-        <tr>
-            <th ts-criteria="name" ts-default  style="width: 20%">Name</th>
-            <th ts-criteria="description"  style="width: 70%">Items</th>
-            <th  style="width: 10%">Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="recipe in recipes" ts-repeat>
-            <td>{{recipe.recipeName}}</td>
-            <td>{{recipe.description}}</td>
-            <td>
-                <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span></button>
-                <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div>
+        <div ui-grid="recipesOptions" ui-grid-edit ui-grid-row-edit ui-grid-auto-resize class="grid"></div>
+    </div>
 </div>

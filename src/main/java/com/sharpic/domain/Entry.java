@@ -6,8 +6,7 @@ import java.util.Date;
  * Created by joey on 2016-12-04.
  */
 
-public class Entry implements Comparable<Entry> {
-    private int id;
+public class Entry extends BaseObject implements Comparable<Entry> {
     private int auditId;
     private String location;
     private int productId;
@@ -20,14 +19,6 @@ public class Entry implements Comparable<Entry> {
 
     //transient field
     private String productDescription;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getLocation() {
         return location;

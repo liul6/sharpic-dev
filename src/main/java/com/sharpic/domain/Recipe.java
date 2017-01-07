@@ -1,27 +1,20 @@
 package com.sharpic.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by joey on 2016-12-11.
  */
-public class Recipe implements Comparable<Recipe> {
-    private int id;
+public class Recipe extends BaseObject implements Comparable<Recipe> {
     private String clientName;
     private String recipeName;
     private boolean ignore;
+    private String objectId;
     private Date updatedDatetime;
     private List<RecipeItem> recipeItems;
     private String description;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getClientName() {
         return clientName;
@@ -67,11 +60,25 @@ public class Recipe implements Comparable<Recipe> {
         this.recipeItems = recipeItems;
     }
 
+    public void addRecipeItem(RecipeItem recipeItem) {
+        if (recipeItems == null)
+            recipeItems = new ArrayList<RecipeItem>();
+        recipeItems.add(recipeItem);
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 }

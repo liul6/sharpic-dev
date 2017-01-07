@@ -11,7 +11,7 @@
         <result column="update_datetime" property="updatedDatetime"/>
     </resultMap>
 
-    <select id="getClientActiveRecipes" resultMap="ResultMap">
+    <select id="getClientRecipes" resultMap="ResultMap">
         select t1.id, t1.client_name, t1.name, t1.ignore, t1.update_datetime from recipe t1,
         (select client_name, name, max( update_datetime) as update_datetime from recipe
         where ignore = 0 and client_name=#{clientName}
@@ -21,7 +21,7 @@
         and t1.update_datetime=t2.update_datetime
     </select>
 
-    <select id="getActiveRecipes" resultMap="ResultMap">
+    <select id="getAllRecipes" resultMap="ResultMap">
         select t1.id, t1.client_name, t1.name, t1.ignore, t1.update_datetime from recipe t1,
         (select client_name, name, max( update_datetime) as update_datetime from recipe
         where ignore = 0
@@ -47,8 +47,8 @@
         and t1.update_datetime=t2.update_datetime
     </select>
 
-    <insert id="createDummyRecipe">
-        insert into recipe(client_name, name, update_datetime) values(#{clientName}, #{recipeName}, SYSDATETIME())
+    <insert id="createRecipe">
+        insert into recipe(client_name, name, update_datetime) values(#{recipeObj.clientName}, #{recipeObj.recipeName}, SYSDATETIME())
     </insert>
 
 

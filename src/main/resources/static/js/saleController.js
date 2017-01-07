@@ -5,9 +5,10 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
     $scope.clientNames = [];
     $scope.auditDates = [];
     $scope.auditSales = [];
+    $scope.auditSalesOptions = {};
 
     $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDisplayLength(50)
+        .withDisplayLength(100)
         .withOption('bLengthChange', false);
 
     $scope.getClientNames = function() {
@@ -25,14 +26,28 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
     $scope.getClientNames();
 
     $scope.populateDefault = function(selectedClientName) {
-        $scope.auditEntries = [];
+        $scope.auditSales = [];
 
         $scope.clientName = selectedClientName;
+
+        $scope.auditSalesOptions = {
+            data: [],
+            enableSorting: false,
+            enableColumnMenus: false,
+            columnDefs: [
+                {name: 'recipe.recipeName', displayName: 'Recipe Name', width : '30%' },
+                {name: 'recipe.description', displayName: 'Recipe Items', type: 'number', width : '40%' },
+                {name: 'amount', displayName: 'Amount', type: 'number' },
+                {name: 'price', displayName: 'Price', type: 'number' },
+                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSale(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+            ]
+        };
+
         $scope.selectClient();
     };
 
     $scope.selectClient = function() {
-        $scope.auditEntries = [];
+        $scope.auditSales = [];
         $http.get('/client/getAuditDates?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
             $scope.auditDates = data;
@@ -49,9 +64,15 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
        $http.get('/sale/getSales?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
            .success(function (data, status, headers, config) {
            $scope.auditSales = data;
+           $scope.auditSalesOptions.data = data;
        })
        .error(function (data, status, header, config) {
        });
+    };
+
+    $scope.removeSale = function(row) {
+        var index = $scope.auditSalesOptions.data.indexOf(row.entity);
+        $scope.auditSalesOptions.data.splice(index, 1);
     };
 
     $scope.uploadSaleFile = function(){
@@ -87,6 +108,7 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
              headers: {'Content-Type': undefined}
              }).then(function (resp){
                 $scope.auditSales = resp.data;
+                $scope.auditSalesOptions.data = resp.data;
              });
     };
 

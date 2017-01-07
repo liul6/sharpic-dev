@@ -5,8 +5,7 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-08.
  */
-public class Product implements Comparable<Product> {
-    private int id;
+public class Product extends BaseObject implements Comparable<Product> {
     private String name;
     private int sizeId;
     private String serving;
@@ -20,14 +19,6 @@ public class Product implements Comparable<Product> {
     private String description;
 
     private Size size;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

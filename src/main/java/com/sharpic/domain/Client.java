@@ -7,7 +7,7 @@ import java.util.List;
  * Created by joey on 2016-12-05.
  */
 
-public class Client {
+public class Client extends BaseObject {
     private String name;
     private String email;
     private String phone;

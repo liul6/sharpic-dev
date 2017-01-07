@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sharpic.domain.AuditRecipeItemMapper">
+    <resultMap id="ResultMap" type="AuditRecipeItem">
+        <result column="id" property="id"/>
+        <result column="audit_id" property="auditId"/>
+        <result column="recipe_id" property="recipeId"/>
+        <result column="product_id" property="productId"/>
+        <result column="fulls" property="fulls"/>
+        <result column="ounces" property="ounces"/>
+        <result column="update_datetime" property="updatedDatetime"/>
+    </resultMap>
+
+    <select id="getAuditRecipeItems" resultMap="ResultMap">
+        select id, audit_id, recipe_id, product_id, fulls, ounces, update_datetime
+        from audit_recipe_item
+        where audit_id=#{auditId}
+    </select>
+
+    <delete id="deleteAuditRecipeItems">
+        delete from audit_recipe_item where audit_id=#{auditId}
+    </delete>
+
+    <insert id="insertAuditRecipeItem">
+        insert into audit_recipe_item(audit_id, recipe_id, fulls, ounces, object_id, update_datetime)
+        values(#{auditId},#{recipeId},
+        #{auditRecipe.clientName}, #{auditRecipe.recipeName}, #{auditRecipe.objectId}, SYSDATETIME())
+
+    </insert>
+
+</mapper>
