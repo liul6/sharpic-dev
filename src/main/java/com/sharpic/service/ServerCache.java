@@ -1,8 +1,12 @@
 package com.sharpic.service;
 
 import com.sharpic.common.Util;
+import com.sharpic.dao.ProductDao;
 import com.sharpic.dao.RecipeDao;
-import com.sharpic.domain.*;
+import com.sharpic.domain.Product;
+import com.sharpic.domain.Recipe;
+import com.sharpic.domain.Size;
+import com.sharpic.domain.SizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -26,13 +30,10 @@ public class ServerCache implements IServerCache {
     private SizeMapper sizeMapper;
 
     @Autowired
-    private ProductMapper productMapper;
+    private ProductDao productDao;
 
     @Autowired
     private RecipeDao recipeDao;
-
-    @Autowired
-    private IObjectDescriptor objectDescriptor;
 
     private Map<Integer, Size> sizeMap = new ConcurrentHashMap<Integer, Size>();
     private Map<Integer, Product> productMap = new ConcurrentHashMap<Integer, Product>();
@@ -110,7 +111,7 @@ public class ServerCache implements IServerCache {
     private void fillProductCache() {
         productMap.clear();
 
-        List<Product> products = productMapper.getProducts();
+        List<Product> products = productDao.getProducts();
         if (products == null)
             return;
 
@@ -118,7 +119,6 @@ public class ServerCache implements IServerCache {
             Product product = products.get(i);
             if (Util.isValidName(product.getName())) {
                 productMap.put(product.getId(), product);
-                product.setDescription(objectDescriptor.getDescription(product));
             }
         }
     }
@@ -137,7 +137,7 @@ public class ServerCache implements IServerCache {
                 recipeMapById.put(recipe.getId(), recipe);
                 recipeMapByName.put(recipe.getClientName() + "_" + recipe.getRecipeName(), recipe);
 
-                recipe.setDescription(objectDescriptor.getDescription(recipe));
+//                recipe.setDescription(objectDescriptor.getDescription(recipe));
             }
         }
     }
