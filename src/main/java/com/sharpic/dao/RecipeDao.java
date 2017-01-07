@@ -2,7 +2,6 @@ package com.sharpic.dao;
 
 import com.sharpic.domain.*;
 import com.sharpic.service.IObjectDescriptor;
-import com.sharpic.service.IServerCache;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +27,6 @@ public class RecipeDao {
 
     @Autowired
     private AuditRecipeItemMapper auditRecipeItemMapper;
-
-    @Autowired
-    private IServerCache serverCache;
 
     @Autowired
     private IObjectDescriptor objectDescriptor;
