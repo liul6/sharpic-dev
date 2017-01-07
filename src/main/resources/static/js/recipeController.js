@@ -32,7 +32,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
             data: [],
             enableColumnMenus: false,
             columnDefs: [
-                {name: 'recipeName', displayName: 'Recipe Name', width : '30%' },
+                {name: 'recipeName', displayName: 'Recipe Name', width : '30%', enableCellEdit : false  },
                 {name: 'description', displayName: 'Recipe Items' },
                 {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipe(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
             ]
