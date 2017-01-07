@@ -35,11 +35,11 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
             enableSorting: false,
             enableColumnMenus: false,
             columnDefs: [
-                {name: 'recipe.recipeName', displayName: 'Recipe Name', width : '30%', enableSorting: false, enableSorting: false },
-                {name: 'recipe.description', displayName: 'Recipe Items', type: 'number', width : '40%', enableSorting: false, enableSorting: false },
-                {name: 'amount', displayName: 'Amount', type: 'number', enableSorting: false, enableSorting: false },
-                {name: 'price', displayName: 'Price', type: 'number', enableSorting: false, enableSorting: false },
-                {name: 'action', displayName: '', width : '3%', enableSorting: false, , enableSorting: false, cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSale(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                {name: 'recipe.recipeName', displayName: 'Recipe Name', width : '30%', enableColumnMenus: false },
+                {name: 'recipe.description', displayName: 'Recipe Items', type: 'number', width : '40%', enableColumnMenus: false },
+                {name: 'amount', displayName: 'Amount', type: 'number', enableColumnMenus: false },
+                {name: 'price', displayName: 'Price', type: 'number', enableColumnMenus: false },
+                {name: 'action', displayName: '', width : '3%', enableColumnMenus: false, cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSale(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
             ]
         };
 

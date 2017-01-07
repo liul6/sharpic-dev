@@ -80,9 +80,9 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
                     enableSorting: false,
                     enableColumnMenus: false,
                     columnDefs: [
-                        {name: 'name', displayName: 'Name', width : '40%', enableSorting: false },
-                        {name: 'ounces', displayName: 'Ounces', type: 'number', enableSorting: false },
-                        {name: 'action', displayName: '', width : '3%', enableSorting: false, cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSize(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                        {name: 'name', displayName: 'Name', width : '40%', enableColumnMenus: false },
+                        {name: 'ounces', displayName: 'Ounces', type: 'number', enableColumnMenus: false },
+                        {name: 'action', displayName: '', width : '3%', enableColumnMenus: false, cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSize(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                     ]
                 };
         })
