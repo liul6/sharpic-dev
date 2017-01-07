@@ -30,12 +30,11 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
 
         $scope.recipesOptions = {
             data: [],
-            enableSorting: false,
             enableColumnMenus: false,
             columnDefs: [
-                {name: 'recipeName', displayName: 'Recipe Name', width : '30%',enableColumnMenus: false },
-                {name: 'description', displayName: 'Recipe Items', enableColumnMenus: false},
-                {name: 'action', displayName: '', width : '3%', enableColumnMenus: false, cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipe(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                {name: 'recipeName', displayName: 'Recipe Name', width : '30%' },
+                {name: 'description', displayName: 'Recipe Items' },
+                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipe(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
             ]
         };
 

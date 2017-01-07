@@ -52,15 +52,14 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
 
         $scope.auditEntriesOptions = {
             data: [],
-            enableSorting: false,
             enableColumnMenus: false,
             columnDefs: [
-                {name: 'productDescription', displayName: 'Product', width : '40%', enableColumnMenus: false },
-                {name: 'weights', displayName: 'Partials', type: 'number', enableColumnMenus: false },
-                {name: 'fulls', displayName: 'Fulls', type: 'number', enableColumnMenus: false },
-                {name: 'bin', displayName: 'Bin', enableColumnMenus: false },
-                {name: 'location', displayName: 'Location', enableColumnMenus: false },
-                {name: 'action', displayName: '', width : '3%', enableColumnMenus: false, cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                {name: 'productDescription', displayName: 'Product', width : '40%'},
+                {name: 'weights', displayName: 'Partials', type: 'number' },
+                {name: 'fulls', displayName: 'Fulls', type: 'number' },
+                {name: 'bin', displayName: 'Bin' },
+                {name: 'location', displayName: 'Location' },
+                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
             ]
         };
         $scope.selectClient();
