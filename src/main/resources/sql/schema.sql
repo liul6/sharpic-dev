@@ -89,6 +89,7 @@ create table product(
 drop table client_product;
 create table client_product(
         ID int IDENTITY(1,1) PRIMARY KEY,
+        product_id int not null,
         client_name varchar(100) not null,
         name varchar(100) not null,
         size_id int not null,
@@ -228,6 +229,12 @@ where sale.recipe_id=audit_recipe.id
 and sale.audit_id=audit_recipe.audit_id
 and recipe_item.recipe_id=audit_recipe.object_id;
 
-insert into client_product(client_name, name, size_id, serving, update_datetime)
-select client.name, product.name, size_id,serving, product.update_datetime
+insert into client_product(client_name, product_id, name, size_id, serving, update_datetime)
+select client.name, product.id, product.name, size_id,serving, product.update_datetime
 from client, product;
+
+update entry
+set product_id=client_product.id
+from audit, client_product
+where audit.id=entry.audit_id
+and audit.client_name=client_product.client_name and entry.product_id=client_product.product_id;

@@ -52,9 +52,9 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
 
         $scope.auditEntriesOptions = {
             data: [],
-            enableColumnMenus: false,
+            enableColumnMenus: 'false',
             columnDefs: [
-                {name: 'productDescription', displayName: 'Product', width : '40%', enableCellEdit : false },
+                {name: 'productDescription', displayName: 'Product', width : '40%', enableCellEdit : 'false' },
                 {name: 'weights', displayName: 'Partials', type: 'number' },
                 {name: 'fulls', displayName: 'Fulls', type: 'number' },
                 {name: 'bin', displayName: 'Bin' },
