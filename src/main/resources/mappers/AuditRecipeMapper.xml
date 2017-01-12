@@ -28,14 +28,14 @@
     </insert>
 
 
-    <insert id="insertAuditRecipe">
-        insert into audit_recipe(audit_id, client_name, name, object_id, update_datetime) values(#{auditId},
-        #{auditRecipe.clientName}, #{auditRecipe.recipeName}, #{auditRecipe.objectId}, SYSDATETIME())
+    <insert id="insertAuditRecipe" parameterType='AuditRecipe'>
+        insert into audit_recipe(audit_id, client_name, name, update_datetime) values(#{auditRecipe.auditId},
+        #{auditRecipe.clientName}, #{auditRecipe.recipeName}, SYSDATETIME())
     </insert>
 
     <select id="getAuditRecipeByName" resultMap="ResultMap">
         select id, audit_id, client_name, name, ignore, update_datetime from audit_recipe
-        where client_name=#{clientName} and name=#{recipeName} and t1.audit_id=#{auditId}
+        where client_name=#{clientName} and name=#{recipeName} and audit_id=#{auditId}
     </select>
 
 </mapper>

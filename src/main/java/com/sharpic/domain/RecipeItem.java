@@ -10,7 +10,11 @@ public class RecipeItem extends BaseObject {
     private int productId;
     private double fulls;
     private double ounces;
+    private String objectId;
     private Date updatedDatetime;
+
+    //transient fields
+    private ClientProduct clientProduct;
 
     public int getRecipeId() {
         return recipeId;
@@ -50,6 +54,22 @@ public class RecipeItem extends BaseObject {
 
     public void setUpdatedDatetime(Date updatedDatetime) {
         this.updatedDatetime = updatedDatetime;
+    }
+
+    public ClientProduct getClientProduct() {
+        return clientProduct;
+    }
+
+    public void setClientProduct(ClientProduct clientProduct) {
+        this.clientProduct = clientProduct;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 }
 

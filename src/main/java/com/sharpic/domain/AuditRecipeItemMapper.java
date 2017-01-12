@@ -11,9 +11,9 @@ import java.util.List;
 
 @Mapper
 public interface AuditRecipeItemMapper {
-    List<AuditRecipeItem> getAuditRecipeItems(int auditId);
+    List<RecipeItem> getAuditRecipeItems(int auditId);
 
     void deleteAuditRecipeItems(int auditId);
 
-    void insertAuditRecipeItem(@Param("auditId") int auditId, @Param("recipeId") int recipeId, @Param("recipeItem") RecipeItem recipeItem);
+    void insertAuditRecipeItem(@Param("auditRecipeItem") AuditRecipeItem auditRecipeItem);
 }

@@ -1,7 +1,7 @@
 package com.sharpic.service;
 
 import com.sharpic.common.Util;
-import com.sharpic.domain.Product;
+import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.Recipe;
 import com.sharpic.domain.RecipeItem;
 import com.sharpic.domain.Size;
@@ -15,11 +15,11 @@ import java.util.List;
  */
 
 @Service
-public class ObjectDescriptor implements IObjectDescriptor{
+public class ObjectDescriptor implements IObjectDescriptor {
     @Autowired
     private IServerCache serverCache;
 
-    public String getDescription(Product product) {
+    public String getDescription(ClientProduct product) {
         if (product == null)
             return null;
 
@@ -28,7 +28,7 @@ public class ObjectDescriptor implements IObjectDescriptor{
             return product.getName() + " " + size.getName();
         }
 
-        return "UNKNOWN SIZE with size id: " + product.getSizeId();
+        return product.getName() + " UNKNOWN SIZE with size id: " + product.getSizeId();
     }
 
     public String getDescription(Recipe recipe) {
@@ -42,7 +42,7 @@ public class ObjectDescriptor implements IObjectDescriptor{
         String result = "";
         for (int i = 0; i < recipeItems.size(); i++) {
             RecipeItem recipeItem = recipeItems.get(i);
-            result += this.getDescription(serverCache.findProduct(recipeItem.getProductId()));
+            result += this.getDescription(recipeItem.getClientProduct());
             if (Util.isCloseToZero(recipeItem.getFulls()))
                 result += (" ounces " + recipeItem.getOunces());
             else

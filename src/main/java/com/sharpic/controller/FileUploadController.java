@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +56,6 @@ public class FileUploadController {
             } catch (Exception e) {
                 log.error(e);
             }
-        return null;
+        return new ArrayList<Sale>();
     }
 }

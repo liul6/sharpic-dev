@@ -19,6 +19,7 @@ public class Entry extends BaseObject implements Comparable<Entry> {
 
     //transient field
     private String productDescription;
+    private ClientProduct clientProduct;
 
     public String getLocation() {
         return location;
@@ -102,5 +103,13 @@ public class Entry extends BaseObject implements Comparable<Entry> {
 
     public int compareTo(Entry entry) {
         return this.getProductDescription().compareTo(entry.getProductDescription());
+    }
+
+    public ClientProduct getClientProduct() {
+        return clientProduct;
+    }
+
+    public void setClientProduct(ClientProduct clientProduct) {
+        this.clientProduct = clientProduct;
     }
 }

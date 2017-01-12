@@ -81,6 +81,7 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
         console.dir(file);
         var uploadUrl = "/upload";
 
+        $scope.auditSales = [];
         var info = {'name': 'SALE', 'clientName': $scope.clientName, 'auditDateStr': $scope.auditDate};
         fileUpload.uploadFileToUrl(info, file, uploadUrl)
             .then(function (resp){
@@ -89,6 +90,8 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
     };
 
     $scope.uploadFile = function(files) {
+        $scope.auditSales = [];
+
         var fd = new FormData();
         //Take the first selected file
         fd.append('file', files[0]);

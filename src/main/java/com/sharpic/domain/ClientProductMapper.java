@@ -11,4 +11,8 @@ import java.util.List;
 @Mapper
 public interface ClientProductMapper {
     List<ClientProduct> getClientProducts(String clientName);
+
+    List<ClientProduct> getAuditClientProducts(int auditId);
+
+    List<ClientProduct> getClientProductsWithIds(List<Integer> productIds);
 }

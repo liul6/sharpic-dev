@@ -2,7 +2,6 @@ package com.sharpic.dao;
 
 import com.sharpic.domain.Audit;
 import com.sharpic.domain.AuditMapper;
-import com.sharpic.domain.SaleMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class AuditDao {
     private AuditMapper auditMapper;
 
     @Autowired
-    private SaleMapper saleMapper;
+    private SaleDao saleDao;
 
     @Autowired
     private EntryDao entryDao;
@@ -39,7 +38,7 @@ public class AuditDao {
 
     public void deleteAudit(@Param("clientName") String clientName, @Param("auditDate") Date auditDate) {
         int auditId = auditMapper.getAuditId(clientName, auditDate);
-        saleMapper.deleteSales(clientName, auditId);
+        saleDao.deleteSales(clientName, auditId);
         entryDao.deleteAuditEntries(auditId);
         auditMapper.deleteAudit(clientName, auditDate);
     }

@@ -5,16 +5,50 @@
 <mapper namespace="com.sharpic.domain.ClientProductMapper">
     <resultMap id="ResultMap" type="ClientProduct">
         <result column="id" property="id"/>
+        <result column="product_id" property="productId"/>
         <result column="client_name" property="clientName"/>
         <result column="name" property="name"/>
         <result column="size_id" property="sizeId"/>
         <result column="serving" property="serving"/>
         <result column="retail_price" property="retailPrice"/>
+        <result column="tare" property="tare"/>
+        <result column="cost" property="cost"/>
+        <result column="fulls" property="fulls"/>
+        <result column="cases" property="cases"/>
+        <result column="upc" property="upc"/>
+        <result column="tags" property="tags"/>
         <result column="update_datetime" property="updatedDatetime"/>
     </resultMap>
 
     <select id="getClientProducts" resultMap="ResultMap">
-        select id, client_name, name, size_id, serving, retail_price, update_datetime from client_product
+        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
+        product.upc, product.tags, client_product.update_datetime
+        from product, client_product
         where client_name=#{clientName}
+        and product.id=client_product.product_id
     </select>
+
+    <select id="getAuditClientProducts" resultMap="ResultMap">
+        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
+        product.upc, product.tags, client_product.update_datetime
+        from entry, client_product, product
+        where client_product.id=entry.product_id
+        and product.id=client_product.product_id
+        and entry.audit_id=#{auditId}
+    </select>
+
+    <select id="getClientProductsWithIds" parameterType="list" resultMap="ResultMap">
+        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
+        product.upc, product.tags, client_product.update_datetime
+        from product, client_product
+        where product.id=client_product.product_id
+        and client_product.id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

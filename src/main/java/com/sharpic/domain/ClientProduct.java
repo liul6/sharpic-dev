@@ -6,7 +6,8 @@ import java.util.Date;
  * Created by joey on 2016-12-17.
  */
 
-public class ClientProduct extends BaseObject implements Comparable<ClientProduct> {
+public class ClientProduct extends Product {
+    private int productId;
     private String clientName;
     private String name;
     private int sizeId;
@@ -84,5 +85,13 @@ public class ClientProduct extends BaseObject implements Comparable<ClientProduc
 
     public void setSize(Size size) {
         this.size = size;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 }

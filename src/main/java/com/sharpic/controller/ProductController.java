@@ -4,6 +4,7 @@ import com.sharpic.dao.ClientProductDao;
 import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.Product;
 import com.sharpic.domain.Size;
+import com.sharpic.service.IObjectDescriptor;
 import com.sharpic.service.IServerCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,45 +28,31 @@ public class ProductController {
     @Autowired
     private ClientProductDao clientProductDao;
 
+    @Autowired
+    private IObjectDescriptor objectDescriptor;
+
     @RequestMapping(value = "/product/getProducts")
     @ResponseBody
     public List<Product> getProducts() {
         List<Product> products = serverCache.getProducts();
 
-        if (products != null && products.size() > 0) {
-            for (int i = 0; i < products.size(); i++) {
-                Product product = products.get(i);
-                product.setSize(serverCache.findSize(product.getSizeId()));
-            }
-        }
-
         Collections.sort(products);
         return products;
-    }
-
-    @RequestMapping(value = "/product/getProductsByPage")
-    @ResponseBody
-    public List<Product> getProductsByPage(int pageNo) {
-        List<Product> products = serverCache.getProducts();
-        if (pageNo < 1 || pageNo > (products.size() / PAGE_SIZE + 1))
-            return null;
-
-        if (products != null && products.size() > 0) {
-            for (int i = 0; i < products.size(); i++) {
-                Product product = products.get(i);
-                product.setSize(serverCache.findSize(product.getSizeId()));
-            }
-        }
-
-        Collections.sort(products);
-
-        return products.subList((pageNo - 1) * PAGE_SIZE, Math.min(products.size(), pageNo * PAGE_SIZE));
     }
 
     @RequestMapping(value = "/product/getClientProducts")
     @ResponseBody
     public List<ClientProduct> getClientProducts(String clientName) {
         List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
+        if (clientProducts != null) {
+            for (int i = 0; i < clientProducts.size(); i++) {
+                ClientProduct clientProduct = clientProducts.get(i);
+                if (clientProduct.getSizeId() > 0) {
+                    clientProduct.setSize(serverCache.findSize(clientProduct.getSizeId()));
+                    clientProduct.setDescription(objectDescriptor.getDescription(clientProduct));
+                }
+            }
+        }
 
         Collections.sort(clientProducts);
         return clientProducts;

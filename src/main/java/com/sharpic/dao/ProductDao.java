@@ -1,6 +1,5 @@
 package com.sharpic.dao;
 
-import com.sharpic.common.Util;
 import com.sharpic.domain.Product;
 import com.sharpic.domain.ProductMapper;
 import com.sharpic.service.IObjectDescriptor;
@@ -26,13 +25,6 @@ public class ProductDao {
 
         if (products == null)
             return products;
-
-        for (int i = 0; i < products.size(); i++) {
-            Product product = products.get(i);
-            if (Util.isValidName(product.getName())) {
-                product.setDescription(objectDescriptor.getDescription(product));
-            }
-        }
 
         return products;
     }

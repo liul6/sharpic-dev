@@ -1,9 +1,13 @@
 package com.sharpic.controller;
 
 import com.sharpic.common.DateUtil;
+import com.sharpic.dao.EntryDao;
 import com.sharpic.dao.ModifierDao;
-import com.sharpic.domain.*;
+import com.sharpic.domain.AuditMapper;
+import com.sharpic.domain.Entry;
+import com.sharpic.domain.ModifierItem;
 import com.sharpic.service.IServerCache;
+import com.sharpic.service.ObjectDescriptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +32,16 @@ public class AuditController {
     private AuditMapper auditMapper;
 
     @Autowired
-    private EntryMapper entryMapper;
+    private EntryDao entryDao;
 
     @Autowired
     private IServerCache serverCache;
 
     @Autowired
     private ModifierDao modifierDao;
+
+    @Autowired
+    private ObjectDescriptor objectDescriptor;
 
     @RequestMapping(value = "/audit/getEntries")
     @ResponseBody
@@ -48,15 +55,8 @@ public class AuditController {
         if (auditId < 0)
             return new ArrayList<Entry>();
 
-        List<Entry> entries = entryMapper.getAuditEntries(auditId);
-        if (entries != null) {
-            for (int i = 0; i < entries.size(); i++) {
-                Entry entry = entries.get(i);
-                Product product = serverCache.findProduct(entry.getProductId());
-                entry.setProductDescription(product.getDescription());
-            }
+        List<Entry> entries = entryDao.getAuditEntries(auditId);
 
-        }
         System.out.println("The number of entries retrieved: " + entries.size());
 
         Collections.sort(entries);

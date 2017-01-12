@@ -92,7 +92,7 @@ public class SalesUploader {
 
             return saleDao.uploadSales(clientName, auditId, sales);
         } catch (Exception e) {
-            throw new SharpICException("The selected file has incorrect content, cannot be parsed!");
+            throw new SharpICException("The selected file has incorrect content, cannot be parsed!", e);
         }
     }
 

@@ -7,8 +7,6 @@ import java.util.Date;
  */
 public class Product extends BaseObject implements Comparable<Product> {
     private String name;
-    private int sizeId;
-    private String serving;
     private double tare;
     private double cost;
     private double fulls;
@@ -18,30 +16,12 @@ public class Product extends BaseObject implements Comparable<Product> {
     private Date updatedDatetime;
     private String description;
 
-    private Size size;
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getSizeId() {
-        return sizeId;
-    }
-
-    public void setSizeId(int sizeId) {
-        this.sizeId = sizeId;
-    }
-
-    public String getServing() {
-        return serving;
-    }
-
-    public void setServing(String serving) {
-        this.serving = serving;
     }
 
     public double getTare() {
@@ -98,14 +78,6 @@ public class Product extends BaseObject implements Comparable<Product> {
 
     public void setUpdatedDatetime(Date updatedDatetime) {
         this.updatedDatetime = updatedDatetime;
-    }
-
-    public Size getSize() {
-        return size;
-    }
-
-    public void setSize(Size size) {
-        this.size = size;
     }
 
     public int compareTo(Product product) {

@@ -47,8 +47,8 @@
         and t1.update_datetime=t2.update_datetime
     </select>
 
-    <insert id="createRecipe">
-        insert into recipe(client_name, name, update_datetime) values(#{recipeObj.clientName}, #{recipeObj.recipeName}, SYSDATETIME())
+    <insert id="createRecipe" parameterType='Recipe'>
+        insert into recipe(client_name, name, update_datetime) values(#{recipe.clientName}, #{recipe.recipeName}, SYSDATETIME())
     </insert>
 
 

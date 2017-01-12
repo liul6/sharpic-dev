@@ -136,8 +136,6 @@ public class ServerCache implements IServerCache {
             if (Util.isValidName(recipe.getRecipeName())) {
                 recipeMapById.put(recipe.getId(), recipe);
                 recipeMapByName.put(recipe.getClientName() + "_" + recipe.getRecipeName(), recipe);
-
-//                recipe.setDescription(objectDescriptor.getDescription(recipe));
             }
         }
     }

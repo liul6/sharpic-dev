@@ -94,16 +94,19 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
            .success(function (data, status, headers, config) {
            $scope.auditEntries = data;
            $scope.auditEntriesOptions.data = data;
+
+           $http.get('/audit/getModifierItems?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
+               .success(function (data, status, headers, config) {
+               $scope.auditModiferItems = data;
+           })
+               .error(function (data, status, header, config) {
+           });
+
        })
        .error(function (data, status, header, config) {
        });
 
-       $http.get('/audit/getModifierItems?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
-           .success(function (data, status, headers, config) {
-           $scope.auditModiferItems = data;
-       })
-       .error(function (data, status, header, config) {
-       });
+
     };
 
     $scope.addAudit = function() {
@@ -122,8 +125,8 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
                 if(data != null) {
                     $scope.auditEntries = [];
                     $scope.auditEntriesOptions.data = [];
-                    $scope.selectClient();
                     $scope.auditDate = data;
+                    $scope.selectClient();
                 }
         })
         .error(function (data, status, header, config) {

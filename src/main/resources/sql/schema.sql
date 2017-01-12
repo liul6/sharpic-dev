@@ -204,30 +204,30 @@ create table user_name (
 
 #insert into audit_recipe(audit_id, client_name, name, ignore, object_id, update_datetime)
 #select audit_id, client_name, name, ignore, recipe.id, update_datetime
-from recipe, (select sale.audit_id, sale.recipe_id
-from sale
-group by audit_id, recipe_id) a
-where a.recipe_id=recipe.id;
+#from recipe, (select sale.audit_id, sale.recipe_id
+#from sale
+#group by audit_id, recipe_id) a
+#where a.recipe_id=recipe.id;
 
-update sale
-set recipe_id = audit_recipe.id
-from audit_recipe
-where sale.audit_id=audit_recipe.audit_id and sale.recipe_id=audit_recipe.object_id;
+#update sale
+#set recipe_id = audit_recipe.id
+#from audit_recipe
+#where sale.audit_id=audit_recipe.audit_id and sale.recipe_id=audit_recipe.object_id;
 
-insert into audit_recipe_item(audit_id, recipe_id, product_id, fulls, ounces, object_id, update_datetime)
-select sale.audit_id, audit_recipe.id, recipe_item.product_id, fulls, ounces, recipe_item.id, sale.update_datetime
-from audit_recipe, sale, recipe, recipe_item
-where sale.recipe_id=recipe.id
-and recipe.id=audit_recipe.object_id
-and sale.audit_id=audit_recipe.audit_id
-and recipe_item.recipe_id=recipe.id;
+#insert into audit_recipe_item(audit_id, recipe_id, product_id, fulls, ounces, object_id, update_datetime)
+#select sale.audit_id, audit_recipe.id, recipe_item.product_id, fulls, ounces, recipe_item.id, sale.update_datetime
+#from audit_recipe, sale, recipe, recipe_item
+#where sale.recipe_id=recipe.id
+#and recipe.id=audit_recipe.object_id
+#and sale.audit_id=audit_recipe.audit_id
+#and recipe_item.recipe_id=recipe.id;
 
-insert into audit_recipe_item(audit_id, recipe_id, product_id, fulls, ounces, object_id, update_datetime)
-select sale.audit_id, audit_recipe.id, recipe_item.product_id, fulls, ounces, recipe_item.id, recipe_item.update_datetime
-from recipe_item, audit_recipe, sale
-where sale.recipe_id=audit_recipe.id
-and sale.audit_id=audit_recipe.audit_id
-and recipe_item.recipe_id=audit_recipe.object_id;
+#insert into audit_recipe_item(audit_id, recipe_id, product_id, fulls, ounces, object_id, update_datetime)
+#select sale.audit_id, audit_recipe.id, recipe_item.product_id, fulls, ounces, recipe_item.id, recipe_item.update_datetime
+#from recipe_item, audit_recipe, sale
+#where sale.recipe_id=audit_recipe.id
+#and sale.audit_id=audit_recipe.audit_id
+#and recipe_item.recipe_id=audit_recipe.object_id;
 
 insert into client_product(client_name, product_id, name, size_id, serving, update_datetime)
 select client.name, product.id, product.name, size_id,serving, product.update_datetime
@@ -238,3 +238,17 @@ set product_id=client_product.id
 from audit, client_product
 where audit.id=entry.audit_id
 and audit.client_name=client_product.client_name and entry.product_id=client_product.product_id;
+
+update recipe_item
+set product_id=client_product.id
+from recipe, recipe_item, client_product
+where recipe.id=recipe_item.recipe_id
+and recipe.client_name=client_product.client_name
+and recipe_item.product_id=client_product.product_id;
+
+update audit_recipe_item
+set product_id=client_product.id
+from audit_recipe, audit_recipe_item, client_product
+where audit_recipe.id=audit_recipe_item.recipe_id
+and audit_recipe.client_name=client_product.client_name
+and audit_recipe_item.product_id=client_product.product_id;

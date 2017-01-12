@@ -23,10 +23,10 @@
         delete from audit_recipe_item where audit_id=#{auditId}
     </delete>
 
-    <insert id="insertAuditRecipeItem">
-        insert into audit_recipe_item(audit_id, recipe_id, fulls, ounces, object_id, update_datetime)
-        values(#{auditId},#{recipeId},
-        #{auditRecipe.clientName}, #{auditRecipe.recipeName}, #{auditRecipe.objectId}, SYSDATETIME())
+    <insert id="insertAuditRecipeItem" parameterType='AuditRecipeItem'>
+        insert into audit_recipe_item(audit_id, recipe_id, product_id, fulls, ounces, object_id, update_datetime)
+        values(#{auditRecipeItem.auditId},#{auditRecipeItem.recipeId},#{auditRecipeItem.productId},
+        #{auditRecipeItem.fulls}, #{auditRecipeItem.ounces}, #{auditRecipeItem.objectId}, SYSDATETIME())
 
     </insert>
 

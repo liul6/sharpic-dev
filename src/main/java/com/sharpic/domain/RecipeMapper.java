@@ -12,8 +12,12 @@ import java.util.List;
 @Mapper
 public interface RecipeMapper {
     public List<Recipe> getAllRecipes();
+
     public List<Recipe> getClientRecipes(String clientName);
+
     public Recipe getRecipe(int recipeId);
+
     public Recipe getRecipeByName(@Param("clientName") String clientName, @Param("recipeName") String recipeName);
-    public void createRecipe(Recipe recipe);
+
+    public void createRecipe(@Param("recipe") Recipe recipe);
 }
