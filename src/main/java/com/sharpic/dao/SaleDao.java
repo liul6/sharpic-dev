@@ -4,7 +4,7 @@ import com.sharpic.common.SharpICException;
 import com.sharpic.domain.AuditRecipe;
 import com.sharpic.domain.Sale;
 import com.sharpic.domain.SaleMapper;
-import com.sharpic.service.IObjectDescriptor;
+import com.sharpic.service.IObjectTransientFieldsPopulator;
 import com.sharpic.service.IServerCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class SaleDao {
     private AuditRecipeDao auditRecipeDao;
 
     @Autowired
-    private IObjectDescriptor objectDescriptor;
+    private IObjectTransientFieldsPopulator objectTransientFieldsPopulator;
 
     public void deleteSales(String clientName, int auditId) {
         saleMapper.deleteSales(clientName, auditId);
@@ -50,7 +50,6 @@ public class SaleDao {
                 int newRecipeId = auditRecipeDao.createAuditRecipe(auditId, sale.getRecipe());
                 auditRecipe = auditRecipeDao.getAuditRecipeByName(auditId, sale.getRecipe().getClientName(), sale.getRecipe().getRecipeName());
             }
-            auditRecipe.setDescription(objectDescriptor.getDescription(auditRecipe));
             sale.setRecipeId(auditRecipe.getId());
             sale.setRecipe(auditRecipe);
 
@@ -72,6 +71,7 @@ public class SaleDao {
 
             AuditRecipe auditRecipe = auditRecipeMap.get(sale.getRecipeId());
             sale.setRecipe(auditRecipe);
+            objectTransientFieldsPopulator.populateRecipeTransientFields(auditRecipe);
             if (auditRecipe == null)
                 throw new SharpICException("Cannot find audit recipe with id: " + auditRecipe.getId());
         }

@@ -4,7 +4,7 @@ import com.sharpic.dao.ClientProductDao;
 import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.Product;
 import com.sharpic.domain.Size;
-import com.sharpic.service.IObjectDescriptor;
+import com.sharpic.service.IObjectTransientFieldsPopulator;
 import com.sharpic.service.IServerCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class ProductController {
     private ClientProductDao clientProductDao;
 
     @Autowired
-    private IObjectDescriptor objectDescriptor;
+    private IObjectTransientFieldsPopulator transientFieldsPopulator;
 
     @RequestMapping(value = "/product/getProducts")
     @ResponseBody
@@ -44,15 +44,7 @@ public class ProductController {
     @ResponseBody
     public List<ClientProduct> getClientProducts(String clientName) {
         List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
-        if (clientProducts != null) {
-            for (int i = 0; i < clientProducts.size(); i++) {
-                ClientProduct clientProduct = clientProducts.get(i);
-                if (clientProduct.getSizeId() > 0) {
-                    clientProduct.setSize(serverCache.findSize(clientProduct.getSizeId()));
-                    clientProduct.setDescription(objectDescriptor.getDescription(clientProduct));
-                }
-            }
-        }
+        transientFieldsPopulator.populateProductTransientFields(clientProducts);
 
         Collections.sort(clientProducts);
         return clientProducts;

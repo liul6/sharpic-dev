@@ -7,7 +7,7 @@ import com.sharpic.domain.AuditMapper;
 import com.sharpic.domain.Entry;
 import com.sharpic.domain.ModifierItem;
 import com.sharpic.service.IServerCache;
-import com.sharpic.service.ObjectDescriptor;
+import com.sharpic.service.ObjectTransientFieldsPopulator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class AuditController {
     private ModifierDao modifierDao;
 
     @Autowired
-    private ObjectDescriptor objectDescriptor;
+    private ObjectTransientFieldsPopulator objectDescriptor;
 
     @RequestMapping(value = "/audit/getEntries")
     @ResponseBody

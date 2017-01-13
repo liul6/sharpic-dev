@@ -3,7 +3,7 @@ package com.sharpic.dao;
 import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.Entry;
 import com.sharpic.domain.EntryMapper;
-import com.sharpic.service.IObjectDescriptor;
+import com.sharpic.service.IObjectTransientFieldsPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class EntryDao {
     private ClientProductDao clientProductDao;
 
     @Autowired
-    private IObjectDescriptor objectDescriptor;
+    private IObjectTransientFieldsPopulator objectTransientFieldsPopulator;
 
     public List<Entry> getAuditEntries(int auditId) {
         List<Entry> entries = entryMapper.getAuditEntries(auditId);
@@ -41,7 +41,7 @@ public class EntryDao {
             for (int i = 0; i < entries.size(); i++) {
                 Entry entry = entries.get(i);
                 entry.setClientProduct(clientProductMap.get(entry.getProductId()));
-                entry.setProductDescription(objectDescriptor.getDescription(entry.getClientProduct()));
+                objectTransientFieldsPopulator.populateProductTransientFields(entry.getClientProduct());
             }
         }
 

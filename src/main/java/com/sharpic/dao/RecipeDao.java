@@ -1,7 +1,7 @@
 package com.sharpic.dao;
 
 import com.sharpic.domain.*;
-import com.sharpic.service.IObjectDescriptor;
+import com.sharpic.service.IObjectTransientFieldsPopulator;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class RecipeDao {
     private RecipeItemDao recipeItemDao;
 
     @Autowired
-    private IObjectDescriptor objectDescriptor;
+    private IObjectTransientFieldsPopulator objectDescriptor;
 
     public Recipe createRecipe(String clientName, String recipeName) {
         Recipe recipe = new Recipe();
@@ -73,11 +73,6 @@ public class RecipeDao {
                 continue;
 
             recipe.addRecipeItem(recipeItem);
-        }
-
-        for (int i = 0; i < recipes.size(); i++) {
-            Recipe recipe = recipes.get(i);
-            recipe.setDescription(objectDescriptor.getDescription(recipe));
         }
 
         return recipeMap;

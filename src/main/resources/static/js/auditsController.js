@@ -7,9 +7,10 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.clientNames = [];
     $scope.auditDates = [];
     $scope.allVenues = [];
-    $scope.auditEntries = [];
     $scope.auditModiferItems = [];
+    $scope.clientProducts = [];
     $scope.auditEntriesOptions = [];
+    $scope.productDescriptionCelltemplate = null;
 
     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withDisplayLength(100)
@@ -21,10 +22,6 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
 
     $scope.deleteAudit = function() {
         $scope.message = 'Deleted audit succcessfully';
-    };
-
-    $scope.addEntry = function() {
-        $scope.message = 'Added entry succcessfully';
     };
 
     $scope.addModifiers = function() {
@@ -46,53 +43,72 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.getClientNames();
 
     $scope.populateDefault = function(selectedClientName) {
-        $scope.auditEntries = [];
-
         $scope.clientName = selectedClientName;
-
-        $scope.auditEntriesOptions = {
-            data: [],
-            enableColumnMenus: false,
-            columnDefs: [
-                {name: 'productDescription', displayName: 'Product', width : '40%', enableCellEdit : false },
-                {name: 'weights', displayName: 'Partials', type: 'number' },
-                {name: 'fulls', displayName: 'Fulls', type: 'number' },
-                {name: 'bin', displayName: 'Bin' },
-                {name: 'location', displayName: 'Location' },
-                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
-            ]
-        };
         $scope.selectClient();
     };
 
+    $scope.addEntry = function() {
+        var newEntry = {productDescription : null, weights : null, fulls : null, bin : null, location : null};
+        $scope.auditEntriesOptions.data.unshift(newEntry);
+    };
+
     $scope.selectClient = function() {
-        $scope.auditEntries = [];
         $scope.auditEntriesOptions.data = [];
-        $http.get('/client/getAuditDates?clientName=' + $scope.clientName)
+        $scope.allVenus = [];
+        $scope.clientProduct = [];
+
+        $http.get('/client/getClientInfo?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
-            $scope.auditDates = data;
+            $scope.auditDates = data.model.clientAudits;
+            $scope.allVenus = data.model.clientLocations;
+            $scope.allVenus.push("ALL");
+            $scope.clientProducts = data.model.clientProducts;
+            $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as clientProduct.description for clientProduct in grid.appScope.clientProducts | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
+
             if($scope.auditDates.length>0) {
                 $scope.auditDate = $scope.auditDates[0];
                 $scope.selectAudit();
             }
-        })
-        .error(function (data, status, header, config) {
-        });
+            $scope.auditEntriesOptions = {
+                data: [],
+                enableRowSelection: false,
+                enableCellEditOnFocus: true,
+                multiSelect: false,
+                enableColumnMenus: false,
+                columnDefs: [
+                    {name: 'clientProduct.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
+                    {name: 'weights', displayName: 'Partials', type: 'number' },
+                    {name: 'fulls', displayName: 'Fulls', type: 'number' },
+                    {name: 'bin', displayName: 'Bin' },
+                    {name: 'location', displayName: 'Location' },
+                    {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                ]
+            };
 
-        $http.get('/client/getLocations?clientName=' + $scope.clientName)
-            .success(function (data, status, headers, config) {
-            $scope.allVenus = [];
-            $scope.allVenus = data;
-            $scope.allVenus.push("ALL");
+            $scope.auditEntriesOptions.onRegisterApi = function(gridApi){
+                $scope.gridApi = gridApi;
+                gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+                $scope.$apply();
+                });
+            };
         })
         .error(function (data, status, header, config) {
         });
     }
 
+    $scope.typeaheadSelected = function(entity, selectedItem){
+        entity.clientProduct = selectedItem;
+        $scope.$broadcast('uiGridEventEndCellEdit');
+    };
+
+    $scope.locationTypeaheadSelected = function(entity, selectedItem){
+        entity.location = selectedItem;
+        $scope.$broadcast('uiGridEventEndCellEdit');
+    };
+
     $scope.selectAudit = function() {
        $http.get('/audit/getEntries?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
            .success(function (data, status, headers, config) {
-           $scope.auditEntries = data;
            $scope.auditEntriesOptions.data = data;
 
            $http.get('/audit/getModifierItems?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
@@ -123,7 +139,6 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
         $http.post('/client/addAudit', data, config)
             .success(function (data, status, headers, config) {
                 if(data != null) {
-                    $scope.auditEntries = [];
                     $scope.auditEntriesOptions.data = [];
                     $scope.auditDate = data;
                     $scope.selectClient();

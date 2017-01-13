@@ -2,7 +2,7 @@ package com.sharpic.dao;
 
 import com.sharpic.domain.Product;
 import com.sharpic.domain.ProductMapper;
-import com.sharpic.service.IObjectDescriptor;
+import com.sharpic.service.IObjectTransientFieldsPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class ProductDao {
     private ProductMapper productMapper;
 
     @Autowired
-    private IObjectDescriptor objectDescriptor;
+    private IObjectTransientFieldsPopulator objectDescriptor;
 
 
     public List<Product> getProducts() {

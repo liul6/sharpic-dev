@@ -2,8 +2,11 @@ package com.sharpic.controller;
 
 import com.sharpic.common.DateUtil;
 import com.sharpic.dao.AuditDao;
+import com.sharpic.dao.ClientProductDao;
 import com.sharpic.domain.*;
 import com.sharpic.service.IServerCache;
+import com.sharpic.service.ObjectTransientFieldsPopulator;
+import com.sharpic.web.SharpICResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,12 @@ public class ClientController {
 
     @Autowired
     private IServerCache serverCache;
+
+    @Autowired
+    private ClientProductDao clientProductDao;
+
+    @Autowired
+    private ObjectTransientFieldsPopulator objectTransientFieldsPopulator;
 
     @RequestMapping(value = "/client/getClientNames")
     @ResponseBody
@@ -158,11 +167,33 @@ public class ClientController {
             return new ArrayList<Recipe>();
 
         List<Recipe> clientRecipes = serverCache.getRecipes(clientName);
+        objectTransientFieldsPopulator.populateRecipeTransientFields(clientRecipes);
+
         if (clientRecipes != null)
             Collections.sort(clientRecipes);
 
 
         return clientRecipes;
     }
+
+    @RequestMapping(value = "/client/getClientInfo")
+    @ResponseBody
+    public SharpICResponse getClientInfo(String clientName) {
+        SharpICResponse sharpICResponse = new SharpICResponse();
+
+        if (clientName == null || clientName.isEmpty())
+            return sharpICResponse;
+
+        List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
+        objectTransientFieldsPopulator.populateProductTransientFields(clientProducts);
+
+        sharpICResponse.addToModel("clientProducts", clientProducts);
+        sharpICResponse.addToModel("clientLocations", getClientLocations(clientName));
+        sharpICResponse.addToModel("clientAudits", getClientAuditDates(clientName));
+
+        sharpICResponse.setSuccessful(true);
+        return sharpICResponse;
+    }
+
 
 }

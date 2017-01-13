@@ -1,7 +1,7 @@
 package com.sharpic.dao;
 
 import com.sharpic.domain.*;
-import com.sharpic.service.IObjectDescriptor;
+import com.sharpic.service.IObjectTransientFieldsPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class AuditRecipeDao {
     private AuditRecipeItemDao auditRecipeItemDao;
 
     @Autowired
-    private IObjectDescriptor objectDescriptor;
+    private IObjectTransientFieldsPopulator objectDescriptor;
 
     public List<AuditRecipe> getAuditRecipes(int auditId) {
         List<RecipeItem> auditRecipeItems = auditRecipeItemDao.getAuditRecipeItems(auditId);
@@ -46,7 +46,6 @@ public class AuditRecipeDao {
             for (int i = 0; i < auditRecipes.size(); i++) {
                 AuditRecipe auditRecipe = auditRecipes.get(i);
                 auditRecipe.setRecipeItems(auditRecipeItemMap.get(auditRecipe.getId()));
-                auditRecipe.setDescription(objectDescriptor.getDescription(auditRecipe));
             }
         }
 
@@ -94,14 +93,14 @@ public class AuditRecipeDao {
         auditRecipe.setObjectId(String.valueOf(recipe.getId()));
 
         auditRecipeMapper.insertAuditRecipe(auditRecipe);
-        auditRecipe = auditRecipeMapper.getAuditRecipeByName(auditId,recipe.getClientName(), recipe.getRecipeName());
+        auditRecipe = auditRecipeMapper.getAuditRecipeByName(auditId, recipe.getClientName(), recipe.getRecipeName());
 
         List<RecipeItem> recipeItems = recipe.getRecipeItems();
         if (recipeItems != null) {
             for (int i = 0; i < recipeItems.size(); i++) {
 
                 RecipeItem recipeItem = recipeItems.get(i);
-                if(recipeItem.getProductId()<0) {
+                if (recipeItem.getProductId() < 0) {
                     System.out.println("not good here!");
                 }
 
