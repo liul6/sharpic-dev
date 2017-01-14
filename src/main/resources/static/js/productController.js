@@ -8,6 +8,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
     $scope.productOptions = {};
     $scope.clientProductOptions = {};
     $scope.sizeOptions = {};
+    $scope.activeTabIndex = 0;
 
     $scope.getClientNames = function() {
         $http.get('/client/getClientNames')
@@ -32,7 +33,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
                 {name: 'size.name', displayName: 'Size' },
                 {name: 'serving', displayName: 'Serving' },
                 {name: 'retailPrice', displayName: 'Retail Price', type: 'number' },
-                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeClientProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
             ]
         };
 
@@ -61,7 +62,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
                         {name: 'cases', displayName: 'Cases', type: 'number' },
                         {name: 'upc', displayName: 'UPC', width : '12%'  },
                         {name: 'tags', displayName: 'Tags', width : '12%' },
-                        {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeClientProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                        {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                     ]
                 };
         })
@@ -112,12 +113,20 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
         $scope.productOptions.data.splice(index, 1);
     };
 
+    $scope.addClientProduct = function() {
+        var newClientProduct = {name : null, size : {name : null}, serving : null, retailPrice : null};
+        $scope.clientProductOptions.data.unshift(newClientProduct);
+    };
 
     $scope.removeClientProduct = function(row) {
         var index = $scope.clientProductOptions.data.indexOf(row.entity);
         $scope.clientProductOptions.data.splice(index, 1);
     };
 
+    $scope.addSize = function() {
+        var newSize = {name : null, ounces : null};
+        $scope.sizeOptions.data.unshift(newSize);
+    };
 
     $scope.removeSize = function(row) {
         var index = $scope.sizeOptions.data.indexOf(row.entity);
