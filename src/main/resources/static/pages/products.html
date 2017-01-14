@@ -3,7 +3,8 @@
     <div class="wrapper">
         <div class="row">
             <div class="col-sm-4">
-                <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames" ng-change="selectClient()"></select>
+                <select class="form-control" ng-model="clientName" ng-options="x for x in clientNames"
+                        ng-change="selectClient()"></select>
             </div>
             <button type="button" ng-click="addProduct()" class="btn btn-danger">
                 <span class="glyphicon glyphicon-plus"></span> Add Product
@@ -22,17 +23,17 @@
     <tabset>
         <tab heading="Product">
             <div>
-                <div ui-grid="productOptions" ui-grid-edit ui-grid-row-edit ui-grid-auto-resize class="grid"></div>
+                <div ui-grid="productOptions" ui-grid-edit ui-grid-auto-resize class="grid"></div>
             </div>
         </tab>
         <tab heading="Client Specific">
             <div>
-                <div ui-grid="clientProductOptions" ui-grid-edit ui-grid-row-edit ui-grid-auto-resize class="grid"></div>
+                <div ui-grid="clientProductOptions" ui-grid-edit ui-grid-auto-resize class="grid"></div>
             </div>
         </tab>
         <tab heading="Size">
             <div>
-                <div ui-grid="sizeOptions" ui-grid-edit ui-grid-row-edit ui-grid-auto-resize class="grid"></div>
+                <div ui-grid="sizeOptions" ui-grid-edit ui-grid-auto-resize class="grid"></div>
             </div>
         </tab>
     </tabset>

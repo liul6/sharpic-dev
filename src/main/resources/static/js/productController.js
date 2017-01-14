@@ -2,13 +2,9 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
     $scope.clientName = null;
 
     $scope.clientNames = [];
-    $scope.products = [];
-    $scope.clientProducts = [];
-    $scope.sizes = [];
     $scope.productOptions = {};
     $scope.clientProductOptions = {};
     $scope.sizeOptions = {};
-    $scope.activeTabIndex = 0;
 
     $scope.getClientNames = function() {
         $http.get('/client/getClientNames')
@@ -24,32 +20,14 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
 
     $scope.populateDefault = function(selectedClientName) {
         $scope.clientName = selectedClientName;
-        $scope.clientProductOptions = {
-            data: [],
-            enableSorting: false,
-            enableColumnMenus: false,
-            columnDefs: [
-                {name: 'name', displayName: 'Product', width : '40%' },
-                {name: 'size.name', displayName: 'Size' },
-                {name: 'serving', displayName: 'Serving' },
-                {name: 'retailPrice', displayName: 'Retail Price', type: 'number' },
-                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeClientProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
-            ]
-        };
-
         $scope.selectClient();
     };
-
-    $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDisplayLength(100)
-        .withOption('bLengthChange', false);
 
     $scope.getClientNames();
 
     $scope.getProducts = function() {
         $http.get('/product/getProducts')
             .success(function (data, status, headers, config) {
-                $scope.products = data;
                 $scope.productOptions = {
                     data: data,
                     enableSorting: false,
@@ -75,7 +53,6 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
     $scope.getSizes = function() {
         $http.get('/product/getSizes')
             .success(function (data, status, headers, config) {
-                $scope.sizes = data;
                 $scope.sizeOptions = {
                     data: data,
                     enableColumnMenus: false,
@@ -92,15 +69,50 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
 
     $scope.getSizes();
 
+
     $scope.selectClient = function() {
-        $scope.clientProducts = [];
         $http.get('/product/getClientProducts?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
-            $scope.clientProducts = data;
-            $scope.clientProductOptions.data = data;
+
+            $scope.productCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="name as product.name for product in grid.appScope.productOptions.data | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelectedProduct(row.entity, $item)" class="form-control" ></form></div>';
+            $scope.sizeCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="name as size.name for size in grid.appScope.sizeOptions.data | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelectedSize(row.entity, $item)" class="form-control" ></form></div>';
+
+            $scope.clientProductOptions = {
+                data: data,
+                enableRowSelection: false,
+                enableCellEditOnFocus: true,
+                multiSelect: false,
+                enableColumnMenus: false,
+                columnDefs: [
+                    {name: 'name', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productCelltemplate },
+                    {name: 'size.name', displayName: 'Size', enableCellEdit : true, editableCellTemplate: $scope.sizeCelltemplate },
+                    {name: 'serving', displayName: 'Serving' },
+                    {name: 'retailPrice', displayName: 'Retail Price', type: 'number' },
+                    {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeClientProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                ]
+            };
+
+            $scope.clientProductOptions.onRegisterApi = function(gridApi){
+                $scope.gridApi = gridApi;
+                gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+                $scope.$apply();
+                });
+            };
+
         })
         .error(function (data, status, header, config) {
         });
+    };
+
+
+    $scope.typeaheadSelectedProduct = function(entity, selectedItem){
+        entity.name = selectedItem.name;
+        $scope.$broadcast('uiGridEventEndCellEdit');
+    };
+
+    $scope.typeaheadSelectedSize = function(entity, selectedItem){
+        entity.size = selectedItem;
+        $scope.$broadcast('uiGridEventEndCellEdit');
     };
 
     $scope.addProduct = function() {
