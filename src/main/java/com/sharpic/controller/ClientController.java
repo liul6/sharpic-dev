@@ -90,22 +90,14 @@ public class ClientController {
 
     @RequestMapping(value = "/client/getLocations")
     @ResponseBody
-    public List<String> getClientLocations(String clientName) {
+    public List<Location> getClientLocations(String clientName) {
         if (clientName == null || clientName.isEmpty())
-            return new ArrayList<String>();
+            return new ArrayList<>();
 
-        List<Location> allLocations = locationMapper.getClientLocations(clientName);
+        List<Location> locations = locationMapper.getClientLocations(clientName);
 
-        List<String> allLocationNames = new ArrayList<String>();
-        if (allLocations != null) {
-            for (int i = 0; i < allLocations.size(); i++) {
-                Location location = allLocations.get(i);
-                allLocationNames.add(location.getLocationName());
-            }
-        }
-
-        System.out.println("#####The number of locations for client####:" + allLocationNames.size());
-        return allLocationNames;
+        System.out.println("#####The number of locations for client####:" + locations.size());
+        return locations;
     }
 
     @PreAuthorize("hasRole('USER')")

@@ -12,6 +12,9 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.auditEntriesOptions = [];
     $scope.productDescriptionCelltemplate = null;
 
+    $scope.clientLocations = [];
+    $scope.clientLocationsMap  = {};
+
     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withDisplayLength(100)
         .withOption('bLengthChange', false);
@@ -61,8 +64,11 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
             .success(function (data, status, headers, config) {
             $scope.auditDates = data.model.clientAudits;
             $scope.allVenus = data.model.clientLocations;
+            $scope.clientLocations = data.model.clientLocations;
+
             $scope.allVenus.push("ALL");
             $scope.clientProducts = data.model.clientProducts;
+            $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as clientProduct.description for clientProduct in grid.appScope.clientProducts | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
             $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as clientProduct.description for clientProduct in grid.appScope.clientProducts | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
 
             if($scope.auditDates.length>0) {
@@ -80,7 +86,12 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
                     {name: 'weights', displayName: 'Partials', type: 'number' },
                     {name: 'fulls', displayName: 'Fulls', type: 'number' },
                     {name: 'bin', displayName: 'Bin' },
-                    {name: 'location', displayName: 'Location' },
+                    {    name: 'location',
+                         displayName: 'Location',
+                         editableCellTemplate: 'ui-grid/dropdownEditor',
+                         editDropdownIdLabel: 'locationName',
+                         editDropdownValueLabel: 'locationName',
+                         editDropdownOptionsArray: $scope.clientLocations},
                     {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                 ]
             };
@@ -176,4 +187,15 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
         //notify here
         });
     };
+})
+.filter('locationFilter', function() {
+  var genderHash = $scope.clientLocationsMap;
+
+  return function(input) {
+    if (!input){
+      return '';
+    } else {
+      return genderHash[input];
+    }
+  };
 });

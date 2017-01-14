@@ -4,14 +4,21 @@
 
 <mapper namespace="com.sharpic.domain.LocationMapper">
     <resultMap id="ResultMap" type="Location">
-        <id column="id" property="id" />
-        <result column="client_name" property="clientName" />
-        <result column="name" property="locationName" />
-        <result column="update_datetime" property="updatedDatetime" />
+        <id column="id" property="id"/>
+        <result column="client_name" property="clientName"/>
+        <result column="name" property="locationName"/>
+        <result column="update_datetime" property="updatedDatetime"/>
     </resultMap>
 
     <select id="getClientLocations" resultMap="ResultMap">
         select client_name, name, update_datetime from location where client_name=#{clientName} order by name
+    </select>
+
+    <select id="getClientLocationsByAuditId" resultMap="ResultMap">
+        select location.client_name, location.name, location.update_datetime
+        from location, audit
+        where audit.id=#{auditId} and
+        location.client_name=audit.client_name
     </select>
 
     <select id="getLocations" resultMap="ResultMap">

@@ -1,10 +1,7 @@
 package com.sharpic.service;
 
 import com.sharpic.common.Util;
-import com.sharpic.domain.ClientProduct;
-import com.sharpic.domain.Recipe;
-import com.sharpic.domain.RecipeItem;
-import com.sharpic.domain.Size;
+import com.sharpic.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
