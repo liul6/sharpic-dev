@@ -2,6 +2,7 @@ package com.sharpic.controller;
 
 import com.sharpic.common.Util;
 import com.sharpic.domain.Sale;
+import com.sharpic.service.IServerCache;
 import com.sharpic.uploader.SalesUploader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +28,12 @@ public class FileUploadController {
     @Autowired
     private SalesUploader salesUploader;
 
+    @Autowired
+    private IServerCache serverCache;
+
+    @Autowired
+    private SaleController saleController;
+
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     @ResponseBody
     public String provideUploadInfo() {
@@ -41,7 +48,9 @@ public class FileUploadController {
                                        @RequestParam("file") MultipartFile file) {
         if (category != null && !file.isEmpty()) {
             if ("SALE".equalsIgnoreCase(category)) {
-                return uploadSale(clientName, auditDateStr, file);
+                uploadSale(clientName, auditDateStr, file);
+
+                saleController.getSales(clientName, auditDateStr);
             }
         }
 
@@ -52,6 +61,8 @@ public class FileUploadController {
         if (Util.isValidName(clientName) && Util.isValidName(auditDateStr))
             try {
                 List<Sale> sales = salesUploader.uploadSales(clientName, auditDateStr, file.getInputStream());
+                if (sales == null || sales.size() <= 0)
+                    serverCache.fillRecipeCache();
                 return sales;
             } catch (Exception e) {
                 log.error(e);

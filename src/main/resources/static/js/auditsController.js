@@ -69,7 +69,6 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
             $scope.allVenus.push("ALL");
             $scope.clientProducts = data.model.clientProducts;
             $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as clientProduct.description for clientProduct in grid.appScope.clientProducts | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
-            $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as clientProduct.description for clientProduct in grid.appScope.clientProducts | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
 
             if($scope.auditDates.length>0) {
                 $scope.auditDate = $scope.auditDates[0];

@@ -123,7 +123,7 @@ public class ServerCache implements IServerCache {
         }
     }
 
-    private void fillRecipeCache() {
+    public void fillRecipeCache() {
         recipeMapById.clear();
 
         Map<Integer, Recipe> recipeMap = recipeDao.getRecipesMap();

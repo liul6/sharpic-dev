@@ -26,4 +26,6 @@ public interface IServerCache {
     Recipe findRecipeByName(String clientName, String recipeName);
 
     void addRecipe(Recipe recipe);
+
+    void fillRecipeCache();
 }
