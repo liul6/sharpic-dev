@@ -2,12 +2,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
     $scope.clientName = null;
     $scope.clientNames = [];
 
-    $scope.recipes = [];
     $scope.recipesOptions = {};
-
-    $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDisplayLength(100)
-        .withOption('bLengthChange', false);
 
     $scope.getClientNames = function() {
         $http.get('/client/getClientNames')
@@ -24,8 +19,6 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
     $scope.getClientNames();
 
     $scope.populateDefault = function(selectedClientName) {
-        $scope.auditEntries = [];
-
         $scope.clientName = selectedClientName;
 
         $scope.recipesOptions = {
@@ -38,8 +31,12 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
             ]
         };
 
-
         $scope.selectClient();
+    };
+
+    $scope.addRecipe = function() {
+        var newRecipe = {recipeName : null, description : null};
+        $scope.recipesOptions.data.unshift(newRecipe);
     };
 
     $scope.removeRecipe = function(row) {
@@ -50,7 +47,6 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
     $scope.selectClient = function() {
         $http.get('/client/getClientRecipes?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
-            $scope.recipes = data;
             $scope.recipesOptions.data = data;
         })
         .error(function (data, status, header, config) {

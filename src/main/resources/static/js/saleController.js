@@ -4,7 +4,6 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
 
     $scope.clientNames = [];
     $scope.auditDates = [];
-    $scope.auditSales = [];
     $scope.auditSalesOptions = {};
 
     $scope.dtOptions = DTOptionsBuilder.newOptions()
@@ -26,8 +25,6 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
     $scope.getClientNames();
 
     $scope.populateDefault = function(selectedClientName) {
-        $scope.auditSales = [];
-
         $scope.clientName = selectedClientName;
 
         $scope.auditSalesOptions = {
@@ -47,7 +44,6 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
     };
 
     $scope.selectClient = function() {
-        $scope.auditSales = [];
         $http.get('/client/getAuditDates?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
             $scope.auditDates = data;
@@ -70,28 +66,17 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
        });
     };
 
+    $scope.addSale = function() {
+        var newSale = {recipe : { recipeName : null, description : null}, amount : null, price : null };
+        $scope.auditSalesOptions.data.unshift(newSale);
+    };
+
     $scope.removeSale = function(row) {
         var index = $scope.auditSalesOptions.data.indexOf(row.entity);
         $scope.auditSalesOptions.data.splice(index, 1);
     };
 
-    $scope.uploadSaleFile = function(){
-        var file = $scope.myFile;
-        console.log('file is ' );
-        console.dir(file);
-        var uploadUrl = "/upload";
-
-        $scope.auditSales = [];
-        var info = {'name': 'SALE', 'clientName': $scope.clientName, 'auditDateStr': $scope.auditDate};
-        fileUpload.uploadFileToUrl(info, file, uploadUrl)
-            .then(function (resp){
-                $scope.auditSales = resp.data;
-            });
-    };
-
     $scope.uploadFile = function(files) {
-        $scope.auditSales = [];
-
         var fd = new FormData();
         //Take the first selected file
         fd.append('file', files[0]);
@@ -110,7 +95,6 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
             {transformRequest: angular.identity,
              headers: {'Content-Type': undefined}
              }).then(function (resp){
-                $scope.auditSales = resp.data;
                 $scope.auditSalesOptions.data = resp.data;
              });
     };
