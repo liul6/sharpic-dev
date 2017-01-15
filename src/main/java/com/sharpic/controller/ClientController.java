@@ -154,18 +154,25 @@ public class ClientController {
 
     @RequestMapping(value = "/client/getClientRecipes")
     @ResponseBody
-    public List<Recipe> getRecipes(String clientName) {
+    public SharpICResponse getRecipes(String clientName) {
+        SharpICResponse sharpICResponse = new SharpICResponse();
+
         if (clientName == null || clientName.isEmpty())
-            return new ArrayList<Recipe>();
+            return sharpICResponse;
 
         List<Recipe> clientRecipes = serverCache.getRecipes(clientName);
         objectTransientFieldsPopulator.populateRecipeTransientFields(clientRecipes);
 
         if (clientRecipes != null)
             Collections.sort(clientRecipes);
+        sharpICResponse.addToModel("clientRecipes", clientRecipes);
 
+        List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
+        objectTransientFieldsPopulator.populateProductTransientFields(clientProducts);
 
-        return clientRecipes;
+        sharpICResponse.addToModel("clientProducts", clientProducts);
+
+        return sharpICResponse;
     }
 
     @RequestMapping(value = "/client/getClientInfo")

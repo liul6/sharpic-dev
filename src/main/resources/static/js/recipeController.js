@@ -3,6 +3,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
     $scope.clientNames = [];
 
     $scope.recipesOptions = {};
+    $scope.clientProducts = [];
 
     $scope.getClientNames = function() {
         $http.get('/client/getClientNames')
@@ -52,6 +53,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
             keyboard: true,
             templateUrl : 'pages/modifyRecipe.html',
             controller : modifyRecipeController,
+            size : 'lg',
             resolve: {
 
             } // empty storage
@@ -59,6 +61,10 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
 
         $scope.opts.resolve.recipe = function() {
             return angular.copy(entity); // {recipeName : entity.recipeName} pass name to Dialog
+        }
+
+        $scope.opts.resolve.clientProducts = function() {
+            return $scope.clientProducts;
         }
 
         var modalInstance = $modal.open($scope.opts);
@@ -74,7 +80,8 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
     $scope.selectClient = function() {
         $http.get('/client/getClientRecipes?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
-            $scope.recipesOptions.data = data;
+            $scope.recipesOptions.data = data.model.clientRecipes;
+            $scope.clientProducts = data.model.clientProducts;
         })
         .error(function (data, status, header, config) {
         });
@@ -83,26 +90,44 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
 
 })
 
-var modifyRecipeController = function($scope, $modalInstance, $modal, recipe) {
+var modifyRecipeController = function($scope, $modalInstance, $modal, recipe, clientProducts) {
      $scope.recipe = recipe;
+     $scope.clientProducts = clientProducts;
+
+     $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as clientProduct.description for clientProduct in grid.appScope.clientProducts | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
+
      $scope.recipeItemOptions = {
         data: recipe.recipeItems,
         enableSorting: false,
         enableColumnMenus: false,
         columnDefs: [
-            {name: 'clientProduct.name', displayName: 'Product Name', width : '40%' },
-            {name: 'fulls', displayName: 'Fulls', type: 'number' },
-            {name: 'ounces', displayName: 'Ounces', type: 'number' }
-//            {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+           {name: 'clientProduct.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
+            {name: 'fulls', displayName: 'Fulls', type: 'number', width : '9%' },
+            {name: 'ounces', displayName: 'Ounces', type: 'number', width : '9%' },
+            {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipeIem(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
         ]
-
      };
 
-      $scope.ok = function () {
-        $modalInstance.close();
-      };
+    $scope.addRecipeItem = function() {
+        var newRecipeItem = {clientProduct : null, fulls : null, ounces : null};
+        $scope.recipeItemOptions.data.unshift(newRecipeItem);
+    }
 
-      $scope.cancel = function () {
+    $scope.removeRecipeIem = function(row) {
+        var index = $scope.recipeItemOptions.data.indexOf(row.entity);
+        $scope.recipeItemOptions.data.splice(index, 1);
+    }
+
+    $scope.typeaheadSelected = function(entity, selectedItem){
+        entity.clientProduct = selectedItem;
+        $scope.$broadcast('uiGridEventEndCellEdit');
+    }
+
+    $scope.ok = function () {
+        $modalInstance.close();
+    };
+
+    $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
-      };
+    };
 };
