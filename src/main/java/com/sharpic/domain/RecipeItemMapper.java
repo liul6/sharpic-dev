@@ -1,6 +1,7 @@
 package com.sharpic.domain;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,4 +14,8 @@ public interface RecipeItemMapper {
     public List<RecipeItem> getAllRecipeItems();
 
     public List<RecipeItem> getRecipeItems(int recipeId);
+
+    public void deleteRecipeItems(int recipeId);
+
+    public void insertRecipeItem(@Param("recipeItem") RecipeItem recipeItem);
 }

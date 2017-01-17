@@ -15,4 +15,6 @@ public interface ClientProductMapper {
     List<ClientProduct> getAuditClientProducts(int auditId);
 
     List<ClientProduct> getClientProductsWithIds(List<Integer> productIds);
+
+    ClientProduct getClientProduct(int productId);
 }

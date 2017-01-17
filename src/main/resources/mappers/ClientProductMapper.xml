@@ -51,4 +51,13 @@
         </foreach>
     </select>
 
+    <select id="getClientProduct" resultMap="ResultMap">
+        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
+        product.upc, product.tags, client_product.update_datetime
+        from product, client_product
+        where product.id=client_product.product_id
+        and client_product.id = #{productId}
+    </select>
+
 </mapper>

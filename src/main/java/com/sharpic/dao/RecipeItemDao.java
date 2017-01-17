@@ -6,7 +6,8 @@ import com.sharpic.domain.RecipeItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by joey on 2017-01-07.
@@ -30,6 +31,15 @@ public class RecipeItemDao {
         }
 
         return recipeItems;
+    }
+
+
+    public void deleteRecipeItems(int recipeId) {
+        recipeItemMapper.deleteRecipeItems(recipeId);
+    }
+
+    public void insertRecipeItem(RecipeItem recipeItem) {
+        recipeItemMapper.insertRecipeItem(recipeItem);
     }
 
 }

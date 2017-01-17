@@ -20,7 +20,13 @@ public class RecipeDao {
     private RecipeMapper recipeMapper;
 
     @Autowired
+    private RecipeItemMapper recipeItemMapper;
+
+    @Autowired
     private RecipeItemDao recipeItemDao;
+
+    @Autowired
+    private ClientProductDao clientProductDao;
 
     @Autowired
     private IObjectTransientFieldsPopulator objectDescriptor;
@@ -30,8 +36,12 @@ public class RecipeDao {
         recipe.setClientName(clientName);
         recipe.setRecipeName(recipeName);
 
+        return createRecipe(recipe);
+    }
+
+    public Recipe createRecipe(Recipe recipe) {
         recipeMapper.createRecipe(recipe);
-        return recipeMapper.getRecipeByName(clientName, recipeName);
+        return recipeMapper.getRecipeByName(recipe.getClientName(), recipe.getRecipeName());
     }
 
     public Map<Integer, Recipe> getClientRecipesMap(String clientName) {
@@ -45,7 +55,21 @@ public class RecipeDao {
     }
 
     public Recipe getRecipe(int recipeId) {
-        return recipeMapper.getRecipe(recipeId);
+        Recipe recipe = recipeMapper.getRecipe(recipeId);
+        if (recipe == null)
+            return null;
+
+        List<RecipeItem> recipeItems = recipeItemMapper.getRecipeItems(recipeId);
+        if (recipeItems != null) {
+            for (int i = 0; i < recipeItems.size(); i++) {
+                RecipeItem recipeItem = recipeItems.get(i);
+                recipeItem.setClientProduct(clientProductDao.getClientProduct(recipeItem.getProductId()));
+            }
+        }
+
+        recipe.setRecipeItems(recipeItems);
+
+        return recipe;
     }
 
     public Recipe getRecipeByName(@Param("clientName") String clientName, @Param("recipeName") String recipeName) {

@@ -3,6 +3,8 @@ package com.sharpic.controller;
 import com.sharpic.common.DateUtil;
 import com.sharpic.dao.AuditDao;
 import com.sharpic.dao.ClientProductDao;
+import com.sharpic.dao.RecipeDao;
+import com.sharpic.dao.RecipeItemDao;
 import com.sharpic.domain.*;
 import com.sharpic.service.IServerCache;
 import com.sharpic.service.ObjectTransientFieldsPopulator;
@@ -12,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,6 +50,12 @@ public class ClientController {
 
     @Autowired
     private ClientProductDao clientProductDao;
+
+    @Autowired
+    private RecipeItemDao recipeItemDao;
+
+    @Autowired
+    private RecipeDao recipeDao;
 
     @Autowired
     private ObjectTransientFieldsPopulator objectTransientFieldsPopulator;
@@ -194,5 +203,31 @@ public class ClientController {
         return sharpICResponse;
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(method = RequestMethod.POST, value = "/client/saveRecipe", consumes = "application/json")
+    @ResponseBody
+    public Recipe saveRecipe(@RequestBody Recipe recipe) {
+        if (recipe.getId() <= 0) {
+            recipe = recipeDao.createRecipe(recipe);
+        }
+
+        recipeItemDao.deleteRecipeItems(recipe.getId());
+
+        List<RecipeItem> recipeItems = recipe.getRecipeItems();
+        if (recipeItems != null) {
+            for (int i = 0; i < recipeItems.size(); i++) {
+                RecipeItem recipeItem = recipeItems.get(i);
+                recipeItem.setClientProduct(clientProductDao.getClientProduct(recipeItem.getProductId()));
+                recipeItemDao.insertRecipeItem(recipeItem);
+            }
+        }
+
+        serverCache.fillRecipeCache();
+
+        recipe = recipeDao.getRecipe(recipe.getId());
+        objectTransientFieldsPopulator.populateRecipeTransientFields(recipe);
+
+        return recipe;
+    }
 
 }

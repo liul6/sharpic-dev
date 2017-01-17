@@ -13,6 +13,8 @@ import java.util.List;
 
 @Service
 public class ObjectTransientFieldsPopulator implements IObjectTransientFieldsPopulator {
+    public static final String UNDEFINED = "***UNDEFINED***";
+
     @Autowired
     private IServerCache serverCache;
 
@@ -44,8 +46,10 @@ public class ObjectTransientFieldsPopulator implements IObjectTransientFieldsPop
             return;
 
         List<RecipeItem> recipeItems = recipe.getRecipeItems();
-        if (recipeItems == null)
+        if (recipeItems == null || recipeItems.size() == 0) {
+            recipe.setDescription(UNDEFINED);
             return;
+        }
 
         String result = "";
         for (int i = 0; i < recipeItems.size(); i++) {
@@ -61,6 +65,7 @@ public class ObjectTransientFieldsPopulator implements IObjectTransientFieldsPop
             if (i != recipeItems.size() - 1)
                 result += ", ";
         }
+
         recipe.setDescription(result);
     }
 

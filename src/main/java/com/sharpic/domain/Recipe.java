@@ -58,6 +58,9 @@ public class Recipe extends BaseObject implements Comparable<Recipe> {
 
     public void setRecipeItems(List<RecipeItem> recipeItems) {
         this.recipeItems = recipeItems;
+
+        if (recipeItems == null)
+            this.recipeItems = new ArrayList<RecipeItem>();
     }
 
     public void addRecipeItem(RecipeItem recipeItem) {

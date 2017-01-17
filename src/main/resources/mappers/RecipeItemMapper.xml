@@ -21,4 +21,14 @@
         where recipe_id=#{recipeId}
     </select>
 
+    <insert id="deleteRecipeItems">
+        delete from recipe_item where recipe_id=#{recipeId}
+    </insert>
+
+    <insert id="insertRecipeItem" parameterType="RecipeItem">
+        INSERT INTO recipe_item(recipe_id, product_id, fulls, ounces, update_datetime)
+        VALUES
+            (#{recipeItem.recipeId}, #{recipeItem.productId}, #{recipeItem.fulls}, #{recipeItem.ounces}, SYSDATETIME())
+    </insert>
+
 </mapper>

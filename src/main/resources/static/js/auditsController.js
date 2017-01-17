@@ -19,18 +19,6 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
         .withDisplayLength(100)
         .withOption('bLengthChange', false);
 
-    $scope.addAudit = function() {
-        $scope.message = 'Added audit succcessfully';
-    };
-
-    $scope.deleteAudit = function() {
-        $scope.message = 'Deleted audit succcessfully';
-    };
-
-    $scope.addModifiers = function() {
-        $scope.message = 'Added modifiers succcessfully';
-    };
-
     $scope.getClientNames = function() {
         $http.get('/client/getClientNames')
             .success(function (data, status, headers, config) {

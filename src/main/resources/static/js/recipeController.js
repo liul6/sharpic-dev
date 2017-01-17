@@ -69,8 +69,9 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
 
         var modalInstance = $modal.open($scope.opts);
 
-        modalInstance.result.then(function(){
-            //on ok button press
+        modalInstance.result.then(function(recipe){
+            entity.recipeItems = recipe.recipeItems;
+            entity.description = recipe.description;
         },function(){
             //on cancel button press
             console.log("Modal Closed");
@@ -90,7 +91,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
 
 })
 
-var modifyRecipeController = function($scope, $modalInstance, $modal, recipe, clientProducts) {
+var modifyRecipeController = function($scope, $http, $modalInstance, $modal, recipe, clientProducts) {
      $scope.recipe = recipe;
      $scope.clientProducts = clientProducts;
 
@@ -120,14 +121,32 @@ var modifyRecipeController = function($scope, $modalInstance, $modal, recipe, cl
 
     $scope.typeaheadSelected = function(entity, selectedItem){
         entity.clientProduct = selectedItem;
+        entity.productId = selectedItem.id;
+        entity.recipeId = $scope.recipe.id;
         $scope.$broadcast('uiGridEventEndCellEdit');
     }
 
-    $scope.ok = function () {
-        $modalInstance.close();
+    $scope.saveRecipe = function () {
+        var data = angular.toJson($scope.recipe);
+
+        var config = {
+            headers : {
+                'Content-Type': 'application/json;'
+            }
+        }
+
+//        $http.post('/client/saveRecipe', data, config)
+        $http.post('/client/saveRecipe', data)
+            .success(function (data, status, headers, config) {
+                if(data != null) {
+                    $scope.recipe = data;
+                    $modalInstance.close($scope.recipe);                }
+        })
+        .error(function (data, status, header, config) {
+        });
     };
 
-    $scope.cancel = function () {
+    $scope.close = function () {
         $modalInstance.dismiss('cancel');
     };
 };
