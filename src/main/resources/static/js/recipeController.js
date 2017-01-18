@@ -127,6 +127,7 @@ var modifyRecipeController = function($scope, $http, $modalInstance, $modal, rec
     }
 
     $scope.saveRecipe = function () {
+        $scope.recipe.recipeItems = $scope.recipeItemOptions.data;
         var data = angular.toJson($scope.recipe);
 
         var config = {

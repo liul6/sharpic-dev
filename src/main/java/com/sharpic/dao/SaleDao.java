@@ -9,6 +9,7 @@ import com.sharpic.service.IServerCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +76,8 @@ public class SaleDao {
             if (auditRecipe == null)
                 throw new SharpICException("Cannot find audit recipe with id: " + auditRecipe.getId());
         }
+
+        Collections.sort(sales);
 
         return sales;
     }

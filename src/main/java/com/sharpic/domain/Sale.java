@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by joey on 2016-12-13.
  */
-public class Sale extends BaseObject {
+public class Sale extends BaseObject implements Comparable<Sale> {
     private int auditId;
     private int recipeId;
     private double amount;
@@ -59,5 +59,9 @@ public class Sale extends BaseObject {
 
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
+    }
+
+    public int compareTo(Sale sale) {
+        return this.recipe.getDescription().compareTo(sale.recipe.getDescription());
     }
 }

@@ -187,6 +187,7 @@ var modifyAuditRecipeController = function($scope, $http, $modalInstance, $modal
     }
 
     $scope.saveRecipeFully = function () {
+        $scope.recipe.recipeItems = $scope.recipeItemOptions.data;
         var data = angular.toJson($scope.recipe);
 
         var config = {
@@ -207,6 +208,7 @@ var modifyAuditRecipeController = function($scope, $http, $modalInstance, $modal
     };
 
     $scope.saveAuditRecipe = function () {
+        $scope.recipe.recipeItems = $scope.recipeItemOptions.data;
         var data = angular.toJson($scope.recipe);
 
         var config = {
