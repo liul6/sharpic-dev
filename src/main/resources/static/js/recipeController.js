@@ -140,7 +140,7 @@ var modifyRecipeController = function($scope, $http, $modalInstance, $modal, rec
             .success(function (data, status, headers, config) {
                 if(data != null) {
                     $scope.recipe = data;
-                    $modalInstance.close();                }
+                    $modalInstance.close(data);                }
         })
         .error(function (data, status, header, config) {
         });
