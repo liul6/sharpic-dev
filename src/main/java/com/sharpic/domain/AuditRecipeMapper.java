@@ -13,6 +13,8 @@ import java.util.List;
 public interface AuditRecipeMapper {
     public List<AuditRecipe> getAuditRecipes(int auditId);
 
+    public AuditRecipe getAuditRecipe(int auditRecipeId);
+
     public void deleteAuditRecipes(int auditId);
 
     public void createDummyAuditRecipe(AuditRecipe recipe);

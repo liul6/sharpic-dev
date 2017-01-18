@@ -19,8 +19,18 @@
         where audit_id=#{auditId}
     </select>
 
+    <select id="getAuditRecipeItemsByRecipeId" resultMap="ResultMap">
+        select id, audit_id, recipe_id, product_id, fulls, ounces, update_datetime
+        from audit_recipe_item
+        where recipe_id=#{auditRecipeId}
+    </select>
+
     <delete id="deleteAuditRecipeItems">
         delete from audit_recipe_item where audit_id=#{auditId}
+    </delete>
+
+    <delete id="deleteRecipeItemsByRecipeId">
+        delete from audit_recipe_item where recipe_id=#{auditRecipeId}
     </delete>
 
     <insert id="insertAuditRecipeItem" parameterType='AuditRecipeItem'>

@@ -76,6 +76,13 @@ public class AuditRecipeDao {
         return auditRecipe.getId();
     }
 
+    public AuditRecipe createAuditRecipe(AuditRecipe auditRecipe) {
+        insertAuditRecipe(auditRecipe);
+        AuditRecipe auditRecipeDB = getAuditRecipeByName(auditRecipe.getAuditId(), auditRecipe.getClientName(), auditRecipe.getRecipeName());
+
+        return auditRecipeDB;
+    }
+
     public void deleteAuditRecipes(int auditId) {
         auditRecipeItemDao.deleteAuditRecipeItems(auditId);
         auditRecipeMapper.deleteAuditRecipes(auditId);
@@ -83,6 +90,31 @@ public class AuditRecipeDao {
 
     public void createDummyAuditRecipe(AuditRecipe recipe) {
         auditRecipeMapper.createDummyAuditRecipe(recipe);
+    }
+
+    public void insertAuditRecipe(AuditRecipe auditRecipe) {
+        auditRecipeMapper.insertAuditRecipe(auditRecipe);
+        AuditRecipe auditRecipeDB = auditRecipeMapper.getAuditRecipeByName(auditRecipe.getAuditId(), auditRecipe.getClientName(), auditRecipe.getRecipeName());
+
+        List<RecipeItem> recipeItems = auditRecipe.getRecipeItems();
+        if (recipeItems != null) {
+            for (int i = 0; i < recipeItems.size(); i++) {
+
+                RecipeItem recipeItem = recipeItems.get(i);
+                if (recipeItem.getProductId() < 0) {
+                    System.out.println("not good here!");
+                }
+
+                AuditRecipeItem auditRecipeItem = new AuditRecipeItem();
+                auditRecipeItem.setAuditId(auditRecipeDB.getAuditId());
+                auditRecipeItem.setRecipeId(auditRecipe.getId());
+                auditRecipeItem.setProductId(recipeItem.getProductId());
+                auditRecipeItem.setFulls(recipeItem.getFulls());
+                auditRecipeItem.setOunces(recipeItem.getOunces());
+
+                auditRecipeItemDao.insertAuditRecipeItem(auditRecipeItem);
+            }
+        }
     }
 
     public void insertAuditRecipe(int auditId, Recipe recipe) {
@@ -119,5 +151,16 @@ public class AuditRecipeDao {
     public AuditRecipe getAuditRecipeByName(int auditId,
                                             String clientName, String recipeName) {
         return auditRecipeMapper.getAuditRecipeByName(auditId, clientName, recipeName);
+    }
+
+    public AuditRecipe getAuditRecipe(int auditRecipeId) {
+        AuditRecipe auditRecipe = auditRecipeMapper.getAuditRecipe(auditRecipeId);
+        if (auditRecipe == null)
+            return null;
+
+        List<RecipeItem> recipeItems = auditRecipeItemDao.getAuditRecipeItemsByRecipeId(auditRecipeId);
+        auditRecipe.setRecipeItems(recipeItems);
+
+        return auditRecipe;
     }
 }

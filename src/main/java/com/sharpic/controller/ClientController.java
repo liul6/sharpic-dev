@@ -109,6 +109,18 @@ public class ClientController {
         return locations;
     }
 
+
+    @RequestMapping(value = "/client/getClientProducts")
+    @ResponseBody
+    public List<ClientProduct> getClientProducts(String clientName) {
+        if (clientName == null || clientName.isEmpty())
+            return new ArrayList<>();
+
+        List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
+        objectTransientFieldsPopulator.populateProductTransientFields(clientProducts);
+        return clientProducts;
+    }
+
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, value = "/client/addAudit")
     @ResponseBody
@@ -192,10 +204,8 @@ public class ClientController {
         if (clientName == null || clientName.isEmpty())
             return sharpICResponse;
 
-        List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
-        objectTransientFieldsPopulator.populateProductTransientFields(clientProducts);
 
-        sharpICResponse.addToModel("clientProducts", clientProducts);
+        sharpICResponse.addToModel("clientProducts", getClientProducts(clientName));
         sharpICResponse.addToModel("clientLocations", getClientLocations(clientName));
         sharpICResponse.addToModel("clientAudits", getClientAuditDates(clientName));
 

@@ -1,0 +1,17 @@
+<div>
+    <h3>{{recipe.recipeName}}</h3>
+</div>
+<div >
+    <br/>
+    <button type="button" ng-click="addRecipeItem()" class="btn btn-danger">
+        <span class="glyphicon glyphicon-plus"></span> Add Item
+    </button>
+    <div>
+        <div ui-grid="recipeItemOptions" ui-grid-edit class="grid"  style="height:390px"></div>
+    </div>
+</div>
+<div>
+    <button class="btn btn-primary" ng-click="saveAuditRecipe()">Save To Audit Only</button>
+    <button class="btn btn-primary" ng-click="saveRecipeFully()">Save To Audit/Master</button>
+    <button class="btn btn-warning" ng-click="close()">Cancel</button>
+</div>

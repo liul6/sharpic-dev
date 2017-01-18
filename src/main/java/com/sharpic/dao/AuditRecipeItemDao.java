@@ -22,6 +22,31 @@ public class AuditRecipeItemDao {
 
     public List<RecipeItem> getAuditRecipeItems(int auditId) {
         List<RecipeItem> auditRecipeItems = auditRecipeItemMapper.getAuditRecipeItems(auditId);
+        this.normalizeAuditRecipeItems(auditRecipeItems);
+
+        return auditRecipeItems;
+    }
+
+    public List<RecipeItem> getAuditRecipeItemsByRecipeId(int auditRecipeId) {
+        List<RecipeItem> auditRecipeItems = auditRecipeItemMapper.getAuditRecipeItemsByRecipeId(auditRecipeId);
+        this.normalizeAuditRecipeItems(auditRecipeItems);
+
+        return auditRecipeItems;
+    }
+
+    public void deleteAuditRecipeItems(int auditId) {
+        auditRecipeItemMapper.deleteAuditRecipeItems(auditId);
+    }
+
+    public void deleteRecipeItemsByRecipeId(int recipeId) {
+        auditRecipeItemMapper.deleteRecipeItemsByRecipeId(recipeId);
+    }
+
+    public void insertAuditRecipeItem(AuditRecipeItem auditRecipeItem) {
+        auditRecipeItemMapper.insertAuditRecipeItem(auditRecipeItem);
+    }
+
+    private List<RecipeItem> normalizeAuditRecipeItems(List<RecipeItem> auditRecipeItems) {
         Map<Integer, ClientProduct> clientProductMap = clientProductDao.getClientProducts(auditRecipeItems);
 
         if (auditRecipeItems != null) {
@@ -31,13 +56,5 @@ public class AuditRecipeItemDao {
             }
         }
         return auditRecipeItems;
-    }
-
-    public void deleteAuditRecipeItems(int auditId) {
-        auditRecipeItemMapper.deleteAuditRecipeItems(auditId);
-    }
-
-    public void insertAuditRecipeItem(AuditRecipeItem auditRecipeItem) {
-        auditRecipeItemMapper.insertAuditRecipeItem(auditRecipeItem);
     }
 }

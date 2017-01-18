@@ -13,7 +13,11 @@ import java.util.List;
 public interface AuditRecipeItemMapper {
     List<RecipeItem> getAuditRecipeItems(int auditId);
 
+    List<RecipeItem> getAuditRecipeItemsByRecipeId(int auditRecipeId);
+
     void deleteAuditRecipeItems(int auditId);
+
+    void deleteRecipeItemsByRecipeId(int auditRecipeId);
 
     void insertAuditRecipeItem(@Param("auditRecipeItem") AuditRecipeItem auditRecipeItem);
 }
