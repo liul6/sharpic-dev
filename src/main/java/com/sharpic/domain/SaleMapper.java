@@ -19,4 +19,6 @@ public interface SaleMapper {
 
     public void deleteSales(@Param("clientName") String clientName, @Param("auditId") int auditId);
 
+    public void deleteSale(@Param("saleId") int saleId);
+
 }

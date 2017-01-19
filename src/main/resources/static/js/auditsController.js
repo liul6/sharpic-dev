@@ -148,8 +148,23 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     };
 
     $scope.removeEntry = function(row) {
-        var index = $scope.auditEntriesOptions.data.indexOf(row.entity);
-        $scope.auditEntriesOptions.data.splice(index, 1);
+        var data = angular.toJson(row.entity);
+
+        var config = {
+            headers : {
+                'Content-Type': 'application/json;'
+            }
+        }
+
+        $http.post('/audit/deleteEntry', data)
+            .success(function (data, status, headers, config) {
+                if(data != null && data.successful) {
+                    var index = $scope.auditEntriesOptions.data.indexOf(row.entity);
+                    $scope.auditEntriesOptions.data.splice(index, 1);
+                }
+        })
+        .error(function (data, status, header, config) {
+        });
     };
 
     $scope.removeAudit = function() {

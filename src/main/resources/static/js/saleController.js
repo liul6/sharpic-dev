@@ -122,8 +122,24 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
     };
 
     $scope.removeSale = function(row) {
-        var index = $scope.auditSalesOptions.data.indexOf(row.entity);
-        $scope.auditSalesOptions.data.splice(index, 1);
+        var data = angular.toJson(row.entity);
+
+        var config = {
+            headers : {
+                'Content-Type': 'application/json;'
+            }
+        }
+
+        $http.post('/sale/deleteSale', data)
+            .success(function (data, status, headers, config) {
+                if(data != null && data.successful) {
+                    var index = $scope.auditSalesOptions.data.indexOf(row.entity);
+                    $scope.auditSalesOptions.data.splice(index, 1);
+                }
+        })
+        .error(function (data, status, header, config) {
+        });
+
     };
 
     $scope.uploadFile = function(files) {

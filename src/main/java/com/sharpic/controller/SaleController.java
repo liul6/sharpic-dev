@@ -129,7 +129,6 @@ public class SaleController {
         return auditRecipe;
     }
 
-
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, value = "/sale/saveRecipeFully", consumes = "application/json")
     @ResponseBody
@@ -153,4 +152,25 @@ public class SaleController {
         return clientController.saveRecipe(recipe);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(method = RequestMethod.POST, value = "/sale/deleteSale", consumes = "application/json")
+    @ResponseBody
+    public SharpICResponse deleteSale(@RequestBody Sale sale) {
+        SharpICResponse sharpICResponse = new SharpICResponse();
+        if (sale.getId() <= 0) {
+            sharpICResponse.setSuccessful(true);
+            return sharpICResponse;
+        }
+
+        try {
+            saleDao.deleteSale(sale.getId());
+            sharpICResponse.setSuccessful(true);
+            return sharpICResponse;
+        } catch (Exception e) {
+            sharpICResponse.setErrorText(e.getMessage());
+            sharpICResponse.setSuccessful(false);
+
+            return sharpICResponse;
+        }
+    }
 }

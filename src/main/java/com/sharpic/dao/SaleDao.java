@@ -81,4 +81,8 @@ public class SaleDao {
 
         return sales;
     }
+
+    public void deleteSale(int saleId) {
+        saleMapper.deleteSale(saleId);
+    }
 }

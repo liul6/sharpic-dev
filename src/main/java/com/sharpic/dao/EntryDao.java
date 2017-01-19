@@ -58,4 +58,8 @@ public class EntryDao {
         if (auditId > 0)
             entryMapper.deleteAuditEntries(auditId);
     }
+
+    public void deleteAuditEnty(int entrytId) {
+        entryMapper.deleteAuditEntry(entrytId);
+    }
 }

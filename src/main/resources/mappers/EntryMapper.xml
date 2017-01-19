@@ -5,8 +5,7 @@
 <mapper namespace="com.sharpic.domain.EntryMapper">
     <resultMap id="ResultMap" type="Entry">
         <result column="id" property="id"/>
-
-        <result column="id" property="auditId"/>
+        <result column="audit_id" property="auditId"/>
         <result column="location" property="location"/>
         <result column="product_id" property="productId"/>
         <result column="amount" property="amount"/>
@@ -25,4 +24,10 @@
     <delete id="deleteAuditEntries">
         delete from entry where audit_id=#{auditId}
     </delete>
+
+
+    <delete id="deleteAuditEntry">
+        delete from entry where id=#{entryId}
+    </delete>
+
 </mapper>

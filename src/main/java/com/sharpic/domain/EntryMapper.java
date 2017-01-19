@@ -12,4 +12,5 @@ import java.util.List;
 public interface EntryMapper {
     public List<Entry> getAuditEntries(int auditId);
     public void deleteAuditEntries(int auditId);
+    public void deleteAuditEntry(int entryId);
 }
