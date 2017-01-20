@@ -36,7 +36,6 @@
         delete from sale where audit_id=#{auditId}
     </delete>
 
-
     <delete id="deleteSale">
         delete from sale where id=#{saleId}
     </delete>

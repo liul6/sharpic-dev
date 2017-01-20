@@ -5,7 +5,7 @@
 <mapper namespace="com.sharpic.domain.ClientProductMapper">
     <resultMap id="ResultMap" type="ClientProduct">
         <result column="id" property="id"/>
-        <result column="product_id" property="productId"/>
+        <result column="product_id" property="parentProductId"/>
         <result column="client_name" property="clientName"/>
         <result column="name" property="name"/>
         <result column="size_id" property="sizeId"/>
@@ -58,6 +58,15 @@
         from product, client_product
         where product.id=client_product.product_id
         and client_product.id = #{productId}
+    </select>
+
+    <select id="getLinkedClientProducts" resultMap="ResultMap">
+        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
+        product.upc, product.tags, client_product.update_datetime
+        from product, client_product
+        where product.id=client_product.product_id
+        and client_product.product_id = #{parentProductId}
     </select>
 
 </mapper>

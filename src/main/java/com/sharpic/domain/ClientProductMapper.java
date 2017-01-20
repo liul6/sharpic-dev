@@ -17,4 +17,6 @@ public interface ClientProductMapper {
     List<ClientProduct> getClientProductsWithIds(List<Integer> productIds);
 
     ClientProduct getClientProduct(int productId);
+
+    List<ClientProduct> getLinkedClientProducts(int parentProductId);
 }

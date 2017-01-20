@@ -1,5 +1,7 @@
 package com.sharpic.dao;
 
+import com.sharpic.common.SharpICException;
+import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.Product;
 import com.sharpic.domain.ProductMapper;
 import com.sharpic.service.IObjectTransientFieldsPopulator;
@@ -17,8 +19,10 @@ public class ProductDao {
     private ProductMapper productMapper;
 
     @Autowired
-    private IObjectTransientFieldsPopulator objectDescriptor;
+    private ClientProductDao clientProductDao;
 
+    @Autowired
+    private IObjectTransientFieldsPopulator objectDescriptor;
 
     public List<Product> getProducts() {
         List<Product> products = productMapper.getProducts();
@@ -27,5 +31,13 @@ public class ProductDao {
             return products;
 
         return products;
+    }
+
+    public void deleteProduct(int productId) throws SharpICException {
+        List<ClientProduct> linkedClientProducts = clientProductDao.getLinkedClientProducts(productId);
+        if (linkedClientProducts != null && linkedClientProducts.size() > 0)
+            throw new SharpICException("The product is linked with some clients already, need to delete the client specific product setup first");
+
+        productMapper.deleteProduct(productId);
     }
 }

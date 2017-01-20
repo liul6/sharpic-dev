@@ -7,7 +7,7 @@ import java.util.Date;
  */
 
 public class ClientProduct extends Product {
-    private int productId;
+    private int parentProductId;
     private String clientName;
     private String name;
     private int sizeId;
@@ -87,11 +87,11 @@ public class ClientProduct extends Product {
         this.size = size;
     }
 
-    public int getProductId() {
-        return productId;
+    public int getParentProductId() {
+        return parentProductId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setParentProductId(int clientProductId) {
+        this.parentProductId = parentProductId;
     }
 }

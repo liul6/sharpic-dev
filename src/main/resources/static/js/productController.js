@@ -1,4 +1,4 @@
-sharpicApp.controller('productController', function($rootScope, $http, $location, $route, $scope, DTOptionsBuilder) {
+sharpicApp.controller('productController', function($rootScope, $http, $location, $route, $scope, $window, DTOptionsBuilder) {
     $scope.clientName = null;
 
     $scope.clientNames = [];
@@ -121,8 +121,28 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
     };
 
     $scope.removeProduct = function(row) {
-        var index = $scope.productOptions.data.indexOf(row.entity);
-        $scope.productOptions.data.splice(index, 1);
+        var data = angular.toJson(row.entity);
+
+        var config = {
+            headers : {
+                'Content-Type': 'application/json;'
+            }
+        }
+
+        $http.post('/product/deleteProduct', data)
+            .success(function (data, status, headers, config) {
+                if(data != null) {
+                    if(data.successful) {
+                        var index = $scope.productOptions.data.indexOf(row.entity);
+                        $scope.productOptions.data.splice(index, 1);
+                    }
+                    else {
+                        $window.alert(data.errorText);
+                    }
+                }
+        })
+        .error(function (data, status, header, config) {
+        });
     };
 
     $scope.addClientProduct = function() {

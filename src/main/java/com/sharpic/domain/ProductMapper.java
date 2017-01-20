@@ -11,4 +11,6 @@ import java.util.List;
 @Mapper
 public interface ProductMapper {
     public List<Product> getProducts();
+
+    public void deleteProduct(int productId);
 }

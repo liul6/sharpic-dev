@@ -67,4 +67,8 @@ public class ClientProductDao {
     public ClientProduct getClientProduct(int productId) {
         return clientProductMapper.getClientProduct(productId);
     }
+
+    public List<ClientProduct> getLinkedClientProducts(int parentProductId) {
+        return clientProductMapper.getLinkedClientProducts(parentProductId);
+    }
 }
