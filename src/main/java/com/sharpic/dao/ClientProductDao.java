@@ -1,5 +1,6 @@
 package com.sharpic.dao;
 
+import com.sharpic.common.SharpICException;
 import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.ClientProductMapper;
 import com.sharpic.domain.RecipeItem;
@@ -16,6 +17,15 @@ import java.util.*;
 public class ClientProductDao {
     @Autowired
     private ClientProductMapper clientProductMapper;
+
+    @Autowired
+    private RecipeItemDao recipeItemDao;
+
+    @Autowired
+    private AuditRecipeItemDao auditRecipeItemDao;
+
+    @Autowired
+    private EntryDao entryDao;
 
     public List<ClientProduct> getClientProducts(String clientName) {
         List<ClientProduct> clientProducts = clientProductMapper.getClientProducts(clientName);
@@ -70,5 +80,16 @@ public class ClientProductDao {
 
     public List<ClientProduct> getLinkedClientProducts(int parentProductId) {
         return clientProductMapper.getLinkedClientProducts(parentProductId);
+    }
+
+    public void deleteClientProduct(int productId) throws SharpICException {
+        int ocurrensInRecipeItem = recipeItemDao.getNumberOfRecipeItemsByProductId(productId);
+        int occurensInAuditRecipeItem = auditRecipeItemDao.getNumberOfRecipeItemsByProductId(productId);
+        int occurensInEntry = entryDao.getNumberOfEntriesByProductId(productId);
+
+        if (ocurrensInRecipeItem > 0 || occurensInAuditRecipeItem > 0 || occurensInEntry > 0)
+            throw new SharpICException("The client specific product is used in recipe or linked with sales or audits, cannot be deleted");
+
+        clientProductMapper.getClientProduct(productId);
     }
 }

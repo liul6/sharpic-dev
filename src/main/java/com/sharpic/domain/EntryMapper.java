@@ -11,6 +11,10 @@ import java.util.List;
 @Mapper
 public interface EntryMapper {
     public List<Entry> getAuditEntries(int auditId);
+
     public void deleteAuditEntries(int auditId);
+
     public void deleteAuditEntry(int entryId);
+
+    public int getNumberOfEntriesByProductId(int productId);
 }

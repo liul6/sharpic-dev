@@ -31,4 +31,8 @@
             (#{recipeItem.recipeId}, #{recipeItem.productId}, #{recipeItem.fulls}, #{recipeItem.ounces}, SYSDATETIME())
     </insert>
 
+    <select id="getNumberOfRecipeItemsByProductId" resultType="Integer">
+        select count(*) from recipe_item where product_id=#{productId}
+    </select>
+
 </mapper>

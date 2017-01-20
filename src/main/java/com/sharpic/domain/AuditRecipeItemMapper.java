@@ -20,4 +20,6 @@ public interface AuditRecipeItemMapper {
     void deleteRecipeItemsByRecipeId(int auditRecipeId);
 
     void insertAuditRecipeItem(@Param("auditRecipeItem") AuditRecipeItem auditRecipeItem);
+
+    int getNumberOfRecipeItemsByProductId(int productId);
 }

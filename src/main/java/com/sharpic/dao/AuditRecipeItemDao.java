@@ -57,4 +57,8 @@ public class AuditRecipeItemDao {
         }
         return auditRecipeItems;
     }
+
+    public int getNumberOfRecipeItemsByProductId(int productId) {
+        return auditRecipeItemMapper.getNumberOfRecipeItemsByProductId(productId);
+    }
 }

@@ -40,4 +40,8 @@
 
     </insert>
 
+    <select id="getNumberOfRecipeItemsByProductId" resultType="Integer">
+        select count(*) from audit_recipe_item where product_id=#{productId}
+    </select>
+
 </mapper>

@@ -62,4 +62,8 @@ public class EntryDao {
     public void deleteAuditEnty(int entrytId) {
         entryMapper.deleteAuditEntry(entrytId);
     }
+
+    public int getNumberOfEntriesByProductId(int productId) {
+        return entryMapper.getNumberOfEntriesByProductId(productId);
+    }
 }

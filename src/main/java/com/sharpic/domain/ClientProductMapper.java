@@ -19,4 +19,6 @@ public interface ClientProductMapper {
     ClientProduct getClientProduct(int productId);
 
     List<ClientProduct> getLinkedClientProducts(int parentProductId);
+
+    void deleteClientProduct(int productId);
 }

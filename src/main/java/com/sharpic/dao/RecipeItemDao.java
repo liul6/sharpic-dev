@@ -42,4 +42,8 @@ public class RecipeItemDao {
         recipeItemMapper.insertRecipeItem(recipeItem);
     }
 
+
+    public int getNumberOfRecipeItemsByProductId(int productId) {
+        return recipeItemMapper.getNumberOfRecipeItemsByProductId(productId);
+    }
 }

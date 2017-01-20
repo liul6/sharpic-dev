@@ -21,7 +21,8 @@
     </resultMap>
 
     <select id="getClientProducts" resultMap="ResultMap">
-        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        select client_product.id, client_product.product_id, client_product.client_name, product.name,
+        client_product.size_id,
         client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
         product.upc, product.tags, client_product.update_datetime
         from product, client_product
@@ -30,7 +31,8 @@
     </select>
 
     <select id="getAuditClientProducts" resultMap="ResultMap">
-        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        select client_product.id, client_product.product_id, client_product.client_name, product.name,
+        client_product.size_id,
         client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
         product.upc, product.tags, client_product.update_datetime
         from entry, client_product, product
@@ -40,7 +42,8 @@
     </select>
 
     <select id="getClientProductsWithIds" parameterType="list" resultMap="ResultMap">
-        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        select client_product.id, client_product.product_id, client_product.client_name, product.name,
+        client_product.size_id,
         client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
         product.upc, product.tags, client_product.update_datetime
         from product, client_product
@@ -52,7 +55,8 @@
     </select>
 
     <select id="getClientProduct" resultMap="ResultMap">
-        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        select client_product.id, client_product.product_id, client_product.client_name, product.name,
+        client_product.size_id,
         client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
         product.upc, product.tags, client_product.update_datetime
         from product, client_product
@@ -61,12 +65,17 @@
     </select>
 
     <select id="getLinkedClientProducts" resultMap="ResultMap">
-        select client_product.id, client_product.product_id, client_product.client_name, product.name, client_product.size_id,
+        select client_product.id, client_product.product_id, client_product.client_name, product.name,
+        client_product.size_id,
         client_product.serving, client_product.retail_price, product.tare, product.cost, product.fulls, product.cases,
         product.upc, product.tags, client_product.update_datetime
         from product, client_product
         where product.id=client_product.product_id
         and client_product.product_id = #{parentProductId}
     </select>
+
+    <delete id="deleteClientProduct">
+        delete from client_product where id=#{productId}
+    </delete>
 
 </mapper>

@@ -25,6 +25,10 @@
         delete from entry where audit_id=#{auditId}
     </delete>
 
+    <select id="getNumberOfEntriesByProductId" resultType="Integer">
+        select count(*) from entry where product_id=#{productId}
+    </select>
+
 
     <delete id="deleteAuditEntry">
         delete from entry where id=#{entryId}

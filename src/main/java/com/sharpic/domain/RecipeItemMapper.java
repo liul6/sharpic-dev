@@ -18,4 +18,6 @@ public interface RecipeItemMapper {
     public void deleteRecipeItems(int recipeId);
 
     public void insertRecipeItem(@Param("recipeItem") RecipeItem recipeItem);
+
+    public int getNumberOfRecipeItemsByProductId(int productId);
 }
