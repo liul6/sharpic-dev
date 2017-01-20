@@ -11,4 +11,6 @@ import java.util.List;
 @Mapper
 public interface SizeMapper {
     public List<Size> getSizes();
+
+    public void deleteSize(int sizeId);
 }

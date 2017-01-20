@@ -181,7 +181,27 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
     };
 
     $scope.removeSize = function(row) {
-        var index = $scope.sizeOptions.data.indexOf(row.entity);
-        $scope.sizeOptions.data.splice(index, 1);
+        var data = angular.toJson(row.entity);
+
+        var config = {
+            headers : {
+                'Content-Type': 'application/json;'
+            }
+        }
+
+        $http.post('/product/deleteSize', data)
+            .success(function (data, status, headers, config) {
+                if(data != null) {
+                    if(data.successful) {
+                        var index = $scope.sizeOptions.data.indexOf(row.entity);
+                        $scope.sizeOptions.data.splice(index, 1);
+                    }
+                    else {
+                        $window.alert(data.errorText);
+                    }
+                }
+        })
+        .error(function (data, status, header, config) {
+        });
     };
 });

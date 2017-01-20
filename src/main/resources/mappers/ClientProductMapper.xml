@@ -78,4 +78,10 @@
         delete from client_product where id=#{productId}
     </delete>
 
+
+    <select id="getNumberOfClientProductsBySizeId" resultType="Integer">
+        select count(*) from client_product where size_id=#{sizeId}
+    </select>
+
+
 </mapper>

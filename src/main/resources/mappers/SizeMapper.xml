@@ -13,4 +13,8 @@
     <select id="getSizes" resultMap="ResultMap">
         select id, name, ounces, update_datetime from size
     </select>
+
+    <delete id="deleteSize">
+        delete from size where id=#{sizeId}
+    </delete>
 </mapper>

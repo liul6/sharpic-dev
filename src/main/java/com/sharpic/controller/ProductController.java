@@ -106,4 +106,25 @@ public class ProductController {
 
         return sharpICResponse;
     }
+
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(method = RequestMethod.POST, value = "/product/deleteSize", consumes = "application/json")
+    @ResponseBody
+    public SharpICResponse deleteSize(@RequestBody Size size) {
+        SharpICResponse sharpICResponse = new SharpICResponse();
+        if (size.getId() <= 0) {
+            sharpICResponse.setSuccessful(true);
+            return sharpICResponse;
+        }
+        try {
+            clientProductDao.deleteSize(size.getId());
+            sharpICResponse.setSuccessful(true);
+        } catch (Exception e) {
+            sharpICResponse.setSuccessful(false);
+            sharpICResponse.setErrorText(e.getMessage());
+        }
+
+        return sharpICResponse;
+    }
 }

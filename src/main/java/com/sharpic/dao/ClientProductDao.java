@@ -4,6 +4,7 @@ import com.sharpic.common.SharpICException;
 import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.ClientProductMapper;
 import com.sharpic.domain.RecipeItem;
+import com.sharpic.domain.SizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ public class ClientProductDao {
 
     @Autowired
     private EntryDao entryDao;
+
+    @Autowired
+    private SizeMapper sizeMapper;
 
     public List<ClientProduct> getClientProducts(String clientName) {
         List<ClientProduct> clientProducts = clientProductMapper.getClientProducts(clientName);
@@ -91,5 +95,13 @@ public class ClientProductDao {
             throw new SharpICException("The client specific product is used in recipe or linked with sales or audits, cannot be deleted");
 
         clientProductMapper.getClientProduct(productId);
+    }
+
+    public void deleteSize(int sizeId) throws SharpICException {
+        int occurrencesClientProduct = clientProductMapper.getNumberOfClientProductsBySizeId(sizeId);
+        if(occurrencesClientProduct>0)
+            throw new SharpICException("The size is linked to some cient products, cannot be deleted");
+
+        sizeMapper.deleteSize(sizeId);
     }
 }
