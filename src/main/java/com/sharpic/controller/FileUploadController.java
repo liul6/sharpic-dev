@@ -4,6 +4,7 @@ import com.sharpic.common.Util;
 import com.sharpic.domain.Sale;
 import com.sharpic.service.IServerCache;
 import com.sharpic.uploader.SalesUploader;
+import com.sharpic.web.SharpICResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,19 +43,25 @@ public class FileUploadController {
 
     @RequestMapping(value = ("/upload"), headers = ("content-type=multipart/*"), method = RequestMethod.POST)
     @ResponseBody
-    public List<Sale> handleFileUpload(@RequestParam("name") String category,
-                                       @RequestParam("clientName") String clientName,
-                                       @RequestParam("auditDateStr") String auditDateStr,
-                                       @RequestParam("file") MultipartFile file) {
-        if (category != null && !file.isEmpty()) {
-            if ("SALE".equalsIgnoreCase(category)) {
-                uploadSale(clientName, auditDateStr, file);
+    public SharpICResponse handleFileUpload(@RequestParam("name") String category,
+                                            @RequestParam("clientName") String clientName,
+                                            @RequestParam("auditDateStr") String auditDateStr,
+                                            @RequestParam("file") MultipartFile file) {
+        SharpICResponse sharpICResponse = new SharpICResponse();
 
-                saleController.getSales(clientName, auditDateStr);
+        try {
+            if (category != null && !file.isEmpty()) {
+                if ("SALE".equalsIgnoreCase(category)) {
+                    uploadSale(clientName, auditDateStr, file);
+
+                    return saleController.getSales(clientName, auditDateStr);
+                }
             }
+        } catch (Exception e) {
+            sharpICResponse.setErrorText(e.getMessage());
         }
 
-        return null;
+        return sharpICResponse;
     }
 
     private List<Sale> uploadSale(String clientName, String auditDateStr, MultipartFile file) {

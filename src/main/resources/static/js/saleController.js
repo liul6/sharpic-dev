@@ -61,9 +61,9 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
                 enableColumnMenus: false,
                 columnDefs: [
                     {name: 'recipe.recipeName', displayName: 'Recipe Name', width : '30%', enableCellEdit : true, editableCellTemplate: $scope.recipeCelltemplate },
-                    {name: 'recipe.description', displayName: 'Recipe Items', enableCellEdit : false, cellTemplate : descriptionCelltemplate },
-                    {name: 'amount', displayName: 'Amount', type: 'number' },
-                    {name: 'price', displayName: 'Price', type: 'number' },
+                    {name: 'recipe.description', displayName: 'Recipe Items', width : '51%', enableCellEdit : false, cellTemplate : descriptionCelltemplate },
+                    {name: 'amount', displayName: 'Amount', type: 'number', width : '8%' },
+                    {name: 'price', displayName: 'Price', type: 'number', width : '8%' },
                     {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSale(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                 ]
             };
@@ -157,11 +157,13 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
              }
          }
 
+        $scope.auditSalesOptions.data = [];
+
         $http.post(uploadUrl, fd,
             {transformRequest: angular.identity,
              headers: {'Content-Type': undefined}
              }).then(function (resp){
-                $scope.auditSalesOptions.data = resp.data;
+                $scope.auditSalesOptions.data = resp.data.model.sales;
              });
     };
 
