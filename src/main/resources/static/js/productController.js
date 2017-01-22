@@ -40,7 +40,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
                         {name: 'cases', displayName: 'Cases', type: 'number' },
                         {name: 'upc', displayName: 'UPC', width : '12%'  },
                         {name: 'tags', displayName: 'Tags', width : '12%' },
-                        {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                        {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                     ]
                 };
         })
@@ -59,7 +59,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
                     columnDefs: [
                         {name: 'name', displayName: 'Name', width : '40%' },
                         {name: 'ounces', displayName: 'Ounces', type: 'number' },
-                        {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSize(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                        {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSize(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                     ]
                 };
         })
@@ -88,7 +88,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
                     {name: 'size.name', displayName: 'Size', enableCellEdit : true, editableCellTemplate: $scope.sizeCelltemplate },
                     {name: 'serving', displayName: 'Serving' },
                     {name: 'retailPrice', displayName: 'Retail Price', type: 'number' },
-                    {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeClientProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                    {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeClientProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                 ]
             };
 

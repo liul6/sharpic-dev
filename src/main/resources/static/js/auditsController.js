@@ -1,4 +1,4 @@
-sharpicApp.controller('auditsController', function($rootScope, $http, $location, $route, $scope, DTOptionsBuilder) {
+sharpicApp.controller('auditsController', function($rootScope, $http, $location, $route, $scope, $window, DTOptionsBuilder) {
     $scope.message ='this is a test for angularjs controller';
     $scope.clientName = null;
     $scope.auditDate = null;
@@ -79,19 +79,33 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
                          editDropdownIdLabel: 'locationName',
                          editDropdownValueLabel: 'locationName',
                          editDropdownOptionsArray: $scope.clientLocations},
-                    {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                    {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                 ]
             };
 
             $scope.auditEntriesOptions.onRegisterApi = function(gridApi){
                 $scope.gridApi = gridApi;
+
                 gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-                $scope.$apply();
+                    $scope.$apply();
                 });
+
+                gridApi.rowEdit.on.saveRow($scope, $scope.saveEntryRow);
             };
         })
         .error(function (data, status, header, config) {
         });
+    }
+
+    $scope.saveEntryRow = function(rowEntity) {
+         var promise = $scope.saveEntryToDatabase(rowEntity);
+         $scope.gridApi.rowEdit.setSavePromise($scope.gridApi.grid, rowEntity, promise);
+    }
+
+    $scope.saveEntryToDatabase = function(rowEntity) {
+        var data = angular.toJson(rowEntity.entity);
+        return $q.defer();
+        //$http.post('/audit/saveEntry', data);
     }
 
     $scope.typeaheadSelected = function(entity, selectedItem){

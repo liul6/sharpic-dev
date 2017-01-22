@@ -104,4 +104,20 @@ public class AuditController {
         }
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(method = RequestMethod.POST, value = "/audit/saveEntry", consumes = "application/json")
+    @ResponseBody
+    public SharpICResponse saveEntry(@RequestBody Entry entry) {
+        SharpICResponse sharpICResponse = new SharpICResponse();
+        try {
+            entryDao.updateAuditEntry(entry);
+            sharpICResponse.setSuccessful(true);
+            return sharpICResponse;
+        } catch (Exception e) {
+            sharpICResponse.setErrorText(e.getMessage());
+            sharpICResponse.setSuccessful(false);
+
+            return sharpICResponse;
+        }
+    }
 }

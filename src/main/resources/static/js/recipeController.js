@@ -30,7 +30,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
             columnDefs: [
                 {name: 'recipeName', displayName: 'Recipe Name', width : '30%', enableCellEdit : false  },
                 {name: 'description', displayName: 'Recipe Items', enableCellEdit : false, cellTemplate : descriptionCelltemplate },
-                {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipe(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipe(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
             ]
         };
 
@@ -105,7 +105,7 @@ var modifyRecipeController = function($scope, $http, $modalInstance, $modal, rec
            {name: 'clientProduct.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
             {name: 'fulls', displayName: 'Fulls', type: 'number', width : '9%' },
             {name: 'ounces', displayName: 'Ounces', type: 'number', width : '9%' },
-            {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipeIem(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+            {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipeIem(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
         ]
      };
 

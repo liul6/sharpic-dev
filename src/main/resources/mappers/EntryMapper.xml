@@ -25,6 +25,25 @@
         delete from entry where audit_id=#{auditId}
     </delete>
 
+    <delete id="insertAuditEntry" parameterType="Entry">
+        insert into entry(audit_id,location,product_id,amount,weight,weights,open_bottles,bin)
+        values(#{entry.auditId},#{entry.location},#{entry.productId},#{entry.amount},
+        #{entry.weight},#{entry.weights},#{entry.open_bottles},#{entry.bin})
+    </delete>
+
+    <update id="updateAuditEntry" parameterType="Entry">
+        update entry set
+            audit_id=#{entry.auditId},
+            location=#{entry.location},
+            product_id=#{entry.productId},
+            amount=#{entry.amount},
+            weight=#{entry.weight},
+            weights=#{entry.weights},
+            open_bottles=#{entry.open_bottles},
+            bin=#{entry.bin}
+        where id=#{entry.id}
+    </update>
+
     <select id="getNumberOfEntriesByProductId" resultType="Integer">
         select count(*) from entry where product_id=#{productId}
     </select>

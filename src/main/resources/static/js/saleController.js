@@ -61,10 +61,10 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
                 enableColumnMenus: false,
                 columnDefs: [
                     {name: 'recipe.recipeName', displayName: 'Recipe Name', width : '30%', enableCellEdit : true, editableCellTemplate: $scope.recipeCelltemplate },
-                    {name: 'recipe.description', displayName: 'Recipe Items', width : '51%', enableCellEdit : false, cellTemplate : descriptionCelltemplate },
+                    {name: 'recipe.description', displayName: 'Recipe Items', width : '50%', enableCellEdit : false, cellTemplate : descriptionCelltemplate },
                     {name: 'amount', displayName: 'Amount', type: 'number', width : '8%' },
                     {name: 'price', displayName: 'Price', type: 'number', width : '8%' },
-                    {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSale(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+                    {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSale(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                 ]
             };
 
@@ -183,7 +183,7 @@ var modifyAuditRecipeController = function($scope, $http, $modalInstance, $modal
            {name: 'clientProduct.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
             {name: 'fulls', displayName: 'Fulls', type: 'number', width : '9%' },
             {name: 'ounces', displayName: 'Ounces', type: 'number', width : '9%' },
-            {name: 'action', displayName: '', width : '3%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipeIem(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+            {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipeIem(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
         ]
      };
 

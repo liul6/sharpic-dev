@@ -66,4 +66,11 @@ public class EntryDao {
     public int getNumberOfEntriesByProductId(int productId) {
         return entryMapper.getNumberOfEntriesByProductId(productId);
     }
+
+    public void updateAuditEntry(Entry entry){
+        if(entry.getId()>0)
+            entryMapper.updateAuditEntry(entry);
+        else
+            entryMapper.insertAuditEntry(entry);
+    }
 }
