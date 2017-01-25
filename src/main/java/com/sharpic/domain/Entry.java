@@ -18,7 +18,7 @@ public class Entry extends BaseObject implements Comparable<Entry> {
     private Date updatedDatetime;
 
     //transient field
-    private ClientProduct clientProduct;
+    private Product product;
     private Location clientLocation;
 
     public String getLocation() {
@@ -94,15 +94,15 @@ public class Entry extends BaseObject implements Comparable<Entry> {
     }
 
     public int compareTo(Entry entry) {
-        return this.clientProduct.getDescription().compareTo(entry.clientProduct.getDescription());
+        return this.product.getDescription().compareTo(entry.product.getDescription());
     }
 
-    public ClientProduct getClientProduct() {
-        return clientProduct;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setClientProduct(ClientProduct clientProduct) {
-        this.clientProduct = clientProduct;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Location getClientLocation() {

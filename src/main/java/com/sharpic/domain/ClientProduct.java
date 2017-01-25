@@ -6,50 +6,13 @@ import java.util.Date;
  * Created by joey on 2016-12-17.
  */
 
-public class ClientProduct extends Product {
-    private int parentProductId;
-    private String clientName;
-    private String name;
-    private int sizeId;
-    private String serving;
+public class ClientProduct extends BaseObject implements Comparable<ClientProduct> {
+    private int productId;
     private double retailPrice;
     private Date updatedDatetime;
-    private String description;
 
-    //transient fields
-    private Size size;
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getSizeId() {
-        return sizeId;
-    }
-
-    public void setSizeId(int sizeId) {
-        this.sizeId = sizeId;
-    }
-
-    public String getServing() {
-        return serving;
-    }
-
-    public void setServing(String serving) {
-        this.serving = serving;
-    }
+    //transient field
+    private Product product;
 
     public double getRetailPrice() {
         return retailPrice;
@@ -67,31 +30,26 @@ public class ClientProduct extends Product {
         this.updatedDatetime = updatedDatetime;
     }
 
-    public String getDescription() {
-        return description;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
-    public int compareTo(ClientProduct clientP) {
-        return this.getName().compareTo(clientP.getName());
+    public Product getProduct() {
+        return product;
     }
 
-    public Size getSize() {
-        return size;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public void setSize(Size size) {
-        this.size = size;
-    }
+    public int compareTo(ClientProduct clientProduct) {
+        if (product != null && clientProduct.getProduct() != null)
+            return product.getDescription().compareTo(clientProduct.getProduct().getDescription());
 
-    public int getParentProductId() {
-        return parentProductId;
-    }
-
-    public void setParentProductId(int clientProductId) {
-        this.parentProductId = parentProductId;
+        return String.valueOf(this.getId()).compareTo(String.valueOf(clientProduct.getId()));
     }
 }

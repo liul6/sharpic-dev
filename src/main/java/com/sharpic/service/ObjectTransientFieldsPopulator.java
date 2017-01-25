@@ -18,7 +18,7 @@ public class ObjectTransientFieldsPopulator implements IObjectTransientFieldsPop
     @Autowired
     private IServerCache serverCache;
 
-    public void populateProductTransientFields(ClientProduct product) {
+    public void populateProductTransientFields(Product product) {
         if (product == null)
             return;
         if (product.getSize() == null) {
@@ -32,12 +32,27 @@ public class ObjectTransientFieldsPopulator implements IObjectTransientFieldsPop
         }
     }
 
-    public void populateProductTransientFields(List<ClientProduct> clientProducts) {
+    public void populateProductTransientFields(List<Product> products) {
+        if (products == null)
+            return;
+
+        for (int i = 0; i < products.size(); i++) {
+            populateProductTransientFields(products.get(i));
+        }
+    }
+
+    public void populateClientProductTransientField(ClientProduct clientProduct) {
+        if (clientProduct.getProductId() > 0)
+            clientProduct.setProduct(serverCache.findProduct(clientProduct.getProductId()));
+    }
+
+    public void populateClientProductTransientFields(List<ClientProduct> clientProducts) {
         if (clientProducts == null)
             return;
 
         for (int i = 0; i < clientProducts.size(); i++) {
-            populateProductTransientFields(clientProducts.get(i));
+            ClientProduct clientProduct = clientProducts.get(i);
+            populateClientProductTransientField(clientProduct);
         }
     }
 
@@ -54,9 +69,9 @@ public class ObjectTransientFieldsPopulator implements IObjectTransientFieldsPop
         String result = "";
         for (int i = 0; i < recipeItems.size(); i++) {
             RecipeItem recipeItem = recipeItems.get(i);
-            ClientProduct clientProduct = recipeItem.getClientProduct();
-            populateProductTransientFields(clientProduct);
-            result += clientProduct.getDescription();
+            Product product = recipeItem.getProduct();
+            populateProductTransientFields(product);
+            result += product.getDescription();
             if (Util.isCloseToZero(recipeItem.getFulls()))
                 result += (" ounces " + recipeItem.getOunces());
             else

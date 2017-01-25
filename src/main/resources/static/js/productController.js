@@ -34,6 +34,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
                     enableColumnMenus: false,
                     columnDefs: [
                         {name: 'name', displayName: 'Product Name', width : '40%' },
+                        {name: 'size.name', displayName: 'Size', enableCellEdit : true, editableCellTemplate: $scope.sizeCelltemplate },
                         {name: 'fulls', displayName: 'Fulls', type: 'number' },
                         {name: 'costs', displayName: 'Costs', type: 'number' },
                         {name: 'tare', displayName: 'Tare', type: 'number' },
@@ -74,8 +75,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
         $http.get('/product/getClientProducts?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
 
-            $scope.productCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="name as product.name for product in grid.appScope.productOptions.data | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelectedProduct(row.entity, $item)" class="form-control" ></form></div>';
-            $scope.sizeCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="name as size.name for size in grid.appScope.sizeOptions.data | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelectedSize(row.entity, $item)" class="form-control" ></form></div>';
+            $scope.productCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as product.description for product in grid.appScope.productOptions.data | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelectedProduct(row.entity, $item)" class="form-control" ></form></div>';
 
             $scope.clientProductOptions = {
                 data: data,
@@ -84,9 +84,7 @@ sharpicApp.controller('productController', function($rootScope, $http, $location
                 multiSelect: false,
                 enableColumnMenus: false,
                 columnDefs: [
-                    {name: 'name', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productCelltemplate },
-                    {name: 'size.name', displayName: 'Size', enableCellEdit : true, editableCellTemplate: $scope.sizeCelltemplate },
-                    {name: 'serving', displayName: 'Serving' },
+                    {name: 'product.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productCelltemplate },
                     {name: 'retailPrice', displayName: 'Retail Price', type: 'number' },
                     {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeClientProduct(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                 ]

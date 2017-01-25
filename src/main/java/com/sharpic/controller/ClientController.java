@@ -58,6 +58,9 @@ public class ClientController {
     private RecipeDao recipeDao;
 
     @Autowired
+    private ProductController productController;
+
+    @Autowired
     private ObjectTransientFieldsPopulator objectTransientFieldsPopulator;
 
     @RequestMapping(value = "/client/getClientNames")
@@ -109,7 +112,6 @@ public class ClientController {
         return locations;
     }
 
-
     @RequestMapping(value = "/client/getClientProducts")
     @ResponseBody
     public List<ClientProduct> getClientProducts(String clientName) {
@@ -117,7 +119,7 @@ public class ClientController {
             return new ArrayList<>();
 
         List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
-        objectTransientFieldsPopulator.populateProductTransientFields(clientProducts);
+        objectTransientFieldsPopulator.populateClientProductTransientFields(clientProducts);
         return clientProducts;
     }
 
@@ -187,11 +189,7 @@ public class ClientController {
         if (clientRecipes != null)
             Collections.sort(clientRecipes);
         sharpICResponse.addToModel("clientRecipes", clientRecipes);
-
-        List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
-        objectTransientFieldsPopulator.populateProductTransientFields(clientProducts);
-
-        sharpICResponse.addToModel("clientProducts", clientProducts);
+        sharpICResponse.addToModel("products", serverCache.getProducts());
 
         return sharpICResponse;
     }
@@ -205,7 +203,7 @@ public class ClientController {
             return sharpICResponse;
 
 
-        sharpICResponse.addToModel("clientProducts", getClientProducts(clientName));
+        sharpICResponse.addToModel("products", productController.getProducts());
         sharpICResponse.addToModel("clientLocations", getClientLocations(clientName));
         sharpICResponse.addToModel("clientAudits", getClientAuditDates(clientName));
 
@@ -227,7 +225,7 @@ public class ClientController {
         if (recipeItems != null) {
             for (int i = 0; i < recipeItems.size(); i++) {
                 RecipeItem recipeItem = recipeItems.get(i);
-                recipeItem.setClientProduct(clientProductDao.getClientProduct(recipeItem.getProductId()));
+                recipeItem.setProduct(serverCache.findProduct(recipeItem.getProductId()));
                 recipeItemDao.insertRecipeItem(recipeItem);
             }
         }

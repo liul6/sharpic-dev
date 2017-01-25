@@ -49,8 +49,8 @@ public class ServerCache implements IServerCache {
         recipeMapByName.clear();
 
         this.fillSizeCache();
-        this.fillProductCache();
-        this.fillRecipeCache();
+//        this.fillProductCache();
+//        this.fillRecipeCache();
     }
 
     @Override

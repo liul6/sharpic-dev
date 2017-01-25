@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -51,10 +52,10 @@ public class SaleController {
     private IObjectTransientFieldsPopulator objectTransientFieldsPopulator;
 
     @Autowired
-    private ClientProductDao clientProductDao;
+    private ClientController clientController;
 
     @Autowired
-    private ClientController clientController;
+    private ProductController productController;
 
     @RequestMapping(value = "/sale/getSales")
     @ResponseBody
@@ -72,9 +73,11 @@ public class SaleController {
 
         try {
             List<Sale> auditSales = saleDao.getAuditSales(auditId);
+            Collections.sort(auditSales);
+
             response.addToModel("sales", auditSales);
             response.addToModel("recipes", getClientApplicableRecipes(clientName, auditId));
-            response.addToModel("clientProducts", clientController.getClientProducts(clientName));
+            response.addToModel("products", productController.getProducts());
             response.setSuccessful(true);
         } catch (Exception e) {
             log.error(e);
@@ -115,7 +118,7 @@ public class SaleController {
         if (recipeItems != null) {
             for (int i = 0; i < recipeItems.size(); i++) {
                 RecipeItem recipeItem = recipeItems.get(i);
-                recipeItem.setClientProduct(clientProductDao.getClientProduct(recipeItem.getProductId()));
+                recipeItem.setProduct(serverCache.findProduct(recipeItem.getProductId()));
 
                 AuditRecipeItem auditRecipeItem = new AuditRecipeItem(auditRecipe.getAuditId(), auditRecipe.getId(), recipeItem);
 

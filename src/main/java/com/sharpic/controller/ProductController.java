@@ -43,6 +43,7 @@ public class ProductController {
     @ResponseBody
     public List<Product> getProducts() {
         List<Product> products = serverCache.getProducts();
+        transientFieldsPopulator.populateProductTransientFields(products);
 
         Collections.sort(products);
         return products;
@@ -52,7 +53,8 @@ public class ProductController {
     @ResponseBody
     public List<ClientProduct> getClientProducts(String clientName) {
         List<ClientProduct> clientProducts = clientProductDao.getClientProducts(clientName);
-        transientFieldsPopulator.populateProductTransientFields(clientProducts);
+        transientFieldsPopulator.populateClientProductTransientFields(clientProducts);
+
 
         Collections.sort(clientProducts);
         return clientProducts;

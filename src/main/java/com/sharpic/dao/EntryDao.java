@@ -1,14 +1,13 @@
 package com.sharpic.dao;
 
-import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.Entry;
 import com.sharpic.domain.EntryMapper;
 import com.sharpic.domain.Location;
 import com.sharpic.service.IObjectTransientFieldsPopulator;
+import com.sharpic.service.IServerCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,25 +27,21 @@ public class EntryDao {
     private ClientDao clientDao;
 
     @Autowired
+    private IServerCache serverCache;
+
+    @Autowired
     private IObjectTransientFieldsPopulator objectTransientFieldsPopulator;
 
     public List<Entry> getAuditEntries(int auditId) {
         List<Entry> entries = entryMapper.getAuditEntries(auditId);
-        List<Integer> clientProductIds = new ArrayList<Integer>();
 
         if (entries != null) {
-            for (int i = 0; i < entries.size(); i++) {
-                Entry entry = entries.get(i);
-                clientProductIds.add(entry.getProductId());
-            }
-
-            Map<Integer, ClientProduct> clientProductMap = clientProductDao.getClientProductsWithIdsMap(clientProductIds);
             Map<String, Location> clientLocationMap = clientDao.getLocationMap(auditId);
 
             for (int i = 0; i < entries.size(); i++) {
                 Entry entry = entries.get(i);
-                entry.setClientProduct(clientProductMap.get(entry.getProductId()));
-                objectTransientFieldsPopulator.populateProductTransientFields(entry.getClientProduct());
+                entry.setProduct(serverCache.findProduct(entry.getProductId()));
+                objectTransientFieldsPopulator.populateProductTransientFields(entry.getProduct());
                 entry.setClientLocation(clientLocationMap.get(entry.getLocation()));
             }
         }
@@ -67,8 +62,8 @@ public class EntryDao {
         return entryMapper.getNumberOfEntriesByProductId(productId);
     }
 
-    public void updateAuditEntry(Entry entry){
-        if(entry.getId()>0)
+    public void updateAuditEntry(Entry entry) {
+        if (entry.getId() > 0)
             entryMapper.updateAuditEntry(entry);
         else
             entryMapper.insertAuditEntry(entry);

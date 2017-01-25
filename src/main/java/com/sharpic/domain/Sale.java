@@ -62,6 +62,6 @@ public class Sale extends BaseObject implements Comparable<Sale> {
     }
 
     public int compareTo(Sale sale) {
-        return this.recipe.getDescription().compareTo(sale.recipe.getDescription());
+        return this.recipe.getRecipeName().compareTo(sale.recipe.getRecipeName());
     }
 }

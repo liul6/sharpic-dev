@@ -6,6 +6,7 @@
     <resultMap id="ResultMap" type="Product">
         <result column="id" property="id"/>
         <result column="name" property="name"/>
+        <result column="size_id" property="sizeId"/>
         <result column="tare" property="tare"/>
         <result column="cost" property="cost"/>
         <result column="fulls" property="fulls"/>
@@ -16,7 +17,7 @@
     </resultMap>
 
     <select id="getProducts" resultMap="ResultMap">
-        select id, name,tare, cost, fulls, cases, upc, tags, update_datetime from product
+        select id, name, size_id, tare, cost, fulls, cases, upc, tags, update_datetime from product
     </select>
 
     <delete id="deleteProduct">

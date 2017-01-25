@@ -7,6 +7,7 @@ import java.util.Date;
  */
 public class Product extends BaseObject implements Comparable<Product> {
     private String name;
+    private int sizeId;
     private double tare;
     private double cost;
     private double fulls;
@@ -15,6 +16,9 @@ public class Product extends BaseObject implements Comparable<Product> {
     private String tags;
     private Date updatedDatetime;
     private String description;
+
+    //transient fields
+    private Size size;
 
     public String getName() {
         return name;
@@ -90,5 +94,21 @@ public class Product extends BaseObject implements Comparable<Product> {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getSizeId() {
+        return sizeId;
+    }
+
+    public void setSizeId(int sizeId) {
+        this.sizeId = sizeId;
+    }
+
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
     }
 }

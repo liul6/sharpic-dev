@@ -8,7 +8,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.auditDates = [];
     $scope.allVenues = [];
     $scope.auditModiferItems = [];
-    $scope.clientProducts = [];
+    $scope.products = [];
     $scope.auditEntriesOptions = [];
     $scope.productDescriptionCelltemplate = null;
 
@@ -46,7 +46,6 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.selectClient = function() {
         $scope.auditEntriesOptions.data = [];
         $scope.allVenus = [];
-        $scope.clientProduct = [];
 
         $http.get('/client/getClientInfo?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
@@ -55,8 +54,8 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
             $scope.clientLocations = data.model.clientLocations;
 
             $scope.allVenus.push("ALL");
-            $scope.clientProducts = data.model.clientProducts;
-            $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as clientProduct.description for clientProduct in grid.appScope.clientProducts | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
+            $scope.products = data.model.products;
+            $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as product.description for product in grid.appScope.products | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
 
             if($scope.auditDates.length>0) {
                 $scope.auditDate = $scope.auditDates[0];
@@ -69,9 +68,9 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
                 multiSelect: false,
                 enableColumnMenus: false,
                 columnDefs: [
-                    {name: 'clientProduct.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
+                    {name: 'product.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
                     {name: 'weights', displayName: 'Partials', type: 'number' },
-                    {name: 'fulls', displayName: 'Fulls', type: 'number' },
+                    {name: 'amount', displayName: 'Fulls', type: 'number' },
                     {name: 'bin', displayName: 'Bin' },
                     {    name: 'location',
                          displayName: 'Location',
@@ -109,7 +108,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     }
 
     $scope.typeaheadSelected = function(entity, selectedItem){
-        entity.clientProduct = selectedItem;
+        entity.product = selectedItem;
         $scope.$broadcast('uiGridEventEndCellEdit');
     };
 

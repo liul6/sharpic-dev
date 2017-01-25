@@ -2,13 +2,12 @@ package com.sharpic.dao;
 
 import com.sharpic.domain.AuditRecipeItem;
 import com.sharpic.domain.AuditRecipeItemMapper;
-import com.sharpic.domain.ClientProduct;
 import com.sharpic.domain.RecipeItem;
+import com.sharpic.service.IServerCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by joey on 2017-01-07.
@@ -17,8 +16,11 @@ import java.util.Map;
 public class AuditRecipeItemDao {
     @Autowired
     private AuditRecipeItemMapper auditRecipeItemMapper;
+//    @Autowired
+//    private ClientProductDao clientProductDao;
+
     @Autowired
-    private ClientProductDao clientProductDao;
+    private IServerCache serverCache;
 
     public List<RecipeItem> getAuditRecipeItems(int auditId) {
         List<RecipeItem> auditRecipeItems = auditRecipeItemMapper.getAuditRecipeItems(auditId);
@@ -47,12 +49,10 @@ public class AuditRecipeItemDao {
     }
 
     private List<RecipeItem> normalizeAuditRecipeItems(List<RecipeItem> auditRecipeItems) {
-        Map<Integer, ClientProduct> clientProductMap = clientProductDao.getClientProducts(auditRecipeItems);
-
         if (auditRecipeItems != null) {
             for (int i = 0; i < auditRecipeItems.size(); i++) {
                 RecipeItem auditRecipeItem = auditRecipeItems.get(i);
-                auditRecipeItem.setClientProduct(clientProductMap.get(auditRecipeItem.getProductId()));
+                auditRecipeItem.setProduct(serverCache.findProduct(auditRecipeItem.getProductId()));
             }
         }
         return auditRecipeItems;
