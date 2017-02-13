@@ -54,7 +54,7 @@ public class FileUploadController {
                 if ("SALE".equalsIgnoreCase(category)) {
                     uploadSale(clientName, auditDateStr, file);
 
-                    return saleController.getSales(clientName, auditDateStr);
+                    return saleController.getAuditInfo(clientName, auditDateStr);
                 }
             }
         } catch (Exception e) {

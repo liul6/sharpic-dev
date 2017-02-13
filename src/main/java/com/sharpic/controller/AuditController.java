@@ -1,9 +1,10 @@
 package com.sharpic.controller;
 
 import com.sharpic.common.DateUtil;
+import com.sharpic.dao.AuditDao;
+import com.sharpic.dao.ClientDao;
 import com.sharpic.dao.EntryDao;
 import com.sharpic.dao.ModifierDao;
-import com.sharpic.domain.AuditMapper;
 import com.sharpic.domain.Entry;
 import com.sharpic.domain.ModifierItem;
 import com.sharpic.service.IServerCache;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,10 +33,13 @@ public class AuditController {
     private static Log log = LogFactory.getLog(AuditController.class.getName());
 
     @Autowired
-    private AuditMapper auditMapper;
+    private AuditDao auditDao;
 
     @Autowired
     private EntryDao entryDao;
+
+    @Autowired
+    private ClientDao clientDao;
 
     @Autowired
     private IServerCache serverCache;
@@ -47,39 +50,36 @@ public class AuditController {
     @Autowired
     private ObjectTransientFieldsPopulator objectDescriptor;
 
-    @RequestMapping(value = "/audit/getEntries")
+    @RequestMapping(value = "/audit/getAuditInfo")
     @ResponseBody
-    public List<Entry> getEntries(String clientName, String auditDateStr) {
+    public SharpICResponse getAuditInfo(String clientName, String auditDateStr) {
         LocalDate auditDate = LocalDate.parse(auditDateStr);
+        SharpICResponse sharpICResponse = new SharpICResponse();
 
         if (auditDate == null)
             auditDate = LocalDate.now();
+        try {
+            int auditId = auditDao.getAuditId(clientName, DateUtil.toDate(auditDate));
+            if (auditId >= 0) {
+                List<Entry> entries = entryDao.getAuditEntries(auditId);
+                Collections.sort(entries);
+                sharpICResponse.addToModel("entries", entries);
 
-        int auditId = auditMapper.getAuditId(clientName, DateUtil.toDate(auditDate));
-        if (auditId < 0)
-            return new ArrayList<Entry>();
+                List<ModifierItem> modifierItems = modifierDao.getAuditModifierItems(auditId);
+                sharpICResponse.addToModel("modifierItems", modifierItems);
 
-        List<Entry> entries = entryDao.getAuditEntries(auditId);
+                sharpICResponse.addToModel("recipes", clientDao.getClientApplicableRecipes(clientName, auditId));
+                sharpICResponse.addToModel("audit", auditDao.getAudit(auditId));
 
-        System.out.println("The number of entries retrieved: " + entries.size());
+                sharpICResponse.setSuccessful(true);
+            }
+        } catch (Exception e) {
+            log.error(e);
+            sharpICResponse.setErrorText(e.getMessage());
+            sharpICResponse.setSuccessful(false);
+        }
 
-        Collections.sort(entries);
-        return entries;
-    }
-
-    @RequestMapping(value = "/audit/getModifierItems")
-    @ResponseBody
-    public List<ModifierItem> getModifierItems(String clientName, String auditDateStr) {
-        LocalDate auditDate = LocalDate.parse(auditDateStr);
-
-        if (auditDate == null)
-            auditDate = LocalDate.now();
-
-        int auditId = auditMapper.getAuditId(clientName, DateUtil.toDate(auditDate));
-        if (auditId < 0)
-            return new ArrayList<ModifierItem>();
-
-        return modifierDao.getAuditModifierItems(auditId);
+        return sharpICResponse;
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -110,6 +110,10 @@ public class AuditController {
     public SharpICResponse saveEntry(@RequestBody Entry entry) {
         SharpICResponse sharpICResponse = new SharpICResponse();
         try {
+            if(entry.getProductId()<=0) {
+                entry.setProductId(entry.getProduct().getId());
+            }
+
             entryDao.updateAuditEntry(entry);
             sharpICResponse.setSuccessful(true);
             return sharpICResponse;

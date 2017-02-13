@@ -17,6 +17,8 @@ public interface SaleMapper {
 
     public void insertSale(@Param("sale") Sale sale);
 
+    public void updateSale(@Param("sale") Sale sale);
+
     public void deleteSales(@Param("clientName") String clientName, @Param("auditId") int auditId);
 
     public void deleteSale(@Param("saleId") int saleId);

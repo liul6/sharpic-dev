@@ -71,14 +71,14 @@ public class AuditRecipeDao {
 
     public int createAuditRecipe(int auditId, Recipe recipe) {
         insertAuditRecipe(auditId, recipe);
-        AuditRecipe auditRecipe = getAuditRecipeByName(auditId, recipe.getClientName(), recipe.getRecipeName());
+        AuditRecipe auditRecipe = getAuditRecipeByName(auditId, recipe.getRecipeName());
 
         return auditRecipe.getId();
     }
 
     public AuditRecipe createAuditRecipe(AuditRecipe auditRecipe) {
         insertAuditRecipe(auditRecipe);
-        AuditRecipe auditRecipeDB = getAuditRecipeByName(auditRecipe.getAuditId(), auditRecipe.getClientName(), auditRecipe.getRecipeName());
+        AuditRecipe auditRecipeDB = getAuditRecipeByName(auditRecipe.getAuditId(), auditRecipe.getRecipeName());
 
         return auditRecipeDB;
     }
@@ -94,7 +94,7 @@ public class AuditRecipeDao {
 
     public void insertAuditRecipe(AuditRecipe auditRecipe) {
         auditRecipeMapper.insertAuditRecipe(auditRecipe);
-        AuditRecipe auditRecipeDB = auditRecipeMapper.getAuditRecipeByName(auditRecipe.getAuditId(), auditRecipe.getClientName(), auditRecipe.getRecipeName());
+        AuditRecipe auditRecipeDB = auditRecipeMapper.getAuditRecipeByName(auditRecipe.getAuditId(), auditRecipe.getRecipeName());
 
         List<RecipeItem> recipeItems = auditRecipe.getRecipeItems();
         if (recipeItems != null) {
@@ -125,7 +125,7 @@ public class AuditRecipeDao {
         auditRecipe.setObjectId(String.valueOf(recipe.getId()));
 
         auditRecipeMapper.insertAuditRecipe(auditRecipe);
-        auditRecipe = auditRecipeMapper.getAuditRecipeByName(auditId, recipe.getClientName(), recipe.getRecipeName());
+        auditRecipe = auditRecipeMapper.getAuditRecipeByName(auditId, recipe.getRecipeName());
 
         List<RecipeItem> recipeItems = recipe.getRecipeItems();
         if (recipeItems != null) {
@@ -148,9 +148,8 @@ public class AuditRecipeDao {
         }
     }
 
-    public AuditRecipe getAuditRecipeByName(int auditId,
-                                            String clientName, String recipeName) {
-        return auditRecipeMapper.getAuditRecipeByName(auditId, clientName, recipeName);
+    public AuditRecipe getAuditRecipeByName(int auditId, String recipeName) {
+        return auditRecipeMapper.getAuditRecipeByName(auditId, recipeName);
     }
 
     public AuditRecipe getAuditRecipe(int auditRecipeId) {

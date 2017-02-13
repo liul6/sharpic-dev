@@ -32,6 +32,12 @@
             (#{sale.auditId}, #{sale.recipeId}, #{sale.amount}, #{sale.price}, SYSDATETIME())
     </insert>
 
+    <insert id="updateSale">
+        update sale set
+        AMOUNT = #{sale.amount}, PRICE = #{sale.price}, update_datetime = SYSDATETIME()
+        WHERE ID = #{sale.id}
+    </insert>
+
     <delete id="deleteSales">
         delete from sale where audit_id=#{auditId}
     </delete>

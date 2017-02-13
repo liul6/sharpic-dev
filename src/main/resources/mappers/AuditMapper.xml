@@ -12,7 +12,11 @@
     </resultMap>
 
     <select id="getClientAudits" resultMap="ResultMap">
-        select client_name, audit_date, notes, update_datetime from audit where client_name=#{clientName} order by audit_date desc
+        select id, client_name, audit_date, notes, update_datetime from audit where client_name=#{clientName} order by audit_date desc
+    </select>
+
+    <select id="getAudit" resultMap="ResultMap">
+        select id, client_name, audit_date, notes, update_datetime from audit where id=#{auditId}
     </select>
 
     <select id="getAuditId" resultType="Integer">

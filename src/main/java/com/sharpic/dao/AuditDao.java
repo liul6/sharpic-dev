@@ -32,6 +32,10 @@ public class AuditDao {
         return auditMapper.getAuditId(clientName, auditDate);
     }
 
+    public Audit getAudit(Integer auditId) {
+        return auditMapper.getAudit(auditId);
+    }
+
     public void insertAudit(@Param("clientName") String clientName, @Param("auditDate") Date auditDate) {
         auditMapper.insertAudit(clientName, auditDate);
     }

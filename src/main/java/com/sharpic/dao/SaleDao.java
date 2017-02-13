@@ -46,10 +46,10 @@ public class SaleDao {
 
         for (int i = 0; i < sales.size(); i++) {
             Sale sale = sales.get(i);
-            AuditRecipe auditRecipe = auditRecipeDao.getAuditRecipeByName(auditId, sale.getRecipe().getClientName(), sale.getRecipe().getRecipeName());
+            AuditRecipe auditRecipe = auditRecipeDao.getAuditRecipeByName(auditId, sale.getRecipe().getRecipeName());
             if (auditRecipe == null) {
                 int newRecipeId = auditRecipeDao.createAuditRecipe(auditId, sale.getRecipe());
-                auditRecipe = auditRecipeDao.getAuditRecipeByName(auditId, sale.getRecipe().getClientName(), sale.getRecipe().getRecipeName());
+                auditRecipe = auditRecipeDao.getAuditRecipeByName(auditId, sale.getRecipe().getRecipeName());
             }
             sale.setRecipeId(auditRecipe.getId());
             sale.setRecipe(auditRecipe);
@@ -80,6 +80,37 @@ public class SaleDao {
         Collections.sort(sales);
 
         return sales;
+    }
+
+    public void saveSale(Sale sale) throws SharpICException {
+        if (sale.getRecipe() == null) {
+            throw new SharpICException("Invalid recipe in Sale!");
+        }
+
+        if (!(sale.getRecipe() instanceof AuditRecipe)) {
+            String recipeName = sale.getRecipe().getRecipeName();
+            AuditRecipe auditRecipe = auditRecipeDao.getAuditRecipeByName(sale.getAuditId(), recipeName);
+
+            if (auditRecipe == null) {
+                sale.setRecipeId(auditRecipeDao.createAuditRecipe(sale.getAuditId(), sale.getRecipe()));
+            } else {
+                sale.setRecipeId(auditRecipe.getId());
+            }
+        }
+
+        if (sale.getId() <= 0) {
+            insertSale(sale);
+        } else {
+            updateSale(sale);
+        }
+    }
+
+    public void insertSale(Sale sale) {
+        saleMapper.insertSale(sale);
+    }
+
+    public void updateSale(Sale sale) {
+        saleMapper.updateSale(sale);
     }
 
     public void deleteSale(int saleId) {

@@ -34,8 +34,10 @@
     </insert>
 
     <select id="getAuditRecipeByName" resultMap="ResultMap">
-        select id, audit_id, client_name, name, ignore, update_datetime from audit_recipe
-        where client_name=#{clientName} and name=#{recipeName} and audit_id=#{auditId}
+        select audit_recipe.id, audit_recipe.audit_id, audit_recipe.client_name, audit_recipe.name, ignore, audit_recipe.update_datetime
+        from audit_recipe, audit
+        where name=#{recipeName} and audit_recipe.audit_id=#{auditId}
+        and audit_recipe.audit_id=audit.id
     </select>
 
     <select id="getAuditRecipe" resultMap="ResultMap">

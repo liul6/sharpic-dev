@@ -1,10 +1,7 @@
 package com.sharpic.controller;
 
 import com.sharpic.common.DateUtil;
-import com.sharpic.dao.AuditDao;
-import com.sharpic.dao.ClientProductDao;
-import com.sharpic.dao.RecipeDao;
-import com.sharpic.dao.RecipeItemDao;
+import com.sharpic.dao.*;
 import com.sharpic.domain.*;
 import com.sharpic.service.IServerCache;
 import com.sharpic.service.ObjectTransientFieldsPopulator;
@@ -56,6 +53,9 @@ public class ClientController {
 
     @Autowired
     private RecipeDao recipeDao;
+
+    @Autowired
+    private ModifierDao modifierDao;
 
     @Autowired
     private ProductController productController;
@@ -199,15 +199,21 @@ public class ClientController {
     public SharpICResponse getClientInfo(String clientName) {
         SharpICResponse sharpICResponse = new SharpICResponse();
 
-        if (clientName == null || clientName.isEmpty())
-            return sharpICResponse;
+        try {
+            if (clientName == null || clientName.isEmpty())
+                return sharpICResponse;
 
+            sharpICResponse.addToModel("products", productController.getProducts());
+            sharpICResponse.addToModel("clientLocations", getClientLocations(clientName));
+            sharpICResponse.addToModel("clientAudits", getClientAuditDates(clientName));
 
-        sharpICResponse.addToModel("products", productController.getProducts());
-        sharpICResponse.addToModel("clientLocations", getClientLocations(clientName));
-        sharpICResponse.addToModel("clientAudits", getClientAuditDates(clientName));
+            sharpICResponse.setSuccessful(true);
+        } catch (Exception e) {
+            log.error(e);
+            sharpICResponse.setSuccessful(false);
+            sharpICResponse.setErrorText(e.getMessage());
+        }
 
-        sharpICResponse.setSuccessful(true);
         return sharpICResponse;
     }
 

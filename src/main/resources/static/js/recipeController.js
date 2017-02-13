@@ -48,7 +48,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
 
     $scope.modifyRecipe = function(entity) {
         $scope.opts = {
-            dialogFade: false,
+            dialogFade: true,
             keyboard: true,
             templateUrl : 'pages/modifyRecipe.html',
             controller : modifyRecipeController,
@@ -86,7 +86,6 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
         .error(function (data, status, header, config) {
         });
     };
-
 
 })
 

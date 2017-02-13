@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by joey on 2016-12-13.
@@ -52,14 +50,17 @@ public class SaleController {
     private IObjectTransientFieldsPopulator objectTransientFieldsPopulator;
 
     @Autowired
+    private ClientDao clientDao;
+
+    @Autowired
     private ClientController clientController;
 
     @Autowired
     private ProductController productController;
 
-    @RequestMapping(value = "/sale/getSales")
+    @RequestMapping(value = "/sale/getAuditInfo")
     @ResponseBody
-    public SharpICResponse getSales(String clientName, String auditDateStr) {
+    public SharpICResponse getAuditInfo(String clientName, String auditDateStr) {
         LocalDate auditDate = LocalDate.parse(auditDateStr);
 
         if (auditDate == null)
@@ -75,8 +76,9 @@ public class SaleController {
             List<Sale> auditSales = saleDao.getAuditSales(auditId);
             Collections.sort(auditSales);
 
+            response.addToModel("audit", audiDao.getAudit(auditId));
             response.addToModel("sales", auditSales);
-            response.addToModel("recipes", getClientApplicableRecipes(clientName, auditId));
+            response.addToModel("recipes", clientDao.getClientApplicableRecipes(clientName, auditId));
             response.addToModel("products", productController.getProducts());
             response.setSuccessful(true);
         } catch (Exception e) {
@@ -85,23 +87,6 @@ public class SaleController {
         }
 
         return response;
-    }
-
-    private List<Recipe> getClientApplicableRecipes(String clientName, int auditId) {
-        Map<Integer, AuditRecipe> clientAuditRecipeMap = auditRecipeDao.getAuditRecipesMap(auditId);
-        List<Recipe> clientRecipes = serverCache.getRecipes(clientName);
-
-        List<Recipe> clientAppicableRecipes = new ArrayList<Recipe>();
-        for (int i = 0; i < clientRecipes.size(); i++) {
-            Recipe recipe = clientRecipes.get(i);
-
-            if (clientAuditRecipeMap.containsKey(recipe.getRecipeName()))
-                recipe = clientAuditRecipeMap.get(recipe.getRecipeName());
-            clientAppicableRecipes.add(recipe);
-        }
-
-        objectTransientFieldsPopulator.populateRecipeTransientFields(clientAppicableRecipes);
-        return clientAppicableRecipes;
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -153,6 +138,24 @@ public class SaleController {
         }
 
         return clientController.saveRecipe(recipe);
+    }
+
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(method = RequestMethod.POST, value = "/sale/saveSale", consumes = "application/json")
+    @ResponseBody
+    public SharpICResponse saveSale(@RequestBody Sale sale) {
+        SharpICResponse sharpICResponse = new SharpICResponse();
+        try {
+            saleDao.saveSale(sale);
+            sharpICResponse.setSuccessful(true);
+            return sharpICResponse;
+        } catch (Exception e) {
+            sharpICResponse.setErrorText(e.getMessage());
+            sharpICResponse.setSuccessful(false);
+
+            return sharpICResponse;
+        }
     }
 
     @PreAuthorize("hasRole('USER')")

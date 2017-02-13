@@ -1,12 +1,12 @@
 package com.sharpic.dao;
 
-import com.sharpic.domain.Location;
-import com.sharpic.domain.LocationMapper;
-import com.sharpic.domain.Modifier;
-import com.sharpic.domain.ModifierMapper;
+import com.sharpic.domain.*;
+import com.sharpic.service.IServerCache;
+import com.sharpic.service.ObjectTransientFieldsPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +22,15 @@ public class ClientDao {
 
     @Autowired
     private ModifierMapper modifierMapper;
+
+    @Autowired
+    private AuditRecipeDao auditRecipeDao;
+
+    @Autowired
+    private IServerCache serverCache;
+
+    @Autowired
+    private ObjectTransientFieldsPopulator objectTransientFieldsPopulator;
 
     public Map<String, Location> getLocationMap(String clientName) {
         Map<String, Location> clientLocationMap = new HashMap<String, Location>();
@@ -65,5 +74,21 @@ public class ClientDao {
         return clientModifierMap;
     }
 
+    public List<Recipe> getClientApplicableRecipes(String clientName, int auditId) {
+        Map<Integer, AuditRecipe> clientAuditRecipeMap = auditRecipeDao.getAuditRecipesMap(auditId);
+        List<Recipe> clientRecipes = serverCache.getRecipes(clientName);
+
+        List<Recipe> clientAppicableRecipes = new ArrayList<Recipe>();
+        for (int i = 0; i < clientRecipes.size(); i++) {
+            Recipe recipe = clientRecipes.get(i);
+
+            if (clientAuditRecipeMap.containsKey(recipe.getRecipeName()))
+                recipe = clientAuditRecipeMap.get(recipe.getRecipeName());
+            clientAppicableRecipes.add(recipe);
+        }
+
+        objectTransientFieldsPopulator.populateRecipeTransientFields(clientAppicableRecipes);
+        return clientAppicableRecipes;
+    }
 
 }

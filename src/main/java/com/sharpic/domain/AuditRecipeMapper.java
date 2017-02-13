@@ -21,6 +21,5 @@ public interface AuditRecipeMapper {
 
     public void insertAuditRecipe(@Param("auditRecipe") AuditRecipe auditRecipe);
 
-    public AuditRecipe getAuditRecipeByName(@Param("auditId") int auditId,
-                                            @Param("clientName") String clientName, @Param("recipeName") String recipeName);
+    public AuditRecipe getAuditRecipeByName(@Param("auditId") int auditId, @Param("recipeName") String recipeName);
 }

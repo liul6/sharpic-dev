@@ -1,5 +1,4 @@
-sharpicApp.controller('auditsController', function($rootScope, $http, $location, $route, $scope, $window, DTOptionsBuilder) {
-    $scope.message ='this is a test for angularjs controller';
+sharpicApp.controller('auditsController', function($rootScope, $http, $location, $route, $scope, $window, Notify, $interval, DTOptionsBuilder) {
     $scope.clientName = null;
     $scope.auditDate = null;
     $scope.selectedVenue = null;
@@ -10,10 +9,13 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     $scope.auditModiferItems = [];
     $scope.products = [];
     $scope.auditEntriesOptions = [];
+    $scope.auditModifierItemsOptions = [];
     $scope.productDescriptionCelltemplate = null;
 
     $scope.clientLocations = [];
     $scope.clientLocationsMap  = {};
+
+    $scope.audit = null;
 
     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withDisplayLength(100)
@@ -39,7 +41,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     };
 
     $scope.addEntry = function() {
-        var newEntry = {productDescription : null, weights : null, fulls : null, bin : null, location : null};
+        var newEntry = {productDescription : null, weights : null, fulls : null, bin : null, location : null, product : null, productId : null};
         $scope.auditEntriesOptions.data.unshift(newEntry);
     };
 
@@ -49,62 +51,117 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
 
         $http.get('/client/getClientInfo?clientName=' + $scope.clientName)
             .success(function (data, status, headers, config) {
-            $scope.auditDates = data.model.clientAudits;
-            $scope.allVenus = data.model.clientLocations;
-            $scope.clientLocations = data.model.clientLocations;
+            if(data.successful) {
+                $scope.auditDates = data.model.clientAudits;
+                $scope.allVenus = data.model.clientLocations;
+                $scope.clientLocations = data.model.clientLocations;
 
-            $scope.allVenus.push("ALL");
-            $scope.products = data.model.products;
-            $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as product.description for product in grid.appScope.products | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
+                $scope.allVenus.push("ALL");
+                $scope.products = data.model.products;
 
-            if($scope.auditDates.length>0) {
-                $scope.auditDate = $scope.auditDates[0];
-                $scope.selectAudit();
+                $scope.productDescriptionCelltemplate = '<div><form name="inputForm"><input type="text" data-ng-model="MODEL_COL_FIELD" data-typeahead="description as product.description for product in grid.appScope.products | filter:$viewValue | limitTo:8" data-typeahead-on-select = "grid.appScope.typeaheadSelected(row.entity, $item)" class="form-control" ></form></div>';
+
+                $scope.configAuditEntryGrid();
+                if($scope.auditDates.length>0) {
+                    $scope.auditDate = $scope.auditDates[0];
+                    $scope.selectAudit();
+                }
             }
-            $scope.auditEntriesOptions = {
-                data: [],
-                enableRowSelection: false,
-                enableCellEditOnFocus: true,
-                multiSelect: false,
-                enableColumnMenus: false,
-                columnDefs: [
-                    {name: 'product.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
-                    {name: 'weights', displayName: 'Partials', type: 'number' },
-                    {name: 'amount', displayName: 'Fulls', type: 'number' },
-                    {name: 'bin', displayName: 'Bin' },
-                    {    name: 'location',
-                         displayName: 'Location',
-                         editableCellTemplate: 'ui-grid/dropdownEditor',
-                         editDropdownIdLabel: 'locationName',
-                         editDropdownValueLabel: 'locationName',
-                         editDropdownOptionsArray: $scope.clientLocations},
-                    {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
-                ]
-            };
-
-            $scope.auditEntriesOptions.onRegisterApi = function(gridApi){
-                $scope.gridApi = gridApi;
-
-                gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-                    $scope.$apply();
-                });
-
-                gridApi.rowEdit.on.saveRow($scope, $scope.saveEntryRow);
-            };
+            else {
+                Notify.addMessage(data.errorText, 'danger');
+            }
         })
         .error(function (data, status, header, config) {
         });
     }
 
-    $scope.saveEntryRow = function(rowEntity) {
-         var promise = $scope.saveEntryToDatabase(rowEntity);
-         $scope.gridApi.rowEdit.setSavePromise($scope.gridApi.grid, rowEntity, promise);
+    $scope.auditEntriesOptions.onRegisterApi = function(gridApi){
+        $scope.gridApi = gridApi;
+
+        gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+            if(newValue != oldValue)
+                $scope.saveEntry(rowEntity);
+        });
+    };
+
+    $scope.configAuditEntryGrid = function() {
+        $scope.auditEntriesOptions = {
+            data: [],
+            infiniteScrollRowsFromEnd: 40,
+            infiniteScrollUp: true,
+            infiniteScrollDown: true,
+            enableRowSelection: false,
+            enableCellEditOnFocus: true,
+            multiSelect: false,
+            enableColumnMenus: false,
+            columnDefs: [
+                {name: 'product.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
+                {name: 'weights', displayName: 'Partials', type: 'number' },
+                {name: 'amount', displayName: 'Fulls', type: 'number' },
+                {name: 'bin', displayName: 'Bin' },
+                {    name: 'location',
+                     displayName: 'Location',
+                     editableCellTemplate: 'ui-grid/dropdownEditor',
+                     editDropdownIdLabel: 'locationName',
+                     editDropdownValueLabel: 'locationName',
+                     editDropdownOptionsArray: $scope.clientLocations},
+                {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+            ]
+        };
     }
 
-    $scope.saveEntryToDatabase = function(rowEntity) {
-        var data = angular.toJson(rowEntity.entity);
-        return $q.defer();
-        //$http.post('/audit/saveEntry', data);
+    $scope.configAuditModifierGrid = function() {
+
+        $scope.auditModifierItemsOptions = {
+            data: [],
+            enableRowSelection: false,
+            enableCellEditOnFocus: true,
+            multiSelect: false,
+            enableColumnMenus: false,
+            columnDefs: [
+                {name: 'product.description', displayName: 'Product', width : '40%', enableCellEdit : true, editableCellTemplate: $scope.productDescriptionCelltemplate },
+                {name: 'weights', displayName: 'Partials', type: 'number' },
+                {name: 'amount', displayName: 'Fulls', type: 'number' },
+                {name: 'bin', displayName: 'Bin' },
+                {    name: 'location',
+                     displayName: 'Location',
+                     editableCellTemplate: 'ui-grid/dropdownEditor',
+                     editDropdownIdLabel: 'locationName',
+                     editDropdownValueLabel: 'locationName',
+                     editDropdownOptionsArray: $scope.clientLocations},
+                {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeEntry(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
+            ]
+        };
+    }
+
+    $scope.saveEntry = function(entry) {
+        if( entry.product == null && entry.productId == null)
+            return;
+
+        if(entry.weights==null && entry.amount==null)
+            return;
+
+        if(entry.auditId == null)
+            entry.auditId = $scope.audit.id;
+
+        var data = angular.toJson(entry);
+
+        var config = {
+            headers : {
+                'Content-Type': 'application/json;'
+            }
+        }
+
+        $http.post('/audit/saveEntry', data)
+            .success(function (data, status, headers, config) {
+            if(data.successful)
+                Notify.addMessage('Entry saved successfully', 'success');
+            else
+                Notify.addMessage('Entry failed to save: ' + data.errorText, 'danger');
+        })
+        .error(function (data, status, header, config) {
+            Notify.addMessage('Entry failed to save: ' + data.errorText, 'danger');
+        });
     }
 
     $scope.typeaheadSelected = function(entity, selectedItem){
@@ -118,22 +175,20 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
     };
 
     $scope.selectAudit = function() {
-       $http.get('/audit/getEntries?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
-           .success(function (data, status, headers, config) {
-           $scope.auditEntriesOptions.data = data;
-
-           $http.get('/audit/getModifierItems?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
-               .success(function (data, status, headers, config) {
-               $scope.auditModiferItems = data;
-           })
-               .error(function (data, status, header, config) {
-           });
-
+        $http.get('/audit/getAuditInfo?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
+            .success(function (data, status, headers, config) {
+            if(data.successful)
+            {
+                $scope.auditEntriesOptions.data = data.model.entries;
+                $scope.auditModiferItems = data.model.modifierItems;
+                $scope.audit = data.model.audit;
+            }
+            else {
+                Notify.addMessage(data.errorText, 'danger');
+            }
        })
        .error(function (data, status, header, config) {
        });
-
-
     };
 
     $scope.addAudit = function() {

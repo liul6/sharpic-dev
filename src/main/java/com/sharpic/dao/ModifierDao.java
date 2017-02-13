@@ -1,8 +1,7 @@
 package com.sharpic.dao;
 
-import com.sharpic.domain.ModifierItem;
-import com.sharpic.domain.ModifierItemMapper;
-import com.sharpic.domain.ModifierMapper;
+import com.sharpic.domain.*;
+import com.sharpic.service.IObjectTransientFieldsPopulator;
 import com.sharpic.service.IServerCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,12 @@ public class ModifierDao {
     @Autowired
     private IServerCache serverCache;
 
+    @Autowired
+    private AuditRecipeDao auditRecipeDao;
+
+    @Autowired
+    private IObjectTransientFieldsPopulator objectTransientFieldsPopulator;
+
     public List<ModifierItem> getAuditModifierItems(int auditId) {
         List<ModifierItem> modifierItems = modifierItemMapper.getAuditModifierItems(auditId);
 
@@ -38,11 +43,17 @@ public class ModifierDao {
             }
 
             if (modifierItem.getProductId() > 0) {
-                modifierItem.setProduct(serverCache.findProduct(modifierItem.getProductId()));
+                Product product = serverCache.findProduct(modifierItem.getProductId());
+                modifierItem.setProduct(product);
+                if (product != null)
+                    objectTransientFieldsPopulator.populateProductTransientFields(product);
             }
 
             if (modifierItem.getRecipeId() > 0) {
-                modifierItem.setRecipe(serverCache.findRecipeById(modifierItem.getRecipeId()));
+                Recipe recipe = auditRecipeDao.getAuditRecipe(modifierItem.getRecipeId());
+                modifierItem.setRecipe(recipe);
+                if (recipe != null)
+                    objectTransientFieldsPopulator.populateRecipeTransientFields(recipe);
             }
         }
 

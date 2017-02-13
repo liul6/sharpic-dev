@@ -1,16 +1,13 @@
-sharpicApp.controller('saleController', function($rootScope, $http, $location, $route, $scope, $modal, DTOptionsBuilder, fileUpload) {
+sharpicApp.controller('saleController', function($rootScope, $http, $location, $route, $scope, $modal, Notify, fileUpload) {
     $scope.clientName = null;
     $scope.auditDate = null;
+    $scope.audit = null;
 
     $scope.clientNames = [];
     $scope.auditDates = [];
     $scope.auditSalesOptions = {};
     $scope.clientRecipes = [];
     $scope.products = [];
-
-    $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDisplayLength(100)
-        .withOption('bLengthChange', false);
 
     $scope.getClientNames = function() {
         $http.get('/client/getClientNames')
@@ -21,6 +18,7 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
             }
         })
         .error(function (data, status, header, config) {
+
         });
      };
 
@@ -44,9 +42,22 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
         });
     }
 
+    $scope.auditSalesOptions.onRegisterApi = function(gridApi){
+        $scope.gridApi = gridApi;
+
+        gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+            if(newValue!=oldValue) {
+                $scope.saveRow(rowEntity);
+            }
+
+            $scope.apply();
+        });
+    };
+
     $scope.selectAudit = function() {
-       $http.get('/sale/getSales?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
+       $http.get('/sale/getAuditInfo?auditDateStr=' + $scope.auditDate + '&clientName=' + $scope.clientName)
            .success(function (data, status, headers, config) {
+            $scope.audit = data.model.audit;
             $scope.clientRecipes = data.model.recipes;
             $scope.products = data.model.products;
 
@@ -67,17 +78,37 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
                     {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeSale(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
                 ]
             };
-
-            $scope.auditSalesOptions.onRegisterApi = function(gridApi){
-                $scope.gridApi = gridApi;
-                gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-                $scope.$apply();
-                });
-            };
        })
        .error(function (data, status, header, config) {
        });
     };
+
+   $scope.saveRow = function(sale) {
+        if(sale.price==null || sale.amount == null || sale.recipe ==null)
+            return;
+
+        if(sale.recipeId ==null)
+            sale.recipeId = sale.recipe.id;
+
+        if(sale.auditId ==null)
+            sale.auditId = $scope.audit.id;
+
+       var data = angular.toJson(sale);
+
+       var config = {
+           headers : {
+               'Content-Type': 'application/json;'
+           }
+       }
+
+       $http.post('/sale/saveSale', data)
+           .success(function (data, status, headers, config) {
+            Notify.addMessage('Sale saved successfully', 'success');
+       })
+       .error(function (data, status, header, config) {
+            Notify.addMessage('Sale failed to save: ' + data.errorText, 'danger');
+       });
+   }
 
    $scope.modifyAuditRecipe = function(entity) {
         $scope.opts = {

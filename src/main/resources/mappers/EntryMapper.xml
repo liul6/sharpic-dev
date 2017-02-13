@@ -26,9 +26,9 @@
     </delete>
 
     <delete id="insertAuditEntry" parameterType="Entry">
-        insert into entry(audit_id,location,product_id,amount,weight,weights,open_bottles,bin)
+        insert into entry(audit_id,location,product_id,amount,weight,weights,open_bottles,bin,update_datetime)
         values(#{entry.auditId},#{entry.location},#{entry.productId},#{entry.amount},
-        #{entry.weight},#{entry.weights},#{entry.open_bottles},#{entry.bin})
+        #{entry.weight},#{entry.weights},#{entry.openBottles},#{entry.bin},SYSDATETIME())
     </delete>
 
     <update id="updateAuditEntry" parameterType="Entry">
@@ -39,8 +39,9 @@
             amount=#{entry.amount},
             weight=#{entry.weight},
             weights=#{entry.weights},
-            open_bottles=#{entry.open_bottles},
-            bin=#{entry.bin}
+            open_bottles=#{entry.openBottles},
+            bin=#{entry.bin},
+            update_datetime = SYSDATETIME()
         where id=#{entry.id}
     </update>
 

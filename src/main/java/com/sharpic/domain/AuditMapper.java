@@ -12,6 +12,8 @@ public interface AuditMapper {
 
     Integer getAuditId(@Param("clientName") String clientName, @Param("auditDate") Date auditDate);
 
+    Audit getAudit(@Param("auditId") Integer auditId);
+
     void insertAudit(@Param("clientName") String clientName, @Param("auditDate") Date auditDate);
 
     void deleteAudit(@Param("clientName") String clientName, @Param("auditDate") Date auditDate);
