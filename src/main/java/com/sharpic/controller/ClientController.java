@@ -58,6 +58,9 @@ public class ClientController {
     private ModifierDao modifierDao;
 
     @Autowired
+    private EntryDao entryDao;
+
+    @Autowired
     private ProductController productController;
 
     @Autowired
@@ -126,36 +129,61 @@ public class ClientController {
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, value = "/client/addAudit")
     @ResponseBody
-    public String addAudit(String clientName) {
-        Date auditDate = DateUtil.toDate(LocalDate.now());
-        if (auditDao.getAuditId(clientName, auditDate) != null) {
-            log.error("Cannot create audit  ," + auditDate.toString() + "since it is already existing!!!");
-            return null;
+    public SharpICResponse addAudit(String clientName) {
+        SharpICResponse response = new SharpICResponse();
+        try {
+            Date auditDate = DateUtil.toDate(LocalDate.now());
+            if (auditDao.getAuditId(clientName, auditDate) != null) {
+                response.setErrorText("Cannot create audit  ," + auditDate.toString() + "since it is already existing!!!");
+                response.setSuccessful(false);
+                return response;
+            }
+
+            auditDao.insertAudit(clientName, auditDate);
+            response.addToModel("addedAuditDate", DateUtil.format(auditDate));
+            response.setSuccessful(true);
+        } catch (Exception e) {
+            response.setException(e);
         }
 
-        auditDao.insertAudit(clientName, auditDate);
-        return DateUtil.format(auditDate);
+        return response;
     }
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, value = "/client/deleteAudit")
     @ResponseBody
-    public String deleteAudit(String clientName, String auditDateStr) {
-        LocalDate auditDate = LocalDate.parse(auditDateStr);
-        if (auditDate == null) {
-            log.error(auditDateStr + " is not a valid date");
-            return null;
+    public SharpICResponse deleteAudit(String clientName, String auditDateStr) {
+        SharpICResponse response = new SharpICResponse();
+        try {
+            LocalDate auditDate = LocalDate.parse(auditDateStr);
+            if (auditDate == null) {
+                response.setErrorText(auditDateStr + " is not a valid date");
+                response.setSuccessful(false);
+                return response;
+            }
+            Date aDate = DateUtil.toDate(auditDate);
+
+            int auditId = auditDao.getAuditId(clientName, aDate);
+            if (auditDao.getAuditId(clientName, aDate) < 0) {
+                response.setErrorText("Cannot delete audit with " + auditDateStr + ", since it does not exist!!!");
+                response.setSuccessful(false);
+                return response;
+            }
+
+            List<Entry> entries = entryDao.getAuditEntries(auditId);
+            if(entries!=null && entries.size()>0) {
+                response.setErrorText("Cannot delete audit with " + auditDateStr + ", since it contains entries!!!");
+                response.setSuccessful(false);
+                return response;
+            }
+
+            auditDao.deleteAudit(clientName, aDate);
+            response.setSuccessful(true);
+        } catch (Exception e) {
+            response.setException(e);
         }
-        Date aDate = DateUtil.toDate(auditDate);
 
-        if (auditDao.getAuditId(clientName, aDate) < 0) {
-            log.error("Cannot delete audit with " + auditDateStr + ", since it does not exist!!!");
-            return null;
-        }
-
-        auditDao.deleteAudit(clientName, aDate);
-
-        return DateUtil.format(aDate);
+        return response;
     }
 
     @RequestMapping(value = "/client/getClients")
@@ -180,16 +208,21 @@ public class ClientController {
     public SharpICResponse getRecipes(String clientName) {
         SharpICResponse sharpICResponse = new SharpICResponse();
 
-        if (clientName == null || clientName.isEmpty())
-            return sharpICResponse;
+        try {
+            if (clientName == null || clientName.isEmpty())
+                return sharpICResponse;
 
-        List<Recipe> clientRecipes = serverCache.getRecipes(clientName);
-        objectTransientFieldsPopulator.populateRecipeTransientFields(clientRecipes);
+            List<Recipe> clientRecipes = serverCache.getRecipes(clientName);
+            objectTransientFieldsPopulator.populateRecipeTransientFields(clientRecipes);
 
-        if (clientRecipes != null)
-            Collections.sort(clientRecipes);
-        sharpICResponse.addToModel("clientRecipes", clientRecipes);
-        sharpICResponse.addToModel("products", serverCache.getProducts());
+            if (clientRecipes != null)
+                Collections.sort(clientRecipes);
+            sharpICResponse.addToModel("clientRecipes", clientRecipes);
+            sharpICResponse.addToModel("products", serverCache.getProducts());
+            sharpICResponse.setSuccessful(true);
+        } catch (Exception e) {
+            sharpICResponse.setException(e);
+        }
 
         return sharpICResponse;
     }
@@ -210,8 +243,7 @@ public class ClientController {
             sharpICResponse.setSuccessful(true);
         } catch (Exception e) {
             log.error(e);
-            sharpICResponse.setSuccessful(false);
-            sharpICResponse.setErrorText(e.getMessage());
+            sharpICResponse.setException(e);
         }
 
         return sharpICResponse;
@@ -220,28 +252,35 @@ public class ClientController {
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, value = "/client/saveRecipe", consumes = "application/json")
     @ResponseBody
-    public Recipe saveRecipe(@RequestBody Recipe recipe) {
-        if (recipe.getId() <= 0) {
-            recipe = recipeDao.createRecipe(recipe);
-        }
-
-        recipeItemDao.deleteRecipeItems(recipe.getId());
-
-        List<RecipeItem> recipeItems = recipe.getRecipeItems();
-        if (recipeItems != null) {
-            for (int i = 0; i < recipeItems.size(); i++) {
-                RecipeItem recipeItem = recipeItems.get(i);
-                recipeItem.setProduct(serverCache.findProduct(recipeItem.getProductId()));
-                recipeItemDao.insertRecipeItem(recipeItem);
+    public SharpICResponse saveRecipe(@RequestBody Recipe recipe) {
+        SharpICResponse response = new SharpICResponse();
+        try {
+            if (recipe.getId() <= 0) {
+                recipe = recipeDao.createRecipe(recipe);
             }
+
+            recipeItemDao.deleteRecipeItems(recipe.getId());
+
+            List<RecipeItem> recipeItems = recipe.getRecipeItems();
+            if (recipeItems != null) {
+                for (int i = 0; i < recipeItems.size(); i++) {
+                    RecipeItem recipeItem = recipeItems.get(i);
+                    recipeItem.setProduct(serverCache.findProduct(recipeItem.getProductId()));
+                    recipeItemDao.insertRecipeItem(recipeItem);
+                }
+            }
+
+            serverCache.fillRecipeCache();
+
+            recipe = recipeDao.getRecipe(recipe.getId());
+            objectTransientFieldsPopulator.populateRecipeTransientFields(recipe);
+            response.setSuccessful(true);
+            response.addToModel("recipe", recipe);
+        } catch (Exception e) {
+            response.setException(e);
         }
 
-        serverCache.fillRecipeCache();
-
-        recipe = recipeDao.getRecipe(recipe.getId());
-        objectTransientFieldsPopulator.populateRecipeTransientFields(recipe);
-
-        return recipe;
+        return response;
     }
 
 }

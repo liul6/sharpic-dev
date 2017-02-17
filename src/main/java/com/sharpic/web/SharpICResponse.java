@@ -47,4 +47,9 @@ public class SharpICResponse {
     public void setModel(Map<String, Object> data) {
         this.model = data;
     }
+
+    public void setException(Exception e) {
+        setSuccessful(false);
+        setErrorText(e.getMessage());
+    }
 }

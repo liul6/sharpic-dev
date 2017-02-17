@@ -21,6 +21,14 @@
         select id, audit_id, location, product_id, amount, weight, weights, open_bottles, bin, update_datetime from entry where audit_id=#{auditId}
     </select>
 
+    <select id="getMaxEntryId" resultType="Integer">
+        select max(id) from entry where audit_id=#{auditId} and product_id=#{productId}
+    </select>
+
+    <select id="getEntry" resultMap="ResultMap">
+        select id, audit_id, location, product_id, amount, weight, weights, open_bottles, bin, update_datetime from entry where id=#{id}
+    </select>
+
     <delete id="deleteAuditEntries">
         delete from entry where audit_id=#{auditId}
     </delete>

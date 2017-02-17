@@ -92,52 +92,78 @@ public class SaleController {
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, value = "/sale/saveAuditRecipe", consumes = "application/json")
     @ResponseBody
-    public Recipe saveAuditRecipe(@RequestBody AuditRecipe auditRecipe) {
-        if (auditRecipe.getId() <= 0) {
-            auditRecipe = auditRecipeDao.createAuditRecipe(auditRecipe);
-        }
+    public SharpICResponse saveAuditRecipe(@RequestBody AuditRecipe auditRecipe) {
+        SharpICResponse response = new SharpICResponse();
+        try {
 
-        auditRecipeItemDao.deleteRecipeItemsByRecipeId(auditRecipe.getId());
-        List<RecipeItem> recipeItems = auditRecipe.getRecipeItems();
-
-        if (recipeItems != null) {
-            for (int i = 0; i < recipeItems.size(); i++) {
-                RecipeItem recipeItem = recipeItems.get(i);
-                recipeItem.setProduct(serverCache.findProduct(recipeItem.getProductId()));
-
-                AuditRecipeItem auditRecipeItem = new AuditRecipeItem(auditRecipe.getAuditId(), auditRecipe.getId(), recipeItem);
-
-                auditRecipeItemDao.insertAuditRecipeItem(auditRecipeItem);
+            if (auditRecipe.getId() <= 0) {
+                auditRecipe = auditRecipeDao.createAuditRecipe(auditRecipe);
             }
+
+            auditRecipeItemDao.deleteRecipeItemsByRecipeId(auditRecipe.getId());
+            List<RecipeItem> recipeItems = auditRecipe.getRecipeItems();
+
+            if (recipeItems != null) {
+                for (int i = 0; i < recipeItems.size(); i++) {
+                    RecipeItem recipeItem = recipeItems.get(i);
+                    recipeItem.setProduct(serverCache.findProduct(recipeItem.getProductId()));
+
+                    AuditRecipeItem auditRecipeItem = new AuditRecipeItem(auditRecipe.getAuditId(), auditRecipe.getId(), recipeItem);
+
+                    auditRecipeItemDao.insertAuditRecipeItem(auditRecipeItem);
+                }
+            }
+
+            auditRecipe = auditRecipeDao.getAuditRecipe(auditRecipe.getId());
+            objectTransientFieldsPopulator.populateRecipeTransientFields(auditRecipe);
+            response.setSuccessful(true);
+            response.addToModel("auditRecipe", auditRecipe);
+        } catch (Exception e) {
+            response.setSuccessful(false);
+            response.setErrorText(e.getMessage());
         }
 
-        auditRecipe = auditRecipeDao.getAuditRecipe(auditRecipe.getId());
-        objectTransientFieldsPopulator.populateRecipeTransientFields(auditRecipe);
-
-        return auditRecipe;
+        return response;
     }
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, value = "/sale/saveRecipeFully", consumes = "application/json")
     @ResponseBody
-    public Recipe saveRecipeFully(@RequestBody AuditRecipe auditRecipe) {
-        saveAuditRecipe(auditRecipe);
+    public SharpICResponse saveRecipeFully(@RequestBody AuditRecipe auditRecipe) {
+        SharpICResponse sharpICResponse = new SharpICResponse();
 
-        Recipe recipe = recipeDao.getRecipeByName(auditRecipe.getClientName(), auditRecipe.getRecipeName());
+        try {
+            SharpICResponse sharpICResponse1 = saveAuditRecipe(auditRecipe);
+            if (!sharpICResponse1.isSuccessful())
+                return sharpICResponse1;
 
-        if (auditRecipe.getRecipeItems() != null) {
-            for (int i = 0; i < auditRecipe.getRecipeItems().size(); i++) {
-                RecipeItem recipeItem = auditRecipe.getRecipeItems().get(i);
-                recipeItem.setRecipeId(recipe.getId());
+            Recipe recipe = recipeDao.getRecipeByName(auditRecipe.getClientName(), auditRecipe.getRecipeName());
+
+            if (auditRecipe.getRecipeItems() != null) {
+                for (int i = 0; i < auditRecipe.getRecipeItems().size(); i++) {
+                    RecipeItem recipeItem = auditRecipe.getRecipeItems().get(i);
+                    recipeItem.setRecipeId(recipe.getId());
+                }
+                recipe.setRecipeItems(auditRecipe.getRecipeItems());
             }
-            recipe.setRecipeItems(auditRecipe.getRecipeItems());
+
+            if (recipe.getId() <= 0) {
+                recipe = recipeDao.createRecipe(recipe);
+            }
+
+            SharpICResponse sharpICResponse2 = clientController.saveRecipe(recipe);
+            if (!sharpICResponse2.isSuccessful())
+                return sharpICResponse2;
+
+            sharpICResponse.setSuccessful(true);
+            sharpICResponse.addToModel("recipe", sharpICResponse.getModel().get("recipe"));
+            sharpICResponse.addToModel("auditRecipe", sharpICResponse.getModel().get("auditRecipe"));
+        } catch (Exception e) {
+            sharpICResponse.setSuccessful(false);
+            sharpICResponse.setErrorText(e.getMessage());
         }
 
-        if (recipe.getId() <= 0) {
-            recipe = recipeDao.createRecipe(recipe);
-        }
-
-        return clientController.saveRecipe(recipe);
+        return sharpICResponse;
     }
 
 
@@ -171,12 +197,10 @@ public class SaleController {
         try {
             saleDao.deleteSale(sale.getId());
             sharpICResponse.setSuccessful(true);
-            return sharpICResponse;
         } catch (Exception e) {
             sharpICResponse.setErrorText(e.getMessage());
             sharpICResponse.setSuccessful(false);
-
-            return sharpICResponse;
         }
+        return sharpICResponse;
     }
 }

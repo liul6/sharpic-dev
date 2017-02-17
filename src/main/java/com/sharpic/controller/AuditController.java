@@ -110,12 +110,15 @@ public class AuditController {
     public SharpICResponse saveEntry(@RequestBody Entry entry) {
         SharpICResponse sharpICResponse = new SharpICResponse();
         try {
-            if(entry.getProductId()<=0) {
+            if (entry.getProductId() <= 0) {
                 entry.setProductId(entry.getProduct().getId());
             }
 
-            entryDao.updateAuditEntry(entry);
+            Entry savedEntry = entryDao.updateAuditEntry(entry);
             sharpICResponse.setSuccessful(true);
+            savedEntry.setProduct(serverCache.findProduct(savedEntry.getProductId()));
+            objectDescriptor.populateProductTransientFields(savedEntry.getProduct());
+            sharpICResponse.addToModel("entry", savedEntry);
             return sharpICResponse;
         } catch (Exception e) {
             sharpICResponse.setErrorText(e.getMessage());

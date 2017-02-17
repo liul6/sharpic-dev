@@ -62,10 +62,22 @@ public class EntryDao {
         return entryMapper.getNumberOfEntriesByProductId(productId);
     }
 
-    public void updateAuditEntry(Entry entry) {
-        if (entry.getId() > 0)
+    public Entry updateAuditEntry(Entry entry) {
+        if (entry.getId() > 0) {
             entryMapper.updateAuditEntry(entry);
-        else
+            return getEntry(entry.getId());
+        } else {
             entryMapper.insertAuditEntry(entry);
+            int maxEntryId = getMaxEntryId(entry);
+            return getEntry(maxEntryId);
+        }
+    }
+
+    public int getMaxEntryId(Entry entry) {
+        return entryMapper.getMaxEntryId(entry.getAuditId(), entry.getProductId());
+    }
+
+    public Entry getEntry(int id) {
+        return entryMapper.getEntry(id);
     }
 }

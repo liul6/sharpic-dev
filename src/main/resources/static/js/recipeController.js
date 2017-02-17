@@ -1,4 +1,4 @@
-sharpicApp.controller('recipeController', function($rootScope, $http, $location, $route, $scope, $modal) {
+sharpicApp.controller('recipeController', function($rootScope, $http, $location, Notify, $route, $scope, $modal) {
     $scope.clientName = null;
     $scope.clientNames = [];
 
@@ -27,7 +27,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
             data: [],
             enableColumnMenus: false,
             columnDefs: [
-                {name: 'recipeName', displayName: 'Recipe Name', width : '30%', enableCellEdit : false  },
+                {name: 'recipeName', displayName: 'Recipe Name', width : '30%', enableCellEdit : true  },
                 {name: 'description', displayName: 'Recipe Items', enableCellEdit : false, cellTemplate : descriptionCelltemplate },
                 {name: 'action', displayName: '', width : '4%', cellTemplate: '<button class="btn btn-danger btn-xs" ng-click="grid.appScope.removeRecipe(row)"><span class="glyphicon glyphicon-remove"></span></button>' }
             ]
@@ -37,7 +37,7 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
     };
 
     $scope.addRecipe = function() {
-        var newRecipe = {recipeName : null, description : null};
+        var newRecipe = {recipeName : null, recipeItems : [], description : '***UNDEFINED***'};
         $scope.recipesOptions.data.unshift(newRecipe);
     };
 
@@ -45,6 +45,46 @@ sharpicApp.controller('recipeController', function($rootScope, $http, $location,
         var index = $scope.recipesOptions.data.indexOf(row.entity);
         $scope.recipesOptions.data.splice(index, 1);
     };
+
+    $scope.recipesOptions.onRegisterApi = function(gridApi){
+        $scope.gridApi = gridApi;
+
+        gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+            if(newValue!=oldValue) {
+                $scope.saveRecipe(rowEntity);
+            }
+
+            $scope.apply();
+        });
+    };
+
+    $scope.saveRecipe = function(recipe) {
+        if(recipe.recipeName==null)
+            return;
+        recipe.clientName = $scope.clientName;
+
+       var data = angular.toJson(recipe);
+
+       var config = {
+           headers : {
+               'Content-Type': 'application/json;'
+           }
+       }
+
+       $http.post('/client/saveRecipe', data)
+           .success(function (data, status, headers, config) {
+           if(data.successful) {
+                Notify.addMessage('Recipe saved successfully', 'success');
+                recipe = data.model.recipe;
+           }
+           else {
+                Notify.addMessage('Recipe failed to save: ' + data.errorText, 'danger');
+           }
+       })
+       .error(function (data, status, header, config) {
+            Notify.addMessage('Recipe failed to save: ' + data.errorText, 'danger');
+       });
+    }
 
     $scope.modifyRecipe = function(entity) {
         $scope.opts = {
@@ -137,11 +177,17 @@ var modifyRecipeController = function($scope, $http, $modalInstance, $modal, rec
 //        $http.post('/client/saveRecipe', data, config)
         $http.post('/client/saveRecipe', data)
             .success(function (data, status, headers, config) {
-                if(data != null) {
-                    $scope.recipe = data;
-                    $modalInstance.close(data);                }
+                if(data != null && data.successful) {
+                    $scope.recipe = data.model.recipe;
+                    $modalInstance.close(data);
+                    Notify.addMessage('Recipe saved successfully', 'success');
+                }
+                else  {
+                     Notify.addMessage('Recipe failed to save: ' + data.errorText, 'danger');
+                }
         })
         .error(function (data, status, header, config) {
+             Notify.addMessage('Recipe failed to save: ' + data.errorText, 'danger');
         });
     };
 

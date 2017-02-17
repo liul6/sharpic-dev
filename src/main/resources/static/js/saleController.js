@@ -103,7 +103,10 @@ sharpicApp.controller('saleController', function($rootScope, $http, $location, $
 
        $http.post('/sale/saveSale', data)
            .success(function (data, status, headers, config) {
-            Notify.addMessage('Sale saved successfully', 'success');
+           if(data.successful)
+                Notify.addMessage('Sale saved successfully', 'success');
+           else
+                Notify.addMessage('Sale failed to save: ' + data.errorText, 'danger');
        })
        .error(function (data, status, header, config) {
             Notify.addMessage('Sale failed to save: ' + data.errorText, 'danger');
@@ -248,11 +251,18 @@ var modifyAuditRecipeController = function($scope, $http, $modalInstance, $modal
         $http.post('/sale/saveRecipeFully', data)
             .success(function (data, status, headers, config) {
                 if(data != null) {
-                    $scope.recipe = data;
-                    $modalInstance.close(data);
+                    if(data.successful) {
+                        $scope.recipe = data.model.auditRecipe;
+                        $modalInstance.close(data);
+                         Notify.addMessage('Audit/Master Recipe saved successfully', 'success');
+                    }
+                    else {
+                        Notify.addMessage('Audit/Master Recipe failed to save: ' + data.errorText, 'danger');
+                    }
                 }
         })
         .error(function (data, status, header, config) {
+            Notify.addMessage('Audit/Master Recipe failed to save: ' + data.errorText, 'danger');
         });
     };
 
@@ -269,11 +279,18 @@ var modifyAuditRecipeController = function($scope, $http, $modalInstance, $modal
         $http.post('/sale/saveAuditRecipe', data)
             .success(function (data, status, headers, config) {
                 if(data != null) {
-                    $scope.recipe = data;
-                    $modalInstance.close(data);
+                    if(data.successful) {
+                        $scope.recipe = data.model.auditRecipe;
+                        $modalInstance.close(data);
+                         Notify.addMessage('Audit Recipe saved successfully', 'success');
+                    }
+                    else {
+                        Notify.addMessage('Audit Recipe failed to save: ' + data.errorText, 'danger');
+                    }
                 }
         })
         .error(function (data, status, header, config) {
+            Notify.addMessage('Audit Recipe failed to save: ' + data.errorText, 'danger');
         });
     };
 

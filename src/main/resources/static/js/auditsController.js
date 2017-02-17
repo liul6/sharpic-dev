@@ -72,6 +72,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
             }
         })
         .error(function (data, status, header, config) {
+            Notify.addMessage(data.errorText, 'danger');
         });
     }
 
@@ -79,8 +80,9 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
         $scope.gridApi = gridApi;
 
         gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-            if(newValue != oldValue)
+            if(newValue != oldValue) {
                 $scope.saveEntry(rowEntity);
+            }
         });
     };
 
@@ -151,13 +153,18 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
                 'Content-Type': 'application/json;'
             }
         }
+        var index = $scope.auditEntriesOptions.data.indexOf(entry);
 
         $http.post('/audit/saveEntry', data)
             .success(function (data, status, headers, config) {
-            if(data.successful)
+            if(data.successful) {
                 Notify.addMessage('Entry saved successfully', 'success');
-            else
+                entry = data.model.entry;
+                $scope.auditEntriesOptions.data[index] = entry;
+            }
+            else {
                 Notify.addMessage('Entry failed to save: ' + data.errorText, 'danger');
+            }
         })
         .error(function (data, status, header, config) {
             Notify.addMessage('Entry failed to save: ' + data.errorText, 'danger');
@@ -188,6 +195,7 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
             }
        })
        .error(function (data, status, header, config) {
+            Notify.addMessage(data.errorText, 'danger');
        });
     };
 
@@ -204,14 +212,18 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
 
         $http.post('/client/addAudit', data, config)
             .success(function (data, status, headers, config) {
-                if(data != null) {
+                if(data != null && data.successful) {
                     $scope.auditEntriesOptions.data = [];
-                    $scope.auditDate = data;
+                    $scope.auditDate = data.model.addedAuditDate;
                     $scope.selectClient();
+                    Notify.addMessage('Audit added successfully', 'success');
+                }
+                else {
+                    Notify.addMessage('Audit failed to add: ' + data.errorText, 'danger');
                 }
         })
         .error(function (data, status, header, config) {
-        //notify here
+            Notify.addMessage('Audit failed to add: ' + data.errorText, 'danger');
         });
     };
 
@@ -227,11 +239,17 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
         $http.post('/audit/deleteEntry', data)
             .success(function (data, status, headers, config) {
                 if(data != null && data.successful) {
+                    Notify.addMessage('Entry deleted successfully', 'success');
+
                     var index = $scope.auditEntriesOptions.data.indexOf(row.entity);
                     $scope.auditEntriesOptions.data.splice(index, 1);
                 }
+                else {
+                    Notify.addMessage('Entry failed to delete: ' + data.errorText, 'danger');
+                }
         })
         .error(function (data, status, header, config) {
+            Notify.addMessage('Entry failed to delete: ' + data.errorText, 'danger');
         });
     };
 
@@ -249,12 +267,16 @@ sharpicApp.controller('auditsController', function($rootScope, $http, $location,
 
         $http.post('/client/deleteAudit', data, config)
             .success(function (data, status, headers, config) {
-            if(data != null) {
+            if(data != null && data.successful) {
                 $scope.populateDefault($scope.clientName);
+                Notify.addMessage('Audit deleted successfully', 'success');
+            }
+            else {
+                Notify.addMessage('Audit failed to delete: ' + data.errorText, 'danger');
             }
         })
         .error(function (data, status, header, config) {
-        //notify here
+            Notify.addMessage('Audit failed to delete: ' + data.errorText, 'danger');
         });
     };
 })

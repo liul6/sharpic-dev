@@ -22,4 +22,8 @@ public interface EntryMapper {
     public void insertAuditEntry(@Param("entry") Entry entry);
 
     public void updateAuditEntry(@Param("entry") Entry entry);
+
+    public int getMaxEntryId(@Param("auditId") int auditId, @Param("productId") int productId);
+
+    public Entry getEntry(@Param("id") int id);
 }
